@@ -1,6 +1,7 @@
-import type { CalendarEvent } from '../../../shared/calendar';
+import type { CalendarEvent, TimeEvidence } from '../../../shared/calendar';
 import type { CollectionIssue } from '../../../shared/admin';
 import { isPendingScheduleName } from './names';
+import { applyScheduleTimeRules } from './schedule-time-rules';
 
 const HOUR = 3600000;
 const normalize = (title: string) => title.normalize('NFKC').replace(/[^\p{L}\p{N}]/gu, '').toLowerCase();
@@ -68,7 +69,7 @@ const matches = (left: CalendarEvent, right: CalendarEvent) => {
   return isSameScheduleCycle(left, right, confirmed);
 };
 
-const combine = (members: CalendarEvent[]): CalendarEvent => {
+const combine = (members: CalendarEvent[], issues: CollectionIssue[]): CalendarEvent => {
   const ordered = [...members].sort(compare);
   const preferred = ordered[0];
   if (!preferred) throw new Error('Empty schedule group');
@@ -78,9 +79,23 @@ const combine = (members: CalendarEvent[]): CalendarEvent => {
     .sort((a, b) => a.id.localeCompare(b.id));
   // 출처별 대표 그림의 다른 URL을 합치지 않고 한 출처의 이미지 목록만 선택
   const images = [...new Set(ordered.find((event) => event.imageUrls?.length)?.imageUrls ?? [])].slice(0, 12);
-  return { ...preferred, title: name.title,
+  const evidencePriority: Record<TimeEvidence['basis'], number> = { manual: 0, official: 1, 'schedule-rule': 2, 'version-update': 3, 'version-cycle': 4, 'community-data': 5 };
+  const selectTime = (field: 'start' | 'end') => ordered.flatMap((event) => {
+    const evidence = event.timeEvidence?.[field];
+    return evidence && Date.parse(evidence.at) === Date.parse(field === 'start' ? event.startAt : event.endAt) ? [evidence] : [];
+  })
+    .sort((a, b) => evidencePriority[a.basis] - evidencePriority[b.basis] || a.sourceUrl.localeCompare(b.sourceUrl) || a.at.localeCompare(b.at))[0];
+  const start = selectTime('start'), end = selectTime('end');
+  const startAt = start?.at ?? preferred.startAt, endAt = end?.at ?? preferred.endAt;
+  const valid = Date.parse(endAt) > Date.parse(startAt);
+  if (!valid) issues.push({ id: `timing:${preferred.id}:invalid`, eventId: preferred.id, game: preferred.game, title: preferred.title,
+    sourceUrl: preferred.sourceUrl, reason: '출처별 시작·종료 근거를 합치면 기간이 역전되어 원본 기간을 유지했습니다.', excerpt: `${startAt} ~ ${endAt}` });
+  // 이름과 원본 ID를 보존하면서 시작·종료의 근거를 각각 선택
+  return { ...preferred, title: name.title, ...(valid ? { startAt, endAt } : {}),
+    ...(valid && (start || end) ? { timeEvidence: { ...(start ? { start } : {}), ...(end ? { end } : {}) } } : {}),
     ...(!isPendingScheduleName(name) && (name.displayLanguage === 'ko-kr' || name.sourceLanguage.startsWith('ko')) ? { displayLanguage: 'ko-kr' as const } : {}),
-    ...(images.length ? { imageUrls: images } : {}), ...(sources.length > 1 ? { collectionSources: sources } : {}) };
+    ...(images.length ? { imageUrls: images } : {}),
+    ...(sources.length > 1 || startAt !== preferred.startAt || endAt !== preferred.endAt ? { collectionSources: sources } : {}) };
 };
 
 const compare = (a: CalendarEvent, b: CalendarEvent) => priority(a) - priority(b)
@@ -119,7 +134,7 @@ export const reconcileSchedules = (candidates: CalendarEvent[]) => {
         excerpt: compatible.flatMap((group) => group.map((member) => `${member.id}: ${member.title} (${member.startAt} ~ ${member.endAt})`)).join('\n').slice(0, 6000) });
     }
   }
-  const events = groups.map(combine);
+  const events = groups.map((group) => applyScheduleTimeRules(combine(group, issues), issues));
   for (let i = 0; i < events.length; i++) for (let j = i + 1; j < events.length; j++) {
     const left = events[i], right = events[j];
     if (!left || !right || left.game !== right.game || left.kind !== right.kind || !titleMatches(left, right)) continue;

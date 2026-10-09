@@ -1,9 +1,9 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { EVENT_KINDS, GAME_IDS } from '../../../../shared/calendar';
 import { cn } from '../../../utils/cn';
 import type { CalendarEvent } from '../types';
-import { dayDate, endingCountdown, formatEventEnd, formatTime, groupEndingEvents, nearestEnding, packRange, preserveTimelineScroll, todayDay } from '../utils/calendar';
+import { dayDate, dayNumber, endingCountdown, formatEventEnd, formatTime, groupEndingEvents, nearestEnding, packTimeRange, preserveTimelineScroll, timelineTimePosition } from '../utils/calendar';
 import { GAMES, KIND_LABELS } from '../utils/games';
 import { EventImage } from './EventImage';
 import { allEndingTasksCompleted, canComplete } from '../../completion';
@@ -22,6 +22,22 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
   const labelRef = useRef<HTMLDivElement>(null);
   const previousView = useRef<{ first: number; last: number; selectedDay: number; focusRevision: number } | null>(null);
   const scrollPosition = useRef({ left: 0, top: 0 });
+  const today = dayNumber(new Date(now).toISOString());
+  const timePosition = timelineTimePosition(now, first, last);
+  const layoutId = useId();
+  const scope = `.timeline-calendar[data-layout="${layoutId}"]`;
+  const gameGroups = GAME_IDS.map((game) => ({ game, groups: EVENT_KINDS.map((kind) => ({ kind,
+    lanes: packTimeRange(events.filter((event) => event.game === game && event.kind === kind), first, last),
+  })).filter((group) => group.lanes.length > 0) })).filter((group) => group.groups.length > 0);
+  const segments = gameGroups.flatMap(({ groups }) => groups.flatMap(({ lanes }) => lanes.flat()));
+  const layoutStyles = [
+    `${scope} .timeline-tracks { width: calc(var(--timeline-day-width) * ${days.length}); }`,
+    ...(timePosition ? [`${scope} .timeline-time-line { left: calc(var(--timeline-label-width) + var(--timeline-day-width) * ${timePosition.position}); }`] : []),
+    ...segments.map((segment) => `${scope} .timeline-bar[data-start="${segment.start}"][data-end="${segment.end}"] { left: calc(var(--timeline-day-width) * ${segment.start}); width: calc(var(--timeline-day-width) * ${segment.end - segment.start}); }`),
+  ].join('\n');
+  const timeLine = timePosition && <div className="timeline-time-line" aria-hidden="true">
+    <span className="timeline-time-label">{String(timePosition.hour).padStart(2, '0')}시</span>
+  </div>;
   const endingGroups = groupEndingEvents(endingEvents, first, last);
   const [endingPreviewDay, setEndingPreviewDay] = useState<number | null>(null);
   const previewEvents = endingPreviewDay !== null ? endingGroups.get(endingPreviewDay) : undefined;
@@ -64,8 +80,9 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
     if (scroll) scroll.scrollBy({ left: direction * scroll.clientWidth * 0.7, behavior: 'smooth' });
   };
 
-  return <div className="timeline-calendar"
+  return <div className="timeline-calendar" data-layout={layoutId}
     onKeyDown={(event) => { if (event.key === 'Escape') handleClosePreview(); }}>
+    <style>{layoutStyles}</style>
     <div className="timeline-controls"><span>게임 · 분류별 일정</span><div><span>날짜를 가로로 스크롤</span>
       <button type="button" className="icon-button" aria-label="앞쪽 날짜 보기" onClick={() => handleScroll(-1)}>‹</button>
       <button type="button" className="icon-button" aria-label="뒤쪽 날짜 보기" onClick={() => handleScroll(1)}>›</button></div></div>
@@ -81,8 +98,8 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
               onClick={() => onSelectDay(day)} aria-pressed={selectedDay === day}
               aria-label={`${date.getUTCMonth() + 1}월 ${date.getUTCDate()}일 일정 보기`}
               className={cn('timeline-date', date.getUTCDay() === 0 && 'timeline-sunday', date.getUTCDay() === 6 && 'timeline-saturday',
-                day === selectedDay && 'selected-date', day === todayDay() && 'timeline-today')}>
-              <span className="timeline-month">{date.getUTCMonth() + 1}월</span><span className="day-number">{date.getUTCDate()}</span><span>{day === todayDay() ? '오늘' : WEEKDAYS[date.getUTCDay()]}</span>
+                day === selectedDay && 'selected-date', day === today && 'timeline-today')}>
+              <span className="timeline-month">{date.getUTCMonth() + 1}월</span><span className="day-number">{date.getUTCDate()}</span><span>{day === today ? '오늘' : WEEKDAYS[date.getUTCDay()]}</span>
             </button>;
           })}
         </div>
@@ -113,22 +130,19 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
           })}
         </div>
         </div>
-        {GAME_IDS.map((game) => {
-          const gameEvents = events.filter((event) => event.game === game);
-          const groups = EVENT_KINDS.map((kind) => ({ kind, lanes: packRange(gameEvents.filter((event) => event.kind === kind), first, last) }))
-            .filter((group) => group.lanes.length > 0);
-          if (!groups.length) return null;
+        <div className="timeline-body">
+        {timeLine}
+        {gameGroups.map(({ game, groups }) => {
           return <section className="timeline-game" key={game} aria-label={`${GAMES[game].name} 일정`}>
             <div className="timeline-game-heading"><img className="game-badge" src={GAMES[game].icon} alt="" /><h3>{GAMES[game].name}</h3></div>
             {groups.map(({ kind, lanes }) => <div className="timeline-group" key={kind} aria-label={`${GAMES[game].name} ${KIND_LABELS[kind]}`}>
               {lanes.map((lane, laneIndex) => <div className="timeline-lane timeline-row" key={lane[0]?.event.id}>
                 <div className="timeline-label">{laneIndex === 0 && <><strong>{KIND_LABELS[kind]}</strong><span>{lanes.reduce((sum, row) => sum + row.length, 0)}개</span></>}</div>
-                {lane.map((segment, index) => <div className="timeline-run" key={segment.event.id}>
-                  {Array.from({ length: segment.start - (index === 0 ? 0 : (lane[index - 1]?.end ?? -1) + 1) }, (_, gap) => <span className="timeline-day-spacer" key={gap} aria-hidden="true" />)}
-                  <div className="timeline-segment">
-                  {Array.from({ length: segment.end - segment.start + 1 }, (_, cell) => <span className="timeline-day-spacer" key={cell} aria-hidden="true" />)}
+                <div className="timeline-tracks">
+                {lane.map((segment) =>
                   <div data-start={segment.start} data-end={segment.end}
-                  className={cn('timeline-bar', GAMES[game].className, isCompleted(segment.event) && 'task-completed', segment.continuesBefore && 'continues-before', segment.continuesAfter && 'continues-after')}>
+                  key={segment.event.id}
+                  className={cn('timeline-bar', segment.end - segment.start < 0.75 && 'timeline-short-bar', GAMES[game].className, isCompleted(segment.event) && 'task-completed', segment.continuesBefore && 'continues-before', segment.continuesAfter && 'continues-after')}>
                   <button type="button" className="timeline-task-toggle"
                   onClick={() => canComplete(segment.event) ? onToggleCompletion(segment.event) : onSelectEvent(segment.event)}
                   aria-pressed={canComplete(segment.event) ? isCompleted(segment.event) : undefined}
@@ -138,16 +152,17 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
                   <span className="timeline-bar-content"><img className="game-badge task-game-icon" src={GAMES[game].icon} alt="" />{segment.event.imageUrls?.slice(0, 2).map((url) =>
                     <EventImage key={url} url={url} className="timeline-event-image" />)}
                     <span className="timeline-bar-text"><span className="timeline-bar-meta"><span className={cn('kind-badge', `kind-${kind}`)}>{KIND_LABELS[kind]}</span>{isCompleted(segment.event) && <span className="completion-mark">✓ 완료</span>}
-                    <span>{segment.event.periodBasis === 'community-cycle' ? '공개 주기 계산 · ' : segment.event.periodBasis === 'community-data' ? '공개 일정 · ' : ''}{segment.event.versionEndBasis === 'default-42-days' ? '42일 기본값 · ' : segment.event.versionEndBasis === 'announced-date' ? '공개 날짜 · 시각 확인 필요 · ' : ''}{segment.continuesBefore ? '‹ 표시 범위 이전부터' : ''}{segment.continuesAfter ? ' 표시 범위 이후까지 ›' : ''}</span></span>
+                    <span>{segment.event.timeEvidence?.start?.basis === 'community-data' || segment.event.timeEvidence?.end?.basis === 'community-data' ? '공개 일정 · 시각 확인 필요 · ' : segment.event.periodBasis === 'community-cycle' ? '공개 주기 계산 · ' : segment.event.periodBasis === 'community-data' ? '공개 일정 · ' : ''}{segment.event.versionEndBasis === 'default-42-days' ? '42일 기본값 · ' : segment.event.versionEndBasis === 'announced-date' ? '공개 날짜 · 시각 확인 필요 · ' : ''}{segment.continuesBefore ? '‹ 표시 범위 이전부터' : ''}{segment.continuesAfter ? ' 표시 범위 이후까지 ›' : ''}</span></span>
                     <span className="timeline-bar-title">{segment.event.title}</span></span></span>
                     <button type="button" className="event-detail-button" aria-label={`${segment.event.title} 상세 보기`} onClick={() => onSelectEvent(segment.event)}>⋯</button>
-                </div></div></div>)}
-                {Array.from({ length: days.length - (lane[lane.length - 1]?.end ?? -1) - 1 }, (_, gap) => <span className="timeline-day-spacer" key={`tail-${gap}`} aria-hidden="true" />)}
+                </div>)}
+                </div>
               </div>)}
             </div>)}
           </section>;
         })}
-        {!events.some((event) => packRange([event], first, last).length) && <div className="timeline-empty">표시할 일정 없음</div>}
+        {!gameGroups.length && <div className="timeline-empty">표시할 일정 없음</div>}
+        </div>
       </div>
     </div>
     {endingPreviewDay !== null && previewEvents?.length && createPortal(<section id="ending-preview" className={cn('ending-preview', previewCompleted ? 'ending-completed' : `ending-${previewCountdown?.tone}`)} aria-label="종료 일정 목록"

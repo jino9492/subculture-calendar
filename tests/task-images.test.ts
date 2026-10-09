@@ -51,7 +51,7 @@ test('이미지는 선택 필드이며 잘못된 URL은 수집에서 제외하�
   }
 });
 
-test('원본 피드의 cover를 보존하고 기간과 이름 우선순위 유지하며 누락 이미지만 보완', () => {
+test('원본 피드의 cover와 시각 근거를 보존하고 한국어 이름과 누락 이미지 보완', () => {
   const fallback = parseStructuredActivities({ activities: [{ name: 'Angels Support Operation', startTime: '2026-09-09T11:00:00',
     endTime: '2026-11-30T03:59:59', cover: image }] }, source).events;
   const event = fallback[0];
@@ -62,7 +62,7 @@ test('원본 피드의 cover를 보존하고 기간과 이름 우선순위 유�
   const primary = { ...native, id: 'native', sourceLanguage: 'ko-kr', endAt: '2026-11-29T19:59:00.000Z' };
   const merged = mergeScheduleSources([primary], fallback);
   assert.equal(merged.length, 1);
-  assert.equal(merged[0]?.endAt, primary.endAt);
+  assert.equal(merged[0]?.endAt, event.endAt);
   assert.equal(merged[0]?.sourceLanguage, 'ko-kr');
   assert.deepEqual(merged[0]?.imageUrls, [image]);
 });

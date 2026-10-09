@@ -3,6 +3,13 @@ export type GameId = (typeof GAME_IDS)[number];
 export const EVENT_KINDS = ['version', 'event', 'banner', 'challenge'] as const;
 export type EventKind = (typeof EVENT_KINDS)[number];
 
+export interface TimeEvidence {
+  at: string;
+  basis: 'manual' | 'official' | 'schedule-rule' | 'version-update' | 'version-cycle' | 'community-data';
+  precision: 'second' | 'minute' | 'date';
+  sourceUrl: string;
+}
+
 export interface CalendarEvent {
   id: string;
   game: GameId;
@@ -22,6 +29,7 @@ export interface CalendarEvent {
   periodBasis?: 'community-data' | 'community-cycle';
   versionEndBasis?: 'official' | 'next-maintenance' | 'announced-date' | 'default-42-days' | 'manual';
   versionEndSourceUrl?: string;
+  timeEvidence?: { start?: TimeEvidence; end?: TimeEvidence };
 }
 
 export interface SourceStatus {
@@ -77,7 +85,15 @@ export const isCalendarEvent = (value: unknown): value is CalendarEvent => {
         && typeof source.sourceUrl === 'string' && /^https:\/\//.test(source.sourceUrl)))
     && (value.periodBasis === undefined || value.periodBasis === 'community-data' || value.periodBasis === 'community-cycle')
     && (value.versionEndBasis === undefined || ['official', 'next-maintenance', 'announced-date', 'default-42-days', 'manual'].some((basis) => basis === value.versionEndBasis))
-    && (value.versionEndSourceUrl === undefined || typeof value.versionEndSourceUrl === 'string' && /^https:\/\//.test(value.versionEndSourceUrl));
+    && (value.versionEndSourceUrl === undefined || typeof value.versionEndSourceUrl === 'string' && /^https:\/\//.test(value.versionEndSourceUrl))
+    && (value.timeEvidence === undefined || isRecord(value.timeEvidence)
+      && ['start', 'end'].every((field) => {
+        const evidence = isRecord(value.timeEvidence) ? value.timeEvidence[field] : undefined;
+        return evidence === undefined || isRecord(evidence) && typeof evidence.at === 'string' && Number.isFinite(Date.parse(evidence.at))
+          && ['manual', 'official', 'schedule-rule', 'version-update', 'version-cycle', 'community-data'].includes(String(evidence.basis))
+          && ['second', 'minute', 'date'].includes(String(evidence.precision))
+          && typeof evidence.sourceUrl === 'string' && /^https:\/\//.test(evidence.sourceUrl);
+      }));
 };
 
 export const isSourceStatus = (value: unknown): value is SourceStatus =>

@@ -150,7 +150,10 @@
   .ending-preview-time { @apply text-xs; color: var(--ending-color); }
   .timeline-controls > div { @apply flex items-center gap-2; }
   .timeline-scroll { @apply max-h-160 overflow-auto border-y border-line; scrollbar-color: var(--color-muted) var(--color-canvas); }
-  .timeline-content { width: max-content; min-width: 100%; }
+  .timeline-content { position: relative; width: max-content; min-width: 100%; }
+  .timeline-body { position: relative; }
+  .timeline-time-line { position: absolute; top: 0; bottom: 0; z-index: 10; width: 1px; background: #ffffff66; pointer-events: none; }
+  .timeline-time-label { position: absolute; top: 4px; left: 6px; padding: 2px 4px; border-radius: 3px; background: var(--color-canvas); color: var(--color-muted); font-size: 10px; white-space: nowrap; }
   .timeline-row { @apply flex items-center; }
   .timeline-run { @apply flex h-full shrink-0; }
   .timeline-segment { @apply relative flex h-full shrink-0 items-center; }
@@ -172,7 +175,10 @@
   .timeline-game-heading .game-badge { @apply h-6 w-6 text-xs; }
   .timeline-group { @apply border-t border-line; }
   .timeline-lane { @apply h-15; background-image: repeating-linear-gradient(to right, transparent 0, transparent calc(var(--timeline-day-width) - 1px), var(--color-line) calc(var(--timeline-day-width) - 1px), var(--color-line) var(--timeline-day-width)); background-position: var(--timeline-label-width) 0; }
-  .timeline-bar { @apply absolute inset-x-0 flex h-13 min-w-0 items-center justify-between gap-2 rounded-md border-l-2 px-3 text-left transition-opacity hover:opacity-75; margin-inline: 3px; }
+  .timeline-tracks { @apply relative h-full shrink-0; }
+  .timeline-bar { @apply absolute top-1 flex h-13 min-w-0 items-center justify-between gap-2 rounded-md border-l-2 px-3 text-left transition-opacity hover:opacity-75; }
+  .timeline-short-bar { overflow: hidden; padding-inline: 0; gap: 0; border-left-width: 0; }
+  .timeline-short-bar .timeline-bar-content { display: none; }
   .timeline-task-toggle { @apply absolute inset-0 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent; }
   .task-completed, .task-completed:hover { opacity: .55; }
   .completion-mark { @apply shrink-0 font-semibold; }

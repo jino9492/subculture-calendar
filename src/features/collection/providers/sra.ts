@@ -125,7 +125,10 @@ export const parseStructuredActivities = (raw: unknown, sourceUrl: string, game:
       periodBasis: 'community-data', description: '원본 구조화 이벤트 기간 · 명시 시차 우선, 시차 없는 시각은 Asia UTC+8 기준' }],
       { ...(title ? { [key]: { title, sourceUrl } } : {}), ...names,
         ...(learnedName ? { [key]: learnedName } : {}) });
-    events.push(...translated.events);
+    events.push(...translated.events.map((event) => ({ ...event, timeEvidence: {
+      start: { at: event.startAt, basis: 'community-data' as const, precision: 'second' as const, sourceUrl },
+      end: { at: event.endAt, basis: 'community-data' as const, precision: 'second' as const, sourceUrl },
+    } })));
     issues.push(...translated.issues);
   }
   return { events, issues };
@@ -139,7 +142,8 @@ export const supplementStructuredVersion = (events: CalendarEvent[], raw: unknow
   const match = events.find((event) => event.game === game && event.kind === 'version'
     && (game === 'endfield' || event.title === `버전 ${raw.version}`)
     && Date.parse(event.startAt) >= Date.parse(startAt) && Date.parse(event.startAt) - Date.parse(startAt) <= 6 * 3600000);
-  if (!match || match.sourceLanguage === 'ko-kr' && match.periodBasis === 'community-data') return events;
+  if (!match || match.sourceLanguage === 'ko-kr' && match.periodBasis === 'community-data'
+    || match.versionEndBasis === 'official' || match.versionEndBasis === 'next-maintenance' || match.versionEndBasis === 'manual') return events;
   return events.map((event) => {
     if (event.id !== match.id) return event;
     const next = { ...event, endAt, sourceUrl, sourceLanguage: 'en-us', displayLanguage: 'ko-kr' as const,

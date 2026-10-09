@@ -8,7 +8,7 @@ import { restoreKnownScheduleNames } from './names';
 import { reconcileSchedules, resolveScheduleId } from './reconciliation';
 
 interface Snapshot { events: CalendarEvent[]; issues: CollectionIssue[]; fetchedAt: string; skipped: number; partial: boolean; message: string }
-const SNAPSHOT_VERSION = 15;
+const SNAPSHOT_VERSION = 20;
 export const createCalendarCollector = (dependencies: { fetcher?: typeof fetchGame; read?: (game: GameId) => Promise<Snapshot | undefined>; write?: (game: GameId, snapshot: Snapshot) => Promise<void>; now?: () => number } = {}) => {
   const clock = dependencies.now ?? Date.now;
   const cache = new Map<GameId, Snapshot>();
@@ -25,7 +25,7 @@ export const createCalendarCollector = (dependencies: { fetcher?: typeof fetchGa
     if (dependencies.read) return dependencies.read(game);
     try {
       const raw: unknown = JSON.parse(await readFile(new URL(`../../../.cache/${game}.json`, import.meta.url), 'utf8'));
-      if (isRecord(raw) && (raw.schemaVersion === SNAPSHOT_VERSION || raw.schemaVersion === 14 || raw.schemaVersion === 13 || raw.schemaVersion === 12 || raw.schemaVersion === 11 || raw.schemaVersion === 10 || raw.schemaVersion === 9 || raw.schemaVersion === 8 || raw.schemaVersion === 7 || raw.schemaVersion === 6 || raw.schemaVersion === 5 || raw.schemaVersion === 4 || raw.schemaVersion === 3) && Array.isArray(raw.events) && raw.events.every(isCalendarEvent)
+      if (isRecord(raw) && (raw.schemaVersion === SNAPSHOT_VERSION || raw.schemaVersion === 19 || raw.schemaVersion === 18 || raw.schemaVersion === 17 || raw.schemaVersion === 16 || raw.schemaVersion === 15 || raw.schemaVersion === 14 || raw.schemaVersion === 13 || raw.schemaVersion === 12 || raw.schemaVersion === 11 || raw.schemaVersion === 10 || raw.schemaVersion === 9 || raw.schemaVersion === 8 || raw.schemaVersion === 7 || raw.schemaVersion === 6 || raw.schemaVersion === 5 || raw.schemaVersion === 4 || raw.schemaVersion === 3) && Array.isArray(raw.events) && raw.events.every(isCalendarEvent)
         && raw.events.every((event) => event.game === game) && typeof raw.fetchedAt === 'string'
         && Number.isFinite(Date.parse(raw.fetchedAt)) && typeof raw.skipped === 'number'
         && typeof raw.partial === 'boolean' && typeof raw.message === 'string') {

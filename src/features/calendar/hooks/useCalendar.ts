@@ -65,10 +65,17 @@ export const useCalendar = () => {
   const state = useCalendarStore();
   const [now, setNow] = useState(Date.now);
   useEffect(() => {
-    const update = () => setNow(Date.now());
-    const timer = setInterval(update, 30000);
+    let timer: ReturnType<typeof setTimeout>;
+    const update = () => {
+      clearTimeout(timer);
+      const now = Date.now();
+      setNow(now);
+      // 정각에도 갱신되도록 실제 시계의 30초 경계에 맞춰 예약
+      timer = setTimeout(update, 30000 - now % 30000);
+    };
+    update();
     document.addEventListener('visibilitychange', update);
-    return () => { clearInterval(timer); document.removeEventListener('visibilitychange', update); };
+    return () => { clearTimeout(timer); document.removeEventListener('visibilitychange', update); };
   }, []);
   useEffect(() => { void state.load(); }, [state.load]);
   const selectedEvents = (state.data?.events ?? []).filter((event) => state.games.includes(event.game) && state.kinds.includes(event.kind));

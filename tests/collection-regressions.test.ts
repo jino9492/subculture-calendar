@@ -41,9 +41,7 @@ test('미공개 캐릭터 회차는 추정 표시 후 실제 세 번째 종료�
     content: '<p>· 개방 기간: 2026/09/02 12:00 개방, 「특별 허가 헤드헌팅」 3회 진행 후 종료(「겨울 사냥」부터 집계)</p>' };
   for (const count of [1, 2]) {
     const result = parseEndfieldEvents(article, [], characterCycles.slice(0, count));
-    const last = characterCycles[count - 1]!;
-    assert.equal(result.events[0]?.endAt, new Date(Date.parse(last.endAt)
-      + (3 - count) * (Date.parse(last.endAt) - Date.parse(last.startAt))).toISOString());
+    assert.equal(result.events[0]?.endAt, count === 1 ? '2026-11-25T03:59:00.000Z' : '2026-11-11T03:59:00.000Z');
     assert.equal(result.events[0]?.periodBasis, 'community-cycle');
     assert.ok(result.events[0]?.description.includes('추정'));
   }
@@ -80,7 +78,7 @@ test('누락된 천사 이벤트를 원본 구조화 기간과 공식 한국어 
   const merged = mergeScheduleSources([native], result.events);
   assert.equal(merged.length, 1);
   assert.equal(merged[0]?.id, native.id);
-  assert.equal(merged[0]?.endAt, native.endAt);
+  assert.equal(merged[0]?.endAt, translated.endAt);
   assert.equal(merged[0]?.collectionSources?.length, 2);
 });
 

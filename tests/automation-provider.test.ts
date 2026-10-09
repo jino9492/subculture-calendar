@@ -57,6 +57,7 @@ test('무기 공지가 먼저 수집되어도 캐릭터 세 회차와 연결하�
     const pendingWeapon = estimated.events.find((event) => event.title === '「신규 무기 신청」 무기고 신청');
     assert.ok(pendingWeapon);
     assert.equal(pendingWeapon.periodBasis, 'community-cycle');
+    assert.equal(pendingWeapon.endAt, '2099-04-04T03:59:00.000Z');
     assert.ok(estimated.issues.some((issue) => issue.eventId === pendingWeapon.id));
     publishedCount = articles.length;
     const confirmed = await fetchGame('endfield');

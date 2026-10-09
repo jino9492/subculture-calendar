@@ -46,9 +46,20 @@ export const normalizeAdminState = (state: AdminState, events: CalendarEvent[]):
   const handled = new Set<string>();
   for (const collected of events) {
     const ids = [collected.id, ...(collected.collectionSources ?? []).map((source) => source.id)];
-    const override = ids.flatMap((id) => state.overrides[id] ? [state.overrides[id]] : [])[0];
+    const override = ids.flatMap((id) => state.overrides[id] ? [state.overrides[id]] : []).find((candidate) => {
+      if (candidate.event.game !== collected.game || candidate.event.kind !== collected.kind) return false;
+      // 재사용 ID의 다음 회차에 이전 수동 보정·숨김이 전파되지 않도록 원본 기간 대조
+      const original = candidate.event.collectionSources?.find((source) => ids.includes(source.id)) ?? candidate.event;
+      const periods = [collected, ...(collected.collectionSources ?? [])];
+      return periods.some((period) => Math.max(Date.parse(original.startAt), Date.parse(period.startAt))
+        < Math.min(Date.parse(original.endAt), Date.parse(period.endAt)));
+    });
     ids.forEach((id) => handled.add(id));
     if (override) overrides.set(collected.id, { hidden: override.hidden, event: { ...collected, ...override.event, id: collected.id,
+      timeEvidence: {
+        start: { at: override.event.startAt, basis: 'manual', precision: 'second', sourceUrl: override.event.sourceUrl },
+        end: { at: override.event.endAt, basis: 'manual', precision: 'second', sourceUrl: override.event.sourceUrl },
+      },
       ...(collected.collectionSources ? { collectionSources: collected.collectionSources } : {}) } });
   }
   for (const [id, override] of Object.entries(state.overrides)) if (!handled.has(id)) overrides.set(id, override);

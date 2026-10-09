@@ -133,17 +133,19 @@ const endfieldWeaponPeriod = (text: string, version: VersionBoundary | undefined
   const explicitStart = new RegExp(DATE).exec(text)?.[0];
   const startAt = explicitStart ? parseLocalDate(explicitStart, 8)
     : /버전 업데이트 후/.test(text) ? version?.startAt : namedAnchor?.startAt;
-  const anchor = anchorName ? namedAnchor : candidates.find((event) => event.startAt === startAt);
-  if (!startAt || !anchor || anchor.startAt !== startAt) return null;
+  const anchor = anchorName ? namedAnchor : candidates.find((event) => startAt && Date.parse(event.startAt) === Date.parse(startAt));
+  if (!startAt || !anchor || Date.parse(anchor.startAt) !== Date.parse(startAt)) return null;
   // 업데이트 공지와 개별 공지의 동일 캐릭터 픽업을 한 회차로 집계
-  const cycles = [...new Map(candidates.filter((event) => event.startAt >= startAt)
-    .sort((a, b) => a.endAt.localeCompare(b.endAt)).map((event) => [event.startAt, event])).values()]
-    .sort((a, b) => a.startAt.localeCompare(b.startAt)).slice(0, 3);
+  const cycles = [...new Map(candidates.filter((event) => Date.parse(event.startAt) >= Date.parse(startAt))
+    .sort((a, b) => Date.parse(a.endAt) - Date.parse(b.endAt)).map((event) => [Date.parse(event.startAt), event])).values()]
+    .sort((a, b) => Date.parse(a.startAt) - Date.parse(b.startAt)).slice(0, 3);
   const last = cycles.at(-1);
   if (!last) return null;
   const estimated = cycles.length < 3;
+  // 종료 직전 1분을 회차마다 빼지 않도록 달력 일수로 추정 간격 계산
+  const cycleDays = Math.ceil((Date.parse(last.endAt) - Date.parse(last.startAt)) / 86400000);
   const endAt = estimated ? new Date(Date.parse(last.endAt)
-    + (3 - cycles.length) * (Date.parse(last.endAt) - Date.parse(last.startAt))).toISOString() : last.endAt;
+    + (3 - cycles.length) * cycleDays * 86400000).toISOString() : last.endAt;
   return { startAt, endAt, estimated, sourceUrl: last.sourceUrl,
     note: `캐릭터 픽업 3회 기준: ${cycles.map((event) => event.title).join(' → ')}${estimated ? ` · 미공개 ${3 - cycles.length}회는 마지막 확인 픽업 기간으로 추정` : ''}` };
 };

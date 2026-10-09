@@ -4,6 +4,13 @@ export const DAY_MS = 86400000;
 export const preserveTimelineScroll = (left: number, previousFirst: number, first: number, dayWidth: number, maximum: number) =>
   Math.max(0, Math.min(maximum, left + (previousFirst - first) * dayWidth));
 const SEOUL_OFFSET = 9 * 3600000;
+export const timelineTimePosition = (now: number, first: number, last: number) => {
+  const seoulTime = now + SEOUL_OFFSET;
+  const day = Math.floor(seoulTime / DAY_MS);
+  if (day < first || day > last) return null;
+  const hour = Math.floor((seoulTime - day * DAY_MS) / 3600000);
+  return { day, hour, position: day - first + hour / 24 };
+};
 export const dayNumber = (iso: string) => Math.floor((Date.parse(iso) + SEOUL_OFFSET) / DAY_MS);
 export const dayDate = (day: number) => new Date(day * DAY_MS);
 export const todayDay = () => dayNumber(new Date().toISOString());
@@ -83,4 +90,38 @@ export const packRange = (events: CalendarEvent[], firstDay: number, lastDay: nu
     if (lane) lane.push(segment); else lanes.push([segment]);
   }
   return lanes;
+};
+
+export const packTimeRange = (events: CalendarEvent[], firstDay: number, lastDay: number): EventSegment[][] => {
+  const firstTime = firstDay * DAY_MS - SEOUL_OFFSET;
+  const lastTime = (lastDay + 1) * DAY_MS - SEOUL_OFFSET;
+  const versions = events.filter((event) => event.kind === 'version')
+    .sort((a, b) => Date.parse(a.startAt) - Date.parse(b.startAt) || a.id.localeCompare(b.id));
+  const versionEnds = new Map<string, number>();
+  for (const [index, version] of versions.entries()) {
+    const next = versions.slice(index + 1).find((candidate) => candidate.game === version.game);
+    versionEnds.set(version.id, Math.min(Date.parse(version.endAt), next ? Date.parse(next.startAt) : Infinity));
+  }
+  const segments = events.map((event) => {
+    const startAt = Date.parse(event.startAt);
+    const endAt = versionEnds.get(event.id) ?? Date.parse(event.endAt);
+    return { event, startAt, endAt };
+  }).filter(({ startAt, endAt }) => startAt < lastTime && endAt > firstTime && endAt > startAt)
+    .map(({ event, startAt, endAt }) => ({ event,
+      start: (Math.max(firstTime, startAt) - firstTime) / DAY_MS,
+      end: (Math.min(lastTime, endAt) - firstTime) / DAY_MS,
+      continuesBefore: startAt < firstTime, continuesAfter: endAt > lastTime,
+    })).sort((a, b) => a.start - b.start || b.end - a.end || a.event.id.localeCompare(b.event.id));
+  const lanes: EventSegment[][] = [];
+  for (const segment of segments) {
+    const lane = lanes.find((existing) => existing.every((placed) => placed.end <= segment.start || placed.start >= segment.end));
+    if (lane) lane.push(segment); else lanes.push([segment]);
+  }
+  return lanes;
+};
+
+export const timeEvidenceLabel = (basis: NonNullable<CalendarEvent['timeEvidence']>['start']) => {
+  if (!basis) return '수집 시각';
+  return { manual: '수동 확인', official: '공식 공지', 'schedule-rule': '일정 종료 규칙', 'version-update': '예정 점검 종료 후',
+    'version-cycle': '버전별 갱신 · 예정 점검 종료 후', 'community-data': '공개 일정 · 시각 확인 필요' }[basis.basis];
 };
