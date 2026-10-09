@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { isAdminResponse, type AdminAction, type AdminResponse } from '../../../../shared/admin';
+import { apiUrl } from '../../../utils/api';
 
 export const useAdmin = () => {
   const [data, setData] = useState<AdminResponse | null>(null);
@@ -12,7 +13,7 @@ export const useAdmin = () => {
     busy.current = true;
     setIsBusy(true); setError(''); setMessage('');
     try {
-      const response = await fetch(action === 'refresh' ? '/api/admin/refresh' : '/api/admin', action ? {
+      const response = await fetch(apiUrl(action === 'refresh' ? '/api/admin/refresh' : '/api/admin'), action ? {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(action === 'refresh' ? {} : action),
       } : undefined);
       if (!response.ok) throw new Error('Admin request failed');

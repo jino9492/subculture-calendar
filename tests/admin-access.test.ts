@@ -41,6 +41,16 @@ test('IPv4 매핑 설정과 IPv6 루프백 표기를 정규화', () => {
   assert.ok(isAllowedAdminRequest(request('::1'), allowedIps));
 });
 
+test('신뢰 프록시에서만 단일 전달 IP를 사용하고 누락·위조를 차단', () => {
+  const allowedIps = parseAdminAllowedIps('192.168.0.2,127.0.0.1');
+  const proxies = parseAdminAllowedIps('127.0.0.1,::1');
+  assert.ok(isAllowedAdminRequest(request('::ffff:127.0.0.1', { 'x-forwarded-for': '::ffff:192.168.0.2' }), allowedIps, proxies));
+  for (const forwarded of [undefined, '192.168.0.3', '192.168.0.2,203.0.113.2', 'invalid']) {
+    assert.equal(isAllowedAdminRequest(request('127.0.0.1', { 'x-forwarded-for': forwarded }), allowedIps, proxies), false);
+  }
+  assert.equal(isAllowedAdminRequest(request('203.0.113.2', { 'x-forwarded-for': '192.168.0.2' }), allowedIps, proxies), false);
+});
+
 test('HTTP 연결에서 모든 관리자 경로의 IP 제한과 공개 경로 유지', async () => {
   let allowedIps = parseAdminAllowedIps('127.0.0.1');
   const server = createServer((req, res) => {

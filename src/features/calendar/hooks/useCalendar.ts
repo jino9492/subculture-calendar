@@ -5,6 +5,7 @@ import { GAME_IDS, EVENT_KINDS, isCalendarResponse } from '../../../../shared/ca
 import type { CalendarResponse, EventKind, GameId } from '../types';
 import { todayDay } from '../utils/calendar';
 import { restoreFilterPreferences } from '../utils/filterPreferences';
+import { apiUrl } from '../../../utils/api';
 
 interface CalendarState {
   selectedDay: number; focusRevision: number;
@@ -27,7 +28,7 @@ export const useCalendarStore = create<CalendarState>()(persist((set, get) => ({
     if (get().isLoading) return;
     set({ isLoading: true, error: null });
     try {
-      const response = await fetch('/api/calendar');
+      const response = await fetch(apiUrl('/api/calendar'));
       if (!response.ok) throw new Error('Calendar request failed');
       const data: unknown = await response.json();
       if (!isCalendarResponse(data)) throw new Error('Invalid calendar response');

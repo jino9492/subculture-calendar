@@ -3,6 +3,7 @@ import { GAME_IDS } from '../../../../shared/calendar';
 import { isRunPage, RUN_CAUSES, RUN_STATES, type RunPage } from '../../../../shared/collection-runs';
 import { GAMES } from '../../calendar';
 import { koreanDate } from '../utils';
+import { apiUrl } from '../../../utils/api';
 
 const CAUSES = { startup: '서버 시작', scheduled: '예약 실행', manual: '수동 재수집', 'request-expired': '조회 중 캐시 만료' };
 const STATES = { running: '수집 중', ok: '성공', partial: '일부 확인 필요', stale: '실패 · 이전 데이터', error: '실패' };
@@ -18,7 +19,7 @@ export const CollectionLogs = () => {
       loading = true;
       setBusy(true); setError('');
       try {
-        const response = await fetch(`/api/admin/logs?${new URLSearchParams({ game, state, cause, page: String(page) })}`, { signal: controller.signal });
+        const response = await fetch(apiUrl(`/api/admin/logs?${new URLSearchParams({ game, state, cause, page: String(page) })}`), { signal: controller.signal });
         if (!response.ok) throw new Error('Log request failed');
         const result: unknown = await response.json();
         if (!isRunPage(result)) throw new Error('Invalid log response');

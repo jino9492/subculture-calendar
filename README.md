@@ -76,9 +76,9 @@ pnpm start
 
 처리 완료·제외는 확인 기록이고, 원본 제공자의 ‘일부 확인 필요’ 상태나 실제 수집 범위를 바꾸지 않습니다. 일정 보정은 캘린더 출력에 적용됩니다. 기간 누락 진단은 공지 단위로 묶일 수 있어 확인 항목 수와 누락 이벤트 수는 다릅니다.
 
-관리자 페이지는 로그인 없이 **IP 허용 목록**으로 접근을 제한합니다. `.env`의 `ADMIN_ALLOWED_IPS`에 접속할 클라이언트 IP를 쉼표로 구분해 입력하면 `/admin` 및 `/api/admin`의 모든 하위 경로에 적용됩니다. 예: `ADMIN_ALLOWED_IPS=127.0.0.1,::1,192.168.0.20`. 로컬 접속도 목록에 포함해야 하며, 변수가 없거나 비어 있으면 관리자 접근을 모두 차단합니다. IPv4·IPv6를 지원하고 IPv4 매핑 주소는 IPv4와 동일하게 비교합니다. IP가 아닌 값이나 CIDR은 거부합니다.
+관리자 페이지는 로그인 없이 **IP 허용 목록**으로 접근을 제한합니다. `server/.env`의 `ADMIN_ALLOWED_IPS`에 접속할 클라이언트 IP를 쉼표로 구분해 입력하면 `/admin` 및 `/api/admin`의 모든 하위 경로에 적용됩니다. 예: `ADMIN_ALLOWED_IPS=127.0.0.1,::1,192.168.0.20`. 로컬 접속도 목록에 포함해야 하며, 변수가 없거나 비어 있으면 관리자 접근을 모두 차단합니다. IPv4·IPv6를 지원하고 IPv4 매핑 주소는 IPv4와 동일하게 비교합니다. IP가 아닌 값이나 CIDR은 거부합니다.
 
-서버는 기본적으로 `HOST=0.0.0.0`으로 외부 연결을 받으며 다른 PC에서는 `http://서버IP:5173/admin`으로 접속합니다. `HOST`는 서버의 수신 주소이고 `ADMIN_ALLOWED_IPS`는 접근을 허용할 클라이언트 주소입니다. 실제 연결 IP만 비교하므로 전달된 IP 헤더는 접근 허용 판단에 사용하지 않습니다. 프록시를 거치면 프록시의 IP가 비교 대상입니다. 변경 요청의 동일 출처 검사는 유지하며 설정 변경 후에는 서버를 재시작해야 합니다. 외부 공개용 인증·권한 기능은 포함하지 않습니다.
+서버는 기본적으로 `HOST=0.0.0.0`으로 외부 연결을 받으며 다른 PC에서는 `http://서버IP:5173/admin`으로 접속합니다. `HOST`는 서버의 수신 주소이고 `ADMIN_ALLOWED_IPS`는 접근을 허용할 클라이언트 주소입니다. 직접 연결은 실제 연결 IP를 검사하고, `TRUSTED_PROXY_IPS`에 등록된 프록시의 연결에서만 `X-Forwarded-For`의 단일 IP를 사용합니다. 신뢰 프록시의 IP 헤더가 누락되거나 여러 주소이면 관리자 요청을 차단합니다. 관리자 변경 요청은 JSON 형식과 동일 출처 또는 `CORS_ALLOWED_ORIGINS`에 등록된 출처를 검사합니다. 설정 변경 후에는 서버를 재시작해야 합니다. 외부 공개용 인증·권한 기능은 포함하지 않습니다.
 
 ## 데이터 경로와 한계
 
@@ -110,7 +110,11 @@ tests/calendar.test.ts  날짜 경계·행 배치·수집 파서 테스트
 
 ## 환경 설정
 
-서버 시작 시 프로젝트 루트의 `.env`를 자동으로 읽습니다. `.env.example`을 참고하여 `PORT`, `HOST`, `ADMIN_ALLOWED_IPS` 등을 설정합니다. 이미 지정된 프로세스 환경 변수가 `.env`보다 우선하며, PowerShell에서 설정한 뒤 실행할 수도 있습니다.
+환경 파일은 프론트와 서버로 분리합니다. 루트 `.env`는 Vite가 읽는 프론트 설정이고, `server/.env`는 Node 서버가 읽는 서버 설정입니다. 각각 `.env.example`, `server/.env.example`을 참고합니다. 실제 `.env`와 모드별 환경 파일은 Git에서 제외하고 예제 파일만 공유합니다.
+
+프론트의 `VITE_API_BASE_URL`이 비어 있으면 현재 사이트와 같은 주소로 API를 요청합니다. 별도 API 서버를 배포할 때는 `https://api.example.com`처럼 경로 없는 서버 주소를 지정합니다. 캘린더·관리자·로그 요청 모두 이 주소를 사용합니다. `VITE_` 변수는 브라우저에 공개되므로 비밀값을 넣지 않습니다. 프론트 변경은 개발 서버 재시작 또는 재빌드·재배포 후 반영됩니다.
+
+서버는 실행 디렉터리와 관계없이 `server/.env`를 읽으며, 이미 지정된 프로세스 환경 변수가 우선합니다. `CORS_ALLOWED_ORIGINS`에는 프론트의 출처를 쉼표로 구분해 입력합니다. 와일드카드는 지원하지 않습니다. 등록한 출처의 API 요청과 필요한 OPTIONS 요청을 허용하고, 관리자 API는 별도로 IP 제한을 적용합니다. 같은 출처의 로컬 요청은 별도 CORS 등록 없이 사용할 수 있습니다.
 
 ```powershell
 $env:PORT = '5173'
@@ -119,7 +123,35 @@ $env:WUWA_KR_CDN_BASE = 'https://hw-media-cdn-mingchao.kurogame.com/akiwebsite/w
 pnpm dev
 ```
 
-알림, 계정, ICS 내보내기, 외부 배포는 이번 범위에 포함하지 않습니다.
+## Pages와 VM 분리 배포
+
+Cloudflare Pages의 빌드 환경 변수에 `VITE_API_BASE_URL=https://api.example.com`을 지정하고 다시 배포합니다. VM에는 `server/.env`를 별도로 만들고 다음과 같이 설정합니다. API 도메인과 관리자 접속 공인 IP는 실제 값으로 교체합니다.
+
+```dotenv
+PORT=5173
+HOST=127.0.0.1
+ADMIN_ALLOWED_IPS=203.0.113.20
+CORS_ALLOWED_ORIGINS=https://subculture-calendar.pages.dev
+TRUSTED_PROXY_IPS=127.0.0.1,::1
+```
+
+VM의 Nginx에서 API 서버로 전달하는 헤더는 다음과 같이 설정합니다. 이 예제는 브라우저가 Nginx에 직접 연결하는 구성이며, 추가 CDN·프록시가 있으면 방문자 IP를 별도로 복원해야 합니다.
+
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:5173;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_read_timeout 120s;
+}
+```
+
+Nginx는 방문자가 입력한 IP 헤더를 단일 접속 IP로 덮어써야 합니다. `proxy_add_x_forwarded_for`처럼 목록을 추가하는 설정은 이 서버의 단일 IP 검사에서 차단됩니다. Node 포트는 외부에 개방하지 않으며, 직접 개발 서버를 사용할 때는 `TRUSTED_PROXY_IPS`를 비워 둡니다. HTTPS 출처는 신뢰 프록시가 전달한 `X-Forwarded-Proto`로 확인합니다.
+
+Pages에서 `/admin`의 정적 화면 자체는 보일 수 있지만, 관리자 데이터 조회·저장·재수집·로그 API는 항상 서버의 IP 제한을 적용합니다. VM이 관리자 화면도 제공하도록 하려면 `pnpm build`로 `dist`를 생성한 뒤 `pnpm start`로 실행합니다. 현재 서버 실행에 필요한 `tsx`·Vite가 개발 의존성에 있으므로 설치 시 개발 의존성을 제외하지 않습니다.
+
+알림, 계정, ICS 내보내기는 이번 범위에 포함하지 않습니다.
 
 ## 몰아서 할 날짜 추천
 

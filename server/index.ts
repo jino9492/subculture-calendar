@@ -1,5 +1,5 @@
+import './env';
 import { createServer } from 'node:http';
-import { loadEnvFile } from 'node:process';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 import { createServer as createViteServer } from 'vite';
@@ -7,32 +7,24 @@ import { getAdminCalendar, getCalendar } from './calendar-service';
 import { isAdminAction } from '../shared/admin';
 import { saveAdminAction } from './admin-store';
 import { rememberKoreanNames } from '../src/features/collection';
-import { isAdminPath, isAllowedAdminRequest, parseAdminAllowedIps } from './admin-access';
+import { parseAdminAllowedIps } from './admin-access';
+import { checkRequestAccess, parseAllowedOrigins } from './request-access';
 import { startCollectionRuntime, stopCollectionRuntime, collectionLogPage } from './collection-runtime';
-
-try { loadEnvFile(); }
-catch (error) {
-  if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) throw error;
-}
 
 const isProduction = process.argv.includes('--production');
 const port = Number(process.env.PORT ?? 5173);
 const host = process.env.HOST ?? '0.0.0.0';
-const adminAllowedIps = parseAdminAllowedIps(process.env.ADMIN_ALLOWED_IPS);
+const access = {
+  adminAllowedIps: parseAdminAllowedIps(process.env.ADMIN_ALLOWED_IPS),
+  trustedProxyIps: parseAdminAllowedIps(process.env.TRUSTED_PROXY_IPS, 'TRUSTED_PROXY_IPS'),
+  allowedOrigins: parseAllowedOrigins(process.env.CORS_ALLOWED_ORIGINS),
+};
 const vite = isProduction ? undefined : await createViteServer({ server: { middlewareMode: true }, appType: 'spa' });
 const mimeTypes: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon' };
 const server = createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url ?? '/', 'http://localhost').pathname);
-    if (isAdminPath(pathname)) {
-      response.setHeader('Cache-Control', 'no-store');
-      if (!isAllowedAdminRequest(request, adminAllowedIps)) {
-        console.warn(`관리자 접근 차단: 접속 IP=${request.socket.remoteAddress ?? '알 수 없음'}`);
-        response.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
-        response.end(JSON.stringify({ message: '관리자 페이지는 허용된 IP에서만 접근할 수 있습니다.' }));
-        return;
-      }
-    }
+    if (!checkRequestAccess(request, response, pathname, access)) return;
     if (pathname === '/api/admin/logs') {
       if (request.method !== 'GET') { response.writeHead(405, { Allow: 'GET' }); response.end(); return; }
       response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
@@ -44,13 +36,8 @@ const server = createServer(async (request, response) => {
         response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
         response.end(JSON.stringify(value));
       };
-      const host = request.headers.host;
       if (request.method === 'GET' && pathname === '/api/admin') { send(200, await getAdminCalendar()); return; }
       if (request.method !== 'POST') { response.writeHead(405, { Allow: pathname === '/api/admin' ? 'GET, POST' : 'POST' }); response.end(); return; }
-      // 외부 페이지에서 관리 데이터를 변경하지 못하도록 동일 출처 확인
-      if (request.headers.origin !== `http://${host}` || !request.headers['content-type']?.startsWith('application/json')) {
-        send(403, { message: '관리 페이지에서 요청해 주세요.' }); return;
-      }
       if (pathname === '/api/admin/refresh') { send(200, await getAdminCalendar(true)); return; }
       const chunks: Buffer[] = [];
       let length = 0;
