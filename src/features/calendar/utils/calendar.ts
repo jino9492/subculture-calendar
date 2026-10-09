@@ -17,9 +17,7 @@ export const todayDay = () => dayNumber(new Date().toISOString());
 export const formatTime = (iso: string) => new Intl.DateTimeFormat('ko-KR', {
   timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false,
 }).format(new Date(iso));
-export const formatEventEnd = (event: CalendarEvent) => event.versionEndBasis === 'announced-date'
-  ? `${new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric' }).format(new Date(event.endAt))} · 시각 확인 필요`
-  : formatTime(event.endAt);
+export const formatEventEnd = (event: CalendarEvent) => formatTime(event.endAt);
 
 export const monthRange = (year: number, month: number) => {
   const first = Date.UTC(year, month, 1) / DAY_MS;
@@ -118,10 +116,4 @@ export const packTimeRange = (events: CalendarEvent[], firstDay: number, lastDay
     if (lane) lane.push(segment); else lanes.push([segment]);
   }
   return lanes;
-};
-
-export const timeEvidenceLabel = (basis: NonNullable<CalendarEvent['timeEvidence']>['start']) => {
-  if (!basis) return '수집 시각';
-  return { manual: '수동 확인', official: '공식 공지', 'schedule-rule': '일정 종료 규칙', 'version-update': '예정 점검 종료 후',
-    'version-cycle': '버전별 갱신 · 예정 점검 종료 후', 'community-data': '공개 일정 · 시각 확인 필요' }[basis.basis];
 };

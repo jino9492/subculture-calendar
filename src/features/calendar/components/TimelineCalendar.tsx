@@ -147,12 +147,12 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
                   onClick={() => canComplete(segment.event) ? onToggleCompletion(segment.event) : onSelectEvent(segment.event)}
                   aria-pressed={canComplete(segment.event) ? isCompleted(segment.event) : undefined}
                   aria-label={`${GAMES[game].name} · ${segment.event.title} · ${canComplete(segment.event) ? isCompleted(segment.event) ? '완료 취소' : '완료 표시' : '상세 보기'}`}
-                  title={`${segment.event.title}\n${formatTime(segment.event.startAt)} ~ ${kind === 'version' && Date.parse(segment.event.endAt) - Date.parse(segment.event.startAt) <= 1000 ? '종료 수집 누락' : formatEventEnd(segment.event)}`}
+                  title={`${segment.event.title}\n${formatTime(segment.event.startAt)} ~ ${kind === 'version' && Date.parse(segment.event.endAt) - Date.parse(segment.event.startAt) <= 1000 ? '—' : formatEventEnd(segment.event)}`}
                   />
                   <span className="timeline-bar-content"><img className="game-badge task-game-icon" src={GAMES[game].icon} alt="" />{segment.event.imageUrls?.slice(0, 2).map((url) =>
                     <EventImage key={url} url={url} className="timeline-event-image" />)}
                     <span className="timeline-bar-text"><span className="timeline-bar-meta"><span className={cn('kind-badge', `kind-${kind}`)}>{KIND_LABELS[kind]}</span>{isCompleted(segment.event) && <span className="completion-mark">✓ 완료</span>}
-                    <span>{segment.event.timeEvidence?.start?.basis === 'community-data' || segment.event.timeEvidence?.end?.basis === 'community-data' ? '공개 일정 · 시각 확인 필요 · ' : segment.event.periodBasis === 'community-cycle' ? '공개 주기 계산 · ' : segment.event.periodBasis === 'community-data' ? '공개 일정 · ' : ''}{segment.event.versionEndBasis === 'default-42-days' ? '42일 기본값 · ' : segment.event.versionEndBasis === 'announced-date' ? '공개 날짜 · 시각 확인 필요 · ' : ''}{segment.continuesBefore ? '‹ 표시 범위 이전부터' : ''}{segment.continuesAfter ? ' 표시 범위 이후까지 ›' : ''}</span></span>
+                    <span>{segment.continuesBefore ? '‹ 표시 범위 이전부터' : ''}{segment.continuesAfter ? ' 표시 범위 이후까지 ›' : ''}</span></span>
                     <span className="timeline-bar-title">{segment.event.title}</span></span></span>
                     <button type="button" className="event-detail-button" aria-label={`${segment.event.title} 상세 보기`} onClick={() => onSelectEvent(segment.event)}>⋯</button>
                 </div>)}
@@ -172,12 +172,12 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
         if (!(target instanceof Element && target.closest('.ending-count-active'))) handleClosePreview();
       }}>
       <div className="ending-preview-heading"><h3>{dayDate(endingPreviewDay).getUTCMonth() + 1}월 {dayDate(endingPreviewDay).getUTCDate()}일 종료 · {previewEvents.length}개 · 완료 {previewEvents.filter(isCompleted).length}/{previewEvents.filter(canComplete).length}</h3>
-        <span className="ending-remaining" title="아직 종료되지 않은 일정 중 가장 빠른 종료 기준">{previewEnding?.versionEndBasis === 'announced-date' ? '종료 시각 확인 필요' : previewCountdown?.label}</span></div>
+        <span className="ending-remaining" title="아직 종료되지 않은 일정 중 가장 빠른 종료 기준">{previewCountdown?.label}</span></div>
       <div className="ending-preview-list">{previewEvents.map((event) => <div className={cn('ending-preview-event', isCompleted(event) && 'task-completed', isCompleted(event) && Date.parse(event.endAt) > now ? 'ending-completed' : `ending-${endingCountdown(event.endAt, now).tone}`)} key={event.id}>
         <button type="button" className="ending-preview-toggle" aria-pressed={canComplete(event) ? isCompleted(event) : undefined}
           onClick={() => { if (canComplete(event)) onToggleCompletion(event); else { handleClosePreview(); onSelectEvent(event); } }}>
         <span className="ending-preview-game"><img className="game-badge task-game-icon" src={GAMES[event.game].icon} alt="" /><span className="day-event-meta">{GAMES[event.game].name} · {KIND_LABELS[event.kind]}</span></span>
-        <strong>{event.title}</strong><span className="ending-preview-time">{formatEventEnd(event)} 종료{event.versionEndBasis === 'default-42-days' ? ' · 42일 기본값' : ''}</span>
+        <strong>{event.title}</strong><span className="ending-preview-time">{formatEventEnd(event)} 종료</span>
         </button><button type="button" className="preview-detail-button event-detail-button" aria-label={`${event.title} 상세 보기`} onClick={() => { handleClosePreview(); onSelectEvent(event); }}>⋯</button>
       </div>)}</div>
     </section>, document.body)}

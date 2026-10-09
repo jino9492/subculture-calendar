@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { EVENT_KINDS, GAME_IDS, type CalendarEvent, type EventKind, type GameId } from '../../../../shared/calendar';
 import { type AdminAction, type CollectionIssue, type EventOverride } from '../../../../shared/admin';
 import { GAMES, KIND_LABELS } from '../../calendar';
-import { fromKoreanInput, toKoreanInput } from '../utils';
+import { fromKoreanInput, toKoreanInput, timeEvidenceLabel } from '../utils';
 
 interface EventEditorProps {
   event?: CalendarEvent;
@@ -44,7 +44,15 @@ export const EventEditor = ({ event, issue, override, isBusy, onSave, onClose }:
   return <section className="admin-editor" aria-label="일정 편집">
     <div className="panel-heading"><h2>{event ? '일정 보정' : '수동 일정 추가'}</h2><button type="button" className="small-button" disabled={isBusy} onClick={onClose}>닫기</button></div>
     <p className="admin-help">시간은 한국 시간(UTC+9)으로 입력합니다. 저장한 내용은 재수집 후에도 유지됩니다.</p>
-    {event?.versionEndBasis === 'announced-date' && <p className="admin-help">종료는 공지에서 날짜만 확인했습니다. 입력칸의 00:00은 날짜 경계입니다. 정확한 시각을 확인한 경우에만 수정하세요.</p>}
+    {event?.periodBasis && <p className="admin-help">기간 근거: {event.periodBasis === 'community-cycle' ? '공개 주기 계산 · 날짜 추정' : '공개 일정 데이터 · 시각 확인 필요'}</p>}
+    {event?.versionEndBasis === 'default-42-days' && <p className="admin-help">기간 근거: 42일 기본값 · 종료 시각 확인 필요</p>}
+    {event?.timeEvidence && <dl className="detail-dates">{(['start', 'end'] as const).map((field) => {
+      const evidence = event.timeEvidence?.[field];
+      return evidence && <div key={field}><dt>{field === 'start' ? '시작 근거' : '종료 근거'}</dt><dd>
+        <a href={evidence.sourceUrl} target="_blank" rel="noreferrer">{timeEvidenceLabel(evidence)} ↗</a></dd></div>;
+    })}</dl>}
+    {event?.versionEndSourceUrl && <a className="source-link" href={event.versionEndSourceUrl} target="_blank" rel="noreferrer">버전 종료 근거 ↗</a>}
+    {event?.versionEndBasis === 'announced-date' && <p className="admin-help">종료는 공지에서 날짜만 확인했습니다. 현재 시각은 기본 종료 규칙 또는 날짜 경계이며, 정확한 시각을 확인한 경우에만 수정하세요.</p>}
     {issue && <p className="admin-help">이 공지에 여러 기간이 있다면 일정별로 추가하세요. 같은 기간의 영문 일정이 있다면 전체 일정에서 보정하세요. 저장 시 공지를 처리 완료로 표시하며, 필요하면 다시 미처리로 변경할 수 있습니다.</p>}
     <form className="admin-form" onSubmit={(submitEvent) => void handleSubmit(submitEvent)}>
       <div className="admin-fields"><label>게임<select value={game} disabled={Boolean(event)} onChange={(change) => { const value = GAME_IDS.find((id) => id === change.target.value); if (value) setGame(value); }}>{GAME_IDS.map((id) => <option key={id} value={id}>{GAMES[id].name}</option>)}</select></label>
