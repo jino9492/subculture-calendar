@@ -1,10 +1,58 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import type { CalendarEvent } from '../shared/calendar';
 import { parseHoyoCalendar, parseEndfieldEvents, parseStructuredActivities, mergeScheduleSources, buildVersionEvents, supplementStructuredVersion } from '../src/features/collection';
 
 const source = 'https://example.com/calendar';
 const boundary = { version: '시험 버전', maintenanceStart: '2026-09-01T22:00:00.000Z', startAt: '2026-09-02T04:00:00.000Z',
   endAt: '2026-10-14T22:00:00.000Z', sourceUrl: source, endSourceUrl: 'https://starrailassistant.top/api/v1/activity/end-en-US.json' };
+
+const characterCycles: CalendarEvent[] = [
+  ['겨울 사냥', '2026-09-02T04:00:00.000Z', '2026-09-30T03:59:00.000Z'],
+  ['후속 픽업', '2026-09-30T04:00:00.000Z', '2026-10-21T03:59:00.000Z'],
+  ['세 번째 픽업', '2026-10-21T04:00:00.000Z', '2026-11-18T03:59:00.000Z'],
+].map(([name, startAt, endAt], index) => ({ id: `character:${index}`, game: 'endfield', kind: 'banner',
+  title: `「${name}」 특별 허가 헤드헌팅`, startAt: startAt!, endAt: endAt!, sourceUrl: `${source}/${index}`,
+  description: '', sourceLanguage: 'ko-kr' }));
+
+test('무기 신청은 중복·재구축을 제외한 실제 캐릭터 픽업 세 회의 종료일까지 유지', () => {
+  const unrelated = { ...characterCycles[1]!, id: 'rerun', title: '「찬란한 색채」 재구축 헤드헌팅#1' };
+  const duplicate = { ...characterCycles[0]!, id: 'duplicate' };
+  for (const period of [
+    '「시험 버전」버전 업데이트 후 개방되며, 「겨울 사냥」기준으로 3회의 「특별 허가 헤드헌팅」이후 종료',
+    '2026/09/02 12:00(서버 시간) 개방, 「특별 허가 헤드헌팅」 3회 진행 후 종료(「겨울 사냥」부터 집계)',
+  ]) {
+    const result = parseEndfieldEvents({ id: 'weapon', title: '「한기 신청」 기간 한정 판매 설명',
+      content: `<p>▼//「한기 신청」</p><p>· 개방 시간: ${period}</p>` }, [boundary],
+    [characterCycles[2]!, duplicate, unrelated, ...characterCycles]);
+    assert.equal(result.skipped, 0);
+    assert.equal(result.events.length, 1);
+    assert.equal(result.events[0]?.title, '「한기 신청」 무기고 신청');
+    assert.equal(result.events[0]?.kind, 'banner');
+    assert.equal(result.events[0]?.startAt, characterCycles[0]?.startAt);
+    assert.equal(result.events[0]?.endAt, characterCycles[2]?.endAt);
+    assert.equal(result.events[0]?.periodBasis, undefined);
+    assert.ok(result.events[0]?.description.includes(characterCycles[2]!.sourceUrl));
+  }
+});
+
+test('미공개 캐릭터 회차는 추정 표시 후 실제 세 번째 종료일로 갱신', () => {
+  const article = { id: 'weapon', title: '「한기 신청」 기간 한정 판매 설명',
+    content: '<p>· 개방 기간: 2026/09/02 12:00 개방, 「특별 허가 헤드헌팅」 3회 진행 후 종료(「겨울 사냥」부터 집계)</p>' };
+  for (const count of [1, 2]) {
+    const result = parseEndfieldEvents(article, [], characterCycles.slice(0, count));
+    const last = characterCycles[count - 1]!;
+    assert.equal(result.events[0]?.endAt, new Date(Date.parse(last.endAt)
+      + (3 - count) * (Date.parse(last.endAt) - Date.parse(last.startAt))).toISOString());
+    assert.equal(result.events[0]?.periodBasis, 'community-cycle');
+    assert.ok(result.events[0]?.description.includes('추정'));
+  }
+  const confirmed = parseEndfieldEvents(article, [], characterCycles);
+  assert.equal(confirmed.events[0]?.endAt, characterCycles[2]?.endAt);
+  assert.equal(confirmed.events[0]?.periodBasis, undefined);
+  assert.equal(parseEndfieldEvents(article, [], []).events.length, 0);
+  assert.equal(parseEndfieldEvents({ ...article, content: article.content.replace('겨울 사냥', '없는 픽업') }, [], characterCycles).events.length, 0);
+});
 
 test('스타레일 엔드콘텐츠 종류와 시즌 부제를 함께 표시하고 공백 정규화', () => {
   const types = ['ChallengeTypeBoss', 'ChallengeTypeChasm', 'ChallengeTypeStory', 'ChallengeTypePeak'];
@@ -96,7 +144,7 @@ test('상시 스테이지 개방과 함께 열리는 기간 한정 보상 이벤
   assert.equal(result.events[0]?.title, '「기억의 흔적 · 그림자 각인」 이벤트');
 });
 
-test('콜론 없는 이벤트 기간을 읽되 조건부 무기 픽업 종료는 추정하지 않음', () => {
+test('콜론 없는 이벤트 기간을 읽되 기준 캐릭터 일정이 없으면 조건부 무기 종료를 계산하지 않음', () => {
   const parsed = parseEndfieldEvents({ id: '7013', title: '「융합! 버블!」 웹 이벤트', content:
     '<p>▼//이벤트 기간</p><p>2026/10/01 12:00(서버 시간) ~ 버전 업데이트 전까지</p>' }, [boundary]);
   assert.equal(parsed.events[0]?.endAt, boundary.endAt);

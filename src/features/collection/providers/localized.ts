@@ -124,7 +124,31 @@ export const parseEndfieldBoundary = (article: WuwaArticle): VersionBoundary | n
     sourceUrl: `https://endfield.gryphline.com/ko-kr/news/${article.id}` } : null;
 };
 
-export const parseEndfieldEvents = (article: WuwaArticle, boundaries: VersionBoundary[]) => {
+const endfieldWeaponPeriod = (text: string, version: VersionBoundary | undefined, banners: CalendarEvent[]) => {
+  if (!/특별 허가 헤드헌팅/.test(text) || !/3회(?:의)?[\s\S]*종료/.test(text)) return null;
+  const anchorName = /「([^」]+)」\s*(?:부터 집계|기준으로)/.exec(text)?.[1];
+  const candidates = banners.filter((event) => event.game === 'endfield' && event.kind === 'banner'
+    && /특별 허가 헤드헌팅/.test(event.title) && !/신청/.test(event.title));
+  const namedAnchor = candidates.find((event) => anchorName && event.title.includes(`「${anchorName}」`));
+  const explicitStart = new RegExp(DATE).exec(text)?.[0];
+  const startAt = explicitStart ? parseLocalDate(explicitStart, 8)
+    : /버전 업데이트 후/.test(text) ? version?.startAt : namedAnchor?.startAt;
+  const anchor = anchorName ? namedAnchor : candidates.find((event) => event.startAt === startAt);
+  if (!startAt || !anchor || anchor.startAt !== startAt) return null;
+  // 업데이트 공지와 개별 공지의 동일 캐릭터 픽업을 한 회차로 집계
+  const cycles = [...new Map(candidates.filter((event) => event.startAt >= startAt)
+    .sort((a, b) => a.endAt.localeCompare(b.endAt)).map((event) => [event.startAt, event])).values()]
+    .sort((a, b) => a.startAt.localeCompare(b.startAt)).slice(0, 3);
+  const last = cycles.at(-1);
+  if (!last) return null;
+  const estimated = cycles.length < 3;
+  const endAt = estimated ? new Date(Date.parse(last.endAt)
+    + (3 - cycles.length) * (Date.parse(last.endAt) - Date.parse(last.startAt))).toISOString() : last.endAt;
+  return { startAt, endAt, estimated, sourceUrl: last.sourceUrl,
+    note: `캐릭터 픽업 3회 기준: ${cycles.map((event) => event.title).join(' → ')}${estimated ? ` · 미공개 ${3 - cycles.length}회는 마지막 확인 픽업 기간으로 추정` : ''}` };
+};
+
+export const parseEndfieldEvents = (article: WuwaArticle, boundaries: VersionBoundary[], banners: CalendarEvent[] = []) => {
   const lines = stripHtml(article.content).split('\n').map((line) => line.trim()).filter(Boolean);
   const events: CalendarEvent[] = [];
   const unresolvedPeriods: string[] = [];
@@ -145,6 +169,7 @@ export const parseEndfieldEvents = (article: WuwaArticle, boundaries: VersionBou
       && /Americas|Europe 서버|이벤트 설명|(?:이벤트|개방)\s*(?:기간|시간)(?:[:：]|\s*$)|^\d+\.\s*「/.test(candidate));
     const section = (nextSection >= 0 ? sectionLines.slice(0, nextSection) : sectionLines).join(' ');
     const clean = section.replace(/\(서버 시간\)/g, '');
+    const weaponPeriod = /신청/.test(heading) ? endfieldWeaponPeriod(clean, ownVersion, banners) : null;
     const ranges = [...clean.matchAll(new RegExp(`(${DATE})\\s*[-–~]\\s*(${DATE})`, 'g'))].map((range) => ({ start: range[1], end: range[2], isUtc: false, endIsUtc: false, endSource: '' }));
     const relativeStart = new RegExp(`버전 업데이트 후\\s*[-–~]\\s*(${DATE})`).exec(clean);
     if (relativeStart && ownVersion?.startAt) ranges.push({ start: ownVersion.startAt, end: relativeStart[1], isUtc: true, endIsUtc: false, endSource: '' });
@@ -163,8 +188,10 @@ export const parseEndfieldEvents = (article: WuwaArticle, boundaries: VersionBou
       ranges.push({ start: ownVersion.startAt, end: ownVersion.endAt, isUtc: true, endIsUtc: true,
         endSource: ownVersion.endSourceUrl ?? ownVersion.sourceUrl });
     }
+    if (!ranges.length && weaponPeriod) ranges.push({ start: weaponPeriod.startAt, end: weaponPeriod.endAt,
+      isUtc: true, endIsUtc: true, endSource: weaponPeriod.sourceUrl });
     if (!ranges.length) {
-      if (/개방 시간/.test(line) && new RegExp(DATE).test(clean) && !/[~–]/.test(clean)) continue;
+      if (/개방 시간/.test(line) && new RegExp(DATE).test(clean) && !/[~–]/.test(clean) && !/3회/.test(clean)) continue;
       skipped++;
       const reason = /상시|장기 개방/.test(section) ? '상시 개방으로 달력 종료일 없음'
         : /3회.*종료/.test(section) ? '헤드헌팅 3회 종료 조건으로 후속 픽업 일정 확인 필요'
@@ -180,13 +207,15 @@ export const parseEndfieldEvents = (article: WuwaArticle, boundaries: VersionBou
       const headings = combinedBanners.length > 1 ? combinedBanners : [heading];
       for (const [headingIndex, item] of headings.entries()) {
         const kind: EventKind = /헤드헌팅|신청/.test(item) ? 'banner' : 'event';
-        const title = /함께 개방/.test(item) ? `${/「[^」]+」/.exec(item)?.[0] ?? item} 이벤트`
+        const title = weaponPeriod ? `${/「[^」]+」/.exec(item)?.[0] ?? item} 무기고 신청`
+          : /함께 개방/.test(item) ? `${/「[^」]+」/.exec(item)?.[0] ?? item} 이벤트`
           : item.replace(/^(?:\d+\.\s*|▼\/\/\s*)/, '').replace(/\s*설명$/, '');
         events.push({ id: `endfield:${article.id}:${index}:${rangeIndex}${headings.length > 1 ? `:${headingIndex}` : ''}`, game: 'endfield', kind, title, startAt, endAt,
         sourceUrl: `https://endfield.gryphline.com/ko-kr/news/${article.id}`,
-        description: `${section}${range.endSource ? ` · 종료 경계 자료: ${range.endSource}` : ''}`, sourceLanguage: 'ko-kr',
+        description: `${section}${weaponPeriod ? ` · ${weaponPeriod.note}` : ''}${range.endSource ? ` · 종료 경계 자료: ${range.endSource}` : ''}`, sourceLanguage: 'ko-kr',
         ...(!/버전.*(?:업데이트|점검|개발자)/.test(article.title) && isImageUrl(article.imageUrl) ? { imageUrls: [article.imageUrl] } : {}),
-        ...(range.endSource.includes('starrailassistant.top') ? { periodBasis: 'community-data' } : {}) });
+        ...(weaponPeriod?.estimated ? { periodBasis: 'community-cycle' }
+          : range.endSource.includes('starrailassistant.top') ? { periodBasis: 'community-data' } : {}) });
       }
     }
   }

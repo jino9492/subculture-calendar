@@ -378,8 +378,15 @@ const fetchEndfield = async () => {
       boundary.endSourceUrl = version.versionEndSourceUrl ?? version.sourceUrl;
     }
   }
+  const characterBanners = articles.flatMap((article) => parseEndfieldEvents(article, boundaries).events)
+    .filter((event) => event.kind === 'banner' && /특별 허가 헤드헌팅/.test(event.title));
   const parsed = articles.map((article) => {
-    const result = parseEndfieldEvents(article, boundaries);
+    const result = parseEndfieldEvents(article, boundaries, characterBanners);
+    for (const event of result.events.filter((item) => item.periodBasis === 'community-cycle')) {
+      issues.push({ id: `endfield:weapon-cycle:${event.id}`, game: 'endfield', eventId: event.id, title: event.title,
+        reason: '캐릭터 픽업 3회 중 미공개 회차는 마지막 확인 픽업 기간으로 추정했습니다. 후속 공지 수집 시 종료일을 갱신합니다.',
+        sourceUrl: event.sourceUrl, excerpt: event.description });
+    }
     if (result.skipped) issues.push({ id: `endfield:period:${article.id}`, game: 'endfield', title: article.title,
       reason: `이 공지에서 ${result.skipped}개 기간을 달력에 표시하지 못했습니다. ${result.unresolvedPeriods.join(' · ')}`.slice(0, 3000),
       sourceUrl: new URL(article.id, base).href, excerpt: stripHtml(article.content).slice(0, 6000) });
