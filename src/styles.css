@@ -64,8 +64,7 @@
   .sidebar { @apply fixed inset-y-0 left-0 z-10 flex w-60 flex-col border-r border-line bg-canvas px-6 py-9; }
   .brand { @apply flex items-center gap-3 text-xs tracking-widest; }
   .brand b { @apply text-sm font-bold; }
-  .brand-symbol { @apply flex items-center text-4xl font-black text-accent tracking-tighter; }
-  .brand-symbol span { @apply -ml-1 text-3xl; }
+  .brand-symbol { @apply h-10 w-10 shrink-0; }
   .nav-current { @apply mt-10 flex items-center gap-3 rounded-lg bg-panel px-3 py-3 text-sm font-semibold text-accent; }
   .nav-dot { @apply ml-auto h-1.5 w-1.5 rounded-full bg-accent; }
   .sidebar-section { @apply mt-9; }

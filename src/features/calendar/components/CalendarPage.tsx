@@ -27,7 +27,7 @@ export const CalendarPage = () => {
 
   return <div className="app-shell">
     <aside className="sidebar">
-      <a href="/" className="brand"><span className="brand-symbol">S<span>◷</span></span><span>SUBCULTURE<br /><b>CALENDAR</b></span></a>
+      <a href="/" className="brand"><img src="/favicon.svg" className="brand-symbol" alt="" /><span>SUBCULTURE<br /><b>CALENDAR</b></span></a>
       <div className="nav-current"><span>▦</span> 일정 캘린더 <span className="nav-dot" /></div>
       <div className="sidebar-section"><p className="section-label">게임 선택 <span>{calendar.games.length} / {GAME_IDS.length}</span></p>
         {GAME_IDS.map((game) => <button type="button" key={game} aria-pressed={calendar.games.includes(game)} onClick={() => calendar.toggleGame(game)}
