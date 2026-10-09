@@ -1,0 +1,63 @@
+[
+  {
+    "id": "endfield:3839:3:0:1",
+    "game": "endfield",
+    "kind": "banner",
+    "title": "「점묘 신청」 재구축 신청#1",
+    "startAt": "2026-09-24T04:00:00Z",
+    "endAt": "2026-10-14T22:00:00Z",
+    "sourceUrl": "https://endfield.gryphline.com/ko-kr/news/3839",
+    "description": "▼//개방 시간 2026/09/24 12:00(서버 시간) ~ 버전 업데이트 점검 전 ※ Asia 서버 시간: UTC+8 · 종료 경계 자료: https://starrailassistant.top/api/v1/activity/end-en-US.json",
+    "sourceLanguage": "ko-kr",
+    "imageUrls": [
+      "https://web-static.hg-cdn.com/upload/image/20260922/26cf784538ec32443f78f03ac3f5418c.jpg"
+    ],
+    "periodBasis": "community-data",
+    "displayLanguage": "ko-kr"
+  },
+  {
+    "id": "endfield:3839:3:0:0",
+    "game": "endfield",
+    "kind": "banner",
+    "title": "「찬란한 색채」 재구축 헤드헌팅#1",
+    "startAt": "2026-09-24T04:00:00Z",
+    "endAt": "2026-10-14T22:00:00Z",
+    "sourceUrl": "https://endfield.gryphline.com/ko-kr/news/3839",
+    "description": "▼//개방 시간 2026/09/24 12:00(서버 시간) ~ 버전 업데이트 점검 전 ※ Asia 서버 시간: UTC+8 · 종료 경계 자료: https://starrailassistant.top/api/v1/activity/end-en-US.json",
+    "sourceLanguage": "ko-kr",
+    "imageUrls": [
+      "https://web-static.hg-cdn.com/upload/image/20260922/26cf784538ec32443f78f03ac3f5418c.jpg"
+    ],
+    "periodBasis": "community-data",
+    "displayLanguage": "ko-kr",
+    "collectionSources": [
+      {
+        "id": "endfield:3839:3:0:0",
+        "title": "「찬란한 색채」 재구축 헤드헌팅#1",
+        "startAt": "2026-09-24T04:00:00Z",
+        "endAt": "2026-10-14T22:00:00Z",
+        "sourceUrl": "https://endfield.gryphline.com/ko-kr/news/3839"
+      },
+      {
+        "id": "endfield:5208:44:0",
+        "title": "「찬란한 색채」 재구축 헤드헌팅#1",
+        "startAt": "2026-09-24T04:00:00Z",
+        "endAt": "2026-10-14T22:00:00Z",
+        "sourceUrl": "https://endfield.gryphline.com/ko-kr/news/5208"
+      }
+    ]
+  },
+  {
+    "id": "endfield:5208:48:0",
+    "game": "endfield",
+    "kind": "banner",
+    "title": "「점묘 신청」 재구축 신청#1 개방",
+    "startAt": "2026-09-24T04:00:00Z",
+    "endAt": "2026-10-14T22:00:00Z",
+    "sourceUrl": "https://endfield.gryphline.com/ko-kr/news/5208",
+    "description": "· 개방 기간: 2026/09/24 12:00(서버 시간) ~ 버전 업데이트 전까지 · 신청 설명: 「점묘 신청」 재구축 신청#1에서 6성 무기 [예술의 폭군(권총)] 획득 확률 증가. 「점묘 신청」 재구축 신청에서 획득 가능한 6성 무기 목록: 예술의 폭군(권총)/쐐기(권총)/부요(한손검)/백야의 별(한손검)/J.E.T.(장병기)/기사도 정신(아츠 유닛)/분쇄의 군주(양손검). ※ 「점묘 신청」은 신규 신청 유형인 「재구축 신청」에 해당하며, 다른 무기고 신청과는 다른 규칙이 적용됩니다. ※ 헤드헌팅 및 신청 관련 더 자세한 설명은 게임 내에서 확인해 주시기 바랍니다. ■ 신규 이벤트 1. 티프로스 스토리 이벤트 「안개에 잠긴 겨울꿈의 숲」 · 종료 경계 자료: https://starrailassistant.top/api/v1/activity/end-en-US.json",
+    "sourceLanguage": "ko-kr",
+    "periodBasis": "community-data",
+    "displayLanguage": "ko-kr"
+  }
+]

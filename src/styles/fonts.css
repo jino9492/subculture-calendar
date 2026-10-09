@@ -1,0 +1,25 @@
+/* 외부 웹폰트의 @import가 필요하면 이 위치에 추가 */
+
+/* 로컬 폰트 테스트 시 주석 해제 후 파일명과 실제 지원 굵기에 맞춰 수정 */
+/*
+@font-face {
+  font-family: "TestFont";
+  src: url("/fonts/test-font.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+@font-face {
+    font-family: 'YeogiOttaeJalnan';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight: normal;
+    font-display: swap;
+}
+
+@theme {
+  --tracking-site: 0.1em;
+  /* 앞쪽 폰트부터 적용, 미설치 폰트나 지원하지 않는 글자는 다음 폰트로 대체 */
+  --font-sans: 'YeogiOttaeJalnan', "Segoe UI", "Malgun Gothic", sans-serif;
+  /* 로컬 폰트 예시: --font-sans: "TestFont", "Malgun Gothic", sans-serif; */
+}

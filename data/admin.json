@@ -1,0 +1,1180 @@
+{
+  "reviews": {
+    "period:sra:genshin:event:A%20Rekviem%20for%20the%20Underworld:2026-09-23T03:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:52:59.886Z"
+    },
+    "genshin:events:missing:449": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:01.833Z"
+    },
+    "genshin:events:missing:448": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:03.428Z"
+    },
+    "genshin:events:missing:452": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:04.961Z"
+    },
+    "genshin:announcement:21986:period:4": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:06.302Z"
+    },
+    "genshin:announcement:21886:period:1": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:07.984Z"
+    },
+    "genshin:announcement:21902:format": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:11.927Z"
+    },
+    "genshin:announcement:21879:period:3": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:27.171Z"
+    },
+    "genshin:announcement:21879:period:22": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:28.871Z"
+    },
+    "genshin:announcement:20508:period:1": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:30.301Z"
+    },
+    "genshin:announcement:21812:period:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:31.961Z"
+    },
+    "translation:sra:starrail:event:Fate%20Contract%3A%20Renewal:2026-07-24T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:35.842Z"
+    },
+    "translation:sra:starrail:event:Apocalyptic%20Shadow%3A%20Celestial%20Lupine:2026-08-30T20:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:37.216Z"
+    },
+    "starrail:announcement:1415:period:1": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:41.816Z"
+    },
+    "starrail:announcement:211:format": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:47.164Z"
+    },
+    "zenless:challenges:missing:2": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:49.609Z"
+    },
+    "translation:sra:zenless:event:Ding-Dong!%20Delivery%20Training%20in%20Progress:2026-08-28T02:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:50.837Z"
+    },
+    "zenless:announcement:1297:period:78": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:53.893Z"
+    },
+    "zenless:announcement:1297:period:83": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:55.285Z"
+    },
+    "zenless:announcement:1297:period:88": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:53:56.410Z"
+    },
+    "zenless:announcement:1297:period:93": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:09.896Z"
+    },
+    "zenless:announcement:1297:period:97": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:11.567Z"
+    },
+    "zenless:announcement:1297:period:102": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:12.951Z"
+    },
+    "zenless:announcement:1297:period:107": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:14.295Z"
+    },
+    "zenless:announcement:1297:period:111": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:15.508Z"
+    },
+    "zenless:announcement:1297:period:115": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:16.826Z"
+    },
+    "zenless:announcement:1297:period:120": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:18.257Z"
+    },
+    "zenless:announcement:1300:format": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:21.779Z"
+    },
+    "zenless:announcement:1302:format": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:23.344Z"
+    },
+    "wuwa:kr:period:naver-8165286": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:25.477Z"
+    },
+    "wuwa:kr:period:naver-7989217": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:27.676Z"
+    },
+    "wuwa:kr:period:naver-7934687": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:29.688Z"
+    },
+    "endfield:period:5208": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:31.450Z"
+    },
+    "endfield:period:4480": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:34.678Z"
+    },
+    "endfield:period:4482": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:36.515Z"
+    },
+    "endfield:period:1329": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:38.037Z"
+    },
+    "endfield:period:9564": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:39.537Z"
+    },
+    "endfield:period:2655": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:41.128Z"
+    },
+    "endfield:period:5200": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:42.655Z"
+    },
+    "endfield:period:6174": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:44.021Z"
+    },
+    "translation:sra:endfield:event:%5BA%20Winter%20Dream%20Fogged%20Deep%20in%20the%20Woods%5D%20Narrative%20Event:2026-09-02T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:45.524Z"
+    },
+    "translation:sra:endfield:event:%5BSnow%20Over%20Deep%20Woods%5D%20Guide%20Event:2026-09-02T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:46.808Z"
+    },
+    "translation:sra:endfield:event:%5BTrial%20of%20the%20Bow%5D%20Challenge%20Event:2026-09-09T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:48.058Z"
+    },
+    "translation:sra:endfield:event:%5BAIC%20Support%3A%20Chubby%20Lung%20Attacks%5D%20AIC%20Production%20Event:2026-09-16T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:49.260Z"
+    },
+    "translation:sra:endfield:event:%5BSanity%20Supply%5D%20Limited-Time%20Event%20(Round%201):2026-09-16T20:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:50.701Z"
+    },
+    "translation:sra:endfield:event:%5BPurry%20Big%20Feline!%20RAWR!%5D%20Giveaway%20Event:2026-09-24T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:51.909Z"
+    },
+    "translation:sra:endfield:event:%5BEchoing%20Bell%20of%20an%20Old%20City%5D%20Guide%20Event:2026-09-24T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:53.251Z"
+    },
+    "translation:sra:endfield:event:%5BSeason%20of%20Illusion%5D%20(Echoes%20of%20War):2026-09-24T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:54.409Z"
+    },
+    "translation:sra:endfield:event:%5BRidgeline%20Flows%20of%20Autumn%5D%20Limited-Time%20Sign-In:2026-10-01T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:55.587Z"
+    },
+    "translation:sra:endfield:event:%5BRunners'%20Steeplechase%5D%20Fun%20%26%20Games%20Event:2026-10-01T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:56.704Z"
+    },
+    "translation:sra:endfield:event:%5BSanity%20Supply%5D%20Limited-Time%20Event%20(Round%202):2026-10-07T20:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:58.234Z"
+    },
+    "translation:sra:endfield:event:%5BMonumental%20Etching%3A%20Shadow%20Marked%5D%20Limited-Time%20Challenge:2026-10-05T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:54:59.308Z"
+    },
+    "period:sra:genshin:event:To%20Temper%20Thyself%20and%20Journey%20Far:2026-08-09T20:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:00.375Z"
+    },
+    "period:sra:genshin:event:Raiment%20Collection%3A%20Warmth%20of%20a%20Sunny%20Day:2026-09-23T03:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:01.336Z"
+    },
+    "period:sra:genshin:event:The%20Godforsaken%20Frostlands:2026-08-11T22:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:02.759Z"
+    },
+    "period:sra:genshin:event:Rainbow's%20End%3A%20Resplendent%20Starlight:2026-09-27T16:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:03.692Z"
+    },
+    "period:genshin:version:7.1": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:05.903Z"
+    },
+    "period:sra:starrail:event:Astral%20Slammers%20Squad!:2026-09-28T03:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:07.422Z"
+    },
+    "period:sra:starrail:event:Astral%20Imagea%20Park%3A%20Park%20Souvenir:2026-09-28T03:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:08.686Z"
+    },
+    "period:sra:starrail:event:Astral%20Imagea%20Park%3A%20Astral%20Trendible:2026-09-28T03:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:09.756Z"
+    },
+    "period:sra:starrail:event:Apocalyptic%20Shadow%3A%20Celestial%20Lupine:2026-08-30T20:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:11.042Z"
+    },
+    "period:sra:starrail:event:Fate%20Contract%3A%20Renewal:2026-07-24T04:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:12.440Z"
+    },
+    "period:starrail:version:4.6": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:15.097Z"
+    },
+    "period:sra:zenless:event:All-New%20Program:2026-09-09T03:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:16.696Z"
+    },
+    "period:sra:zenless:event:Shadow%20Chase%20Showdown:2026-09-16T02:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:18.049Z"
+    },
+    "period:sra:zenless:event:Angels%20Support%20Operation:2026-09-09T03:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:19.499Z"
+    },
+    "period:sra:zenless:event:Advanced%20Bounty%3A%20Area%20Patrol:2026-09-22T20:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:20.839Z"
+    },
+    "period:sra:zenless:event:%22En-Nah%22%20Into%20Your%20Lap:2026-09-30T02:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:21.892Z"
+    },
+    "period:sra:zenless:event:Potential%20Hypothesis%3A%20Reforged%20in%20Fire:2026-09-09T03:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:22.965Z"
+    },
+    "period:sra:zenless:event:Data%20Bounty%3A%20Combat%20Simulation:2026-10-13T20:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:24.207Z"
+    },
+    "period:sra:zenless:event:Ding-Dong!%20Delivery%20Training%20in%20Progress:2026-08-28T02:00:00.000Z": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:25.667Z"
+    },
+    "period:zenless:version:3.2": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:26.816Z"
+    },
+    "period:wuwa:challenge:tower:2026-10-11T20:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:27.988Z"
+    },
+    "period:wuwa:wiki:event:108400004": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:29.975Z"
+    },
+    "period:wuwa:wiki:event:111600001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:31.628Z"
+    },
+    "period:wuwa:version:3.4": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:32.933Z"
+    },
+    "period:wuwa:version:3.5": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:34.367Z"
+    },
+    "period:wuwa:version:3.6": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:35.715Z"
+    },
+    "period:wuwa:version:3.7": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:37.060Z"
+    },
+    "period:wuwa:wiki:event:100100023": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:38.489Z"
+    },
+    "period:wuwa:wiki:event:100100024": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:39.735Z"
+    },
+    "period:wuwa:wiki:event:100100025": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:41.152Z"
+    },
+    "period:wuwa:wiki:event:100700039": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:42.474Z"
+    },
+    "period:wuwa:wiki:event:100700041": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:43.572Z"
+    },
+    "period:wuwa:wiki:event:100700043": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:44.884Z"
+    },
+    "period:wuwa:wiki:event:101200010": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:46.652Z"
+    },
+    "period:wuwa:challenge:matrix:2026-11-11T20:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:48.070Z"
+    },
+    "period:wuwa:wiki:event:100700038": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:49.400Z"
+    },
+    "period:wuwa:wiki:event:100700040": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:50.479Z"
+    },
+    "period:wuwa:wiki:event:100700042": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:51.679Z"
+    },
+    "period:wuwa:wiki:event:100700044": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:52.769Z"
+    },
+    "period:wuwa:wiki:event:102000009": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:54.134Z"
+    },
+    "period:wuwa:wiki:event:109900001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:55.176Z"
+    },
+    "period:wuwa:wiki:event:100100021": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:56.381Z"
+    },
+    "period:wuwa:wiki:event:103300004": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:57.415Z"
+    },
+    "period:wuwa:wiki:event:110400001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:55:58.956Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1783281600000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:00.051Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1783886400000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:01.349Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1784491200000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:02.489Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1785096000000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:03.600Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1785700800000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:04.873Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1786305600000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:05.965Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1786910400000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:06.873Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1787515200000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:07.865Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1788120000000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:08.855Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1788724800000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:09.771Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1789329600000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:10.749Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1789934400000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:11.798Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1790539200000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:12.823Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1791144000000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:13.949Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1791748800000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:16.539Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1792353600000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:18.048Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1792958400000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:19.295Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1793563200000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:56:20.387Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1794772800000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:03.220Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1794168000000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:06.402Z"
+    },
+    "period:wuwa:wiki:challenge:103600001:1794772800000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:07.690Z"
+    },
+    "period:wuwa:wiki:event:100600006": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:08.784Z"
+    },
+    "period:wuwa:wiki:event:110000001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:10.365Z"
+    },
+    "period:wuwa:wiki:event:101500009": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:11.490Z"
+    },
+    "period:wuwa:wiki:event:110300001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:12.465Z"
+    },
+    "period:wuwa:wiki:event:101300025": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:13.309Z"
+    },
+    "period:wuwa:wiki:event:109500001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:14.129Z"
+    },
+    "period:wuwa:wiki:event:111300001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:14.944Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1783281600000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:15.744Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1783886400000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:16.654Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1784491200000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:17.579Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1785096000000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:18.408Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1785700800000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:19.261Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1786910400000": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:20.113Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1786305600000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:21.769Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1787515200000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:22.870Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1788120000000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:24.125Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1788724800000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:25.120Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1789329600000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:26.625Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1789934400000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:27.792Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1790539200000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:28.857Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1791144000000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:30.468Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1791748800000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:31.452Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1792353600000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:32.431Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1793563200000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:33.542Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1792958400000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:53.345Z"
+    },
+    "period:wuwa:wiki:challenge:105500002:1794168000000": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:54.440Z"
+    },
+    "period:wuwa:wiki:event:102700007": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:55.437Z"
+    },
+    "period:wuwa:wiki:event:111400001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:56.380Z"
+    },
+    "period:wuwa:challenge:ruins:2026-10-25T20:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:57.230Z"
+    },
+    "period:wuwa:wiki:event:101900004": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:58.249Z"
+    },
+    "period:wuwa:wiki:event:111200001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:57:59.251Z"
+    },
+    "period:wuwa:wiki:banner:10000102": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:00.162Z"
+    },
+    "period:wuwa:wiki:banner:10000202": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:01.073Z"
+    },
+    "period:wuwa:wiki:banner:10000302": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:01.955Z"
+    },
+    "period:wuwa:wiki:banner:10000502": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:02.971Z"
+    },
+    "period:wuwa:wiki:banner:10000402": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:03.916Z"
+    },
+    "period:wuwa:wiki:banner:100068": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:05.005Z"
+    },
+    "period:wuwa:wiki:banner:100074": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:05.951Z"
+    },
+    "period:wuwa:wiki:banner:100076": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:07.053Z"
+    },
+    "period:wuwa:wiki:banner:100079": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:08.364Z"
+    },
+    "period:wuwa:wiki:banner:100081": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:09.278Z"
+    },
+    "period:wuwa:wiki:banner:100085": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:10.205Z"
+    },
+    "period:wuwa:wiki:banner:100086": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:11.432Z"
+    },
+    "period:wuwa:wiki:banner:100087": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:12.432Z"
+    },
+    "period:wuwa:wiki:banner:100088": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:13.887Z"
+    },
+    "period:wuwa:wiki:event:110500002": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:15.499Z"
+    },
+    "period:wuwa:wiki:banner:100069": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:16.842Z"
+    },
+    "period:wuwa:wiki:banner:100070": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:17.786Z"
+    },
+    "period:wuwa:wiki:banner:100080": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:19.070Z"
+    },
+    "period:wuwa:wiki:banner:100083": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:20.051Z"
+    },
+    "period:wuwa:wiki:banner:100082": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:21.267Z"
+    },
+    "period:wuwa:wiki:banner:100089": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:22.547Z"
+    },
+    "period:wuwa:wiki:event:106400002": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:23.825Z"
+    },
+    "period:wuwa:wiki:banner:100075": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:25.038Z"
+    },
+    "period:wuwa:wiki:banner:20000502": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:26.140Z"
+    },
+    "period:wuwa:wiki:banner:20000302": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:27.127Z"
+    },
+    "period:wuwa:wiki:banner:200079": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:28.477Z"
+    },
+    "period:wuwa:wiki:banner:200082": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:29.555Z"
+    },
+    "period:wuwa:wiki:banner:100071": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:30.591Z"
+    },
+    "period:wuwa:wiki:banner:20000602": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:31.633Z"
+    },
+    "period:wuwa:wiki:banner:20000102": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:32.624Z"
+    },
+    "period:wuwa:wiki:banner:200069": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:33.611Z"
+    },
+    "period:wuwa:wiki:banner:200073": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:34.609Z"
+    },
+    "period:wuwa:wiki:banner:200075": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:35.615Z"
+    },
+    "period:wuwa:wiki:banner:200081": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:36.661Z"
+    },
+    "period:wuwa:wiki:banner:20000202": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:38.127Z"
+    },
+    "period:wuwa:wiki:banner:200087": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:39.301Z"
+    },
+    "period:wuwa:wiki:banner:200070": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:40.701Z"
+    },
+    "period:wuwa:wiki:banner:200080": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:41.881Z"
+    },
+    "period:wuwa:wiki:banner:100072": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:43.130Z"
+    },
+    "period:wuwa:wiki:banner:200089": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:44.078Z"
+    },
+    "period:wuwa:wiki:banner:100084": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:45.164Z"
+    },
+    "period:wuwa:wiki:banner:20000402": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:46.151Z"
+    },
+    "period:wuwa:wiki:banner:200068": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:47.134Z"
+    },
+    "period:wuwa:wiki:banner:200084": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:48.349Z"
+    },
+    "period:wuwa:wiki:banner:200085": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:49.242Z"
+    },
+    "period:wuwa:wiki:banner:100073": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:50.349Z"
+    },
+    "period:wuwa:wiki:banner:200072": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:51.289Z"
+    },
+    "period:wuwa:wiki:banner:200074": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:52.203Z"
+    },
+    "period:wuwa:wiki:banner:200071": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:53.076Z"
+    },
+    "period:wuwa:wiki:banner:200086": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:54.204Z"
+    },
+    "period:wuwa:wiki:banner:200088": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:55.340Z"
+    },
+    "period:wuwa:wiki:banner:200076": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:56.264Z"
+    },
+    "period:wuwa:wiki:banner:200083": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:57.329Z"
+    },
+    "period:wuwa:wiki:event:105900002": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:58.370Z"
+    },
+    "period:sra:endfield:event:%5BA%20Winter%20Dream%20Fogged%20Deep%20in%20the%20Woods%5D%20Narrative%20Event:2026-09-02T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:58:59.580Z"
+    },
+    "period:sra:endfield:event:%5BAIC%20Support%3A%20Chubby%20Lung%20Attacks%5D%20AIC%20Production%20Event:2026-09-16T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:00.586Z"
+    },
+    "period:sra:endfield:event:%5BEchoing%20Bell%20of%20an%20Old%20City%5D%20Guide%20Event:2026-09-24T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:01.961Z"
+    },
+    "period:sra:endfield:event:%5BMonumental%20Etching%3A%20Shadow%20Marked%5D%20Limited-Time%20Challenge:2026-10-05T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:02.944Z"
+    },
+    "period:sra:endfield:event:%5BPurry%20Big%20Feline!%20RAWR!%5D%20Giveaway%20Event:2026-09-24T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:04.164Z"
+    },
+    "period:sra:endfield:event:%5BRidgeline%20Flows%20of%20Autumn%5D%20Limited-Time%20Sign-In:2026-10-01T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:05.220Z"
+    },
+    "period:sra:endfield:event:%5BRunners'%20Steeplechase%5D%20Fun%20%26%20Games%20Event:2026-10-01T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:06.233Z"
+    },
+    "period:sra:endfield:event:%5BSanity%20Supply%5D%20Limited-Time%20Event%20(Round%201):2026-09-16T20:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:07.174Z"
+    },
+    "period:sra:endfield:event:%5BSanity%20Supply%5D%20Limited-Time%20Event%20(Round%202):2026-10-07T20:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:08.295Z"
+    },
+    "period:sra:endfield:event:%5BSeason%20of%20Illusion%5D%20(Echoes%20of%20War):2026-09-24T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:09.234Z"
+    },
+    "period:sra:endfield:event:%5BSnow%20Over%20Deep%20Woods%5D%20Guide%20Event:2026-09-02T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:10.341Z"
+    },
+    "period:sra:endfield:event:%5BTrial%20of%20the%20Bow%5D%20Challenge%20Event:2026-09-09T04:00:00.000Z": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:11.280Z"
+    },
+    "period:endfield:5208:61:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:12.242Z"
+    },
+    "period:endfield:5208:87:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:13.224Z"
+    },
+    "period:endfield:3839:3:0:1": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:14.250Z"
+    },
+    "period:endfield:5208:90:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:15.268Z"
+    },
+    "period:endfield:5208:81:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:16.402Z"
+    },
+    "period:endfield:version:눈꽃 속에 피어난 고요한 꿈": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:17.471Z"
+    },
+    "period:endfield:3839:3:0:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:18.647Z"
+    },
+    "period:endfield:5208:48:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:19.657Z"
+    },
+    "period:endfield:5208:78:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:20.841Z"
+    },
+    "period:endfield:5208:84:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:21.906Z"
+    },
+    "period:endfield:5208:54:0": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:22.951Z"
+    },
+    "source:genshin:partial": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:24.157Z"
+    },
+    "source:starrail:partial": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:25.493Z"
+    },
+    "source:zenless:partial": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:26.783Z"
+    },
+    "source:wuwa:partial": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:27.853Z"
+    },
+    "source:endfield:partial": {
+      "status": "ignored",
+      "note": "",
+      "updatedAt": "2026-10-09T08:59:31.412Z"
+    },
+    "reconciliation:period:wuwa:kr:5358:61:wuwa:wiki:event:111200001": {
+      "status": "resolved",
+      "note": "",
+      "updatedAt": "2026-10-09T11:25:46.152Z"
+    }
+  },
+  "overrides": {
+    "wuwa:wiki:event:111200001": {
+      "event": {
+        "id": "wuwa:wiki:event:111200001",
+        "game": "wuwa",
+        "kind": "event",
+        "title": "군성 공진 시뮬레이션 영역",
+        "startAt": "2026-08-22T03:00:00.000Z",
+        "endAt": "2026-09-28T20:00:00.000Z",
+        "sourceUrl": "https://wuwa.wiki/api/events/timeline/getversiondetail?ver=3.7.12&lang=ko&id=3.6",
+        "description": "공개 구조화 API의 Asia 명시 기간 기준.",
+        "sourceLanguage": "ko-kr",
+        "displayLanguage": "ko-kr",
+        "localizationKey": "wuwa:wiki:event:111200001",
+        "imageUrls": [
+          "https://static-cloudflare-f8p1t7z8.wutheringwaves.wiki/transform/kuro/gameclient/Content/Aki/UI/UIResources/UiActivity/Image/Activity36/Activity36Rogue/Com/T_ActivityTab_Rouge36.avif"
+        ]
+      },
+      "hidden": false
+    }
+  }
+}
