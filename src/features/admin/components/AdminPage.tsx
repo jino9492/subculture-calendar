@@ -19,6 +19,16 @@ export const AdminPage = () => {
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState('');
   const [editor, setEditor] = useState<EditorSelection | null>(null);
+  if (!admin.data) return <main className="admin-shell">
+    <a href="/" className="admin-back">← 일정 캘린더</a>
+    {admin.accessDenied ? <>
+      <h1>접근이 제한되었습니다</h1>
+      <p className="notice error-notice" role="alert">{admin.error}</p>
+    </> : admin.error ? <>
+      <p className="notice error-notice" role="alert">관리자 접근을 확인하지 못했습니다. 서버 연결을 확인한 뒤 다시 시도해 주세요.</p>
+      <button className="small-button" type="button" disabled={admin.isBusy} onClick={() => void admin.request()}>다시 시도</button>
+    </> : <p className="notice" role="status">관리자 접근을 확인하는 중…</p>}
+  </main>;
   const state = admin.data?.management;
   const issues = admin.data?.issues ?? [];
   const pendingCount = issues.filter((issue) => !state?.reviews[issue.id]).length;
@@ -39,7 +49,6 @@ export const AdminPage = () => {
     <p className="admin-help">로컬 관리자 페이지 · 보정·처리 기록은 서버에 저장됩니다. 수집 범위 제한은 자동으로 해소되지 않습니다.</p>
     {admin.error && <p className="notice error-notice" role="alert">{admin.error}</p>}
     {admin.message && <p className="notice" role="status">{admin.message}</p>}
-    {admin.isBusy && !admin.data && <p className="notice" role="status">수집 결과를 불러오는 중</p>}
     <section className="admin-sources" aria-label="게임별 수집 상태">{admin.data?.sources.map((source) => <button type="button" key={source.game} onClick={() => setGame(game === source.game ? 'all' : source.game)}
       className={cn('admin-source-card', game === source.game && 'admin-selected')} aria-pressed={game === source.game}>
       <span>{GAMES[source.game].name}</span><strong className={cn('source-state', source.state === 'ok' ? 'source-ok' : source.state === 'partial' ? 'source-partial' : 'source-error')}>

@@ -67,6 +67,11 @@ test('Pages CORS·관리자 preflight·HTTPS 출처·프록시 IP 제한을 실�
     assert.equal((await send('/api/admin', 'POST', httpsHeaders)).status, 403);
     access.trustedProxyIps = parseAdminAllowedIps('127.0.0.1');
     access.adminAllowedIps = parseAdminAllowedIps('192.168.0.2,127.0.0.1');
+    const deniedAdmin = await send('/api/admin', 'GET', { origin: pages, 'x-forwarded-for': '192.168.0.3' });
+    assert.equal(deniedAdmin.status, 403);
+    assert.equal(deniedAdmin.headers['access-control-allow-origin'], pages);
+    assert.equal(deniedAdmin.headers.vary, 'Origin');
+    assert.equal(deniedAdmin.headers['cache-control'], 'no-store');
     assert.equal((await send('/api/admin', 'POST', httpsHeaders)).status, 200);
     assert.equal((await send('/api/admin', 'POST', { ...httpsHeaders, 'x-forwarded-proto': 'https,http' })).status, 403);
     assert.equal((await send('/api/admin', 'POST', { ...httpsHeaders, 'x-forwarded-for': '192.168.0.3' })).status, 403);

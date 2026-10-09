@@ -44,6 +44,14 @@ export const checkRequestAccess = (request: IncomingMessage, response: ServerRes
     response.end(JSON.stringify({ message }));
     return false;
   };
+  const origin = request.headers.origin;
+  if (pathname.startsWith('/api/')) {
+    response.setHeader('Vary', 'Origin');
+    if (origin) {
+      if (!isAllowedOrigin(request, access)) return deny(403, '허용된 사이트에서 요청해 주세요.');
+      response.setHeader('Access-Control-Allow-Origin', origin);
+    }
+  }
   const admin = isAdminPath(pathname);
   if (admin) {
     response.setHeader('Cache-Control', 'no-store');
@@ -53,12 +61,6 @@ export const checkRequestAccess = (request: IncomingMessage, response: ServerRes
     }
   }
   if (!pathname.startsWith('/api/')) return true;
-  response.setHeader('Vary', 'Origin');
-  const origin = request.headers.origin;
-  if (origin) {
-    if (!isAllowedOrigin(request, access)) return deny(403, '허용된 사이트에서 요청해 주세요.');
-    response.setHeader('Access-Control-Allow-Origin', origin);
-  }
   if (request.method === 'OPTIONS') {
     if (!origin) return deny(403, '허용된 사이트에서 요청해 주세요.');
     const methods = apiMethods(pathname);

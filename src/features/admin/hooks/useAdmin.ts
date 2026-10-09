@@ -6,6 +6,7 @@ export const useAdmin = () => {
   const [data, setData] = useState<AdminResponse | null>(null);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState('');
+  const [accessDenied, setAccessDenied] = useState(false);
   const [message, setMessage] = useState('');
   const busy = useRef(false);
   const request = useCallback(async (action?: AdminAction | 'refresh') => {
@@ -16,10 +17,17 @@ export const useAdmin = () => {
       const response = await fetch(apiUrl(action === 'refresh' ? '/api/admin/refresh' : '/api/admin'), action ? {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(action === 'refresh' ? {} : action),
       } : undefined);
+      if (response.status === 403) {
+        setData(null);
+        setAccessDenied(true);
+        setError('관리자 페이지는 허용된 IP에서만 접근할 수 있습니다.');
+        return false;
+      }
       if (!response.ok) throw new Error('Admin request failed');
       const result: unknown = await response.json();
       if (!isAdminResponse(result)) throw new Error('Invalid admin response');
       setData(result);
+      setAccessDenied(false);
       if (action) setMessage(action === 'refresh' ? '재수집 완료. 게임별 수집 상태를 확인하세요.' : '저장했습니다. 캘린더에 반영됩니다.');
       return true;
     } catch {
@@ -28,5 +36,5 @@ export const useAdmin = () => {
     } finally { busy.current = false; setIsBusy(false); }
   }, []);
   useEffect(() => { void request(); }, [request]);
-  return { data, isBusy, error, message, request };
+  return { data, isBusy, error, message, accessDenied, request };
 };
