@@ -26,6 +26,7 @@
   --ending-soon-color: #8a6500;
   --ending-urgent-color: #c32e3b;
   --ending-expired-color: #64748b;
+  --ending-completed-color: #176b43;
   --game-genshin-color: #12627a;
   --game-starrail-color: #65429a;
   --game-zenless-color: #855800;
@@ -57,6 +58,7 @@
   --ending-soon-color: #fde047;
   --ending-urgent-color: #f87171;
   --ending-expired-color: #9ca3af;
+  --ending-completed-color: #b8efcf;
   --game-genshin-color: #a5f3fc;
   --game-starrail-color: #ddd6fe;
   --game-zenless-color: #fde68a;
@@ -142,7 +144,7 @@
   .ending-soon { --ending-color: var(--ending-soon-color); }
   .ending-urgent { --ending-color: var(--ending-urgent-color); }
   .ending-expired { --ending-color: var(--ending-expired-color); }
-  .ending-completed { --ending-color: var(--color-accent); }
+  .ending-completed { --ending-color: var(--ending-completed-color); }
   .ending-count.ending-expired { color: var(--color-muted); border-color: var(--color-line); background-color: var(--color-surface); }
   .ending-count.ending-expired:hover { background-color: var(--color-hover); }
   .ending-count-active { anchor-name: --ending-trigger; }
