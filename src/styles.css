@@ -139,6 +139,7 @@
     border-color: color-mix(in srgb, var(--ending-color) 45%, transparent);
   }
   .ending-preview-heading { @apply mb-3 flex items-center justify-between gap-3; }
+  .ending-preview-heading .icon-button { @apply shrink-0; }
   .ending-preview.ending-expired { border-color: var(--color-line); background-color: var(--color-panel); }
   .ending-preview-heading h3 { @apply text-sm font-semibold; color: var(--ending-color); }
   .ending-remaining { @apply shrink-0 text-xs font-semibold; color: var(--ending-color); }
@@ -291,29 +292,73 @@
   .main-content { @apply ml-52 px-5; }
 }
 @media (max-width: 760px) {
+  .timeline-calendar { --timeline-label-width: 96px; --timeline-day-width: 104px; }
   .sidebar { @apply static w-full border-b border-r-0 px-5 py-5; }
   .brand { @apply text-xs; }
   .nav-current, .sidebar-note { @apply hidden; }
   .sidebar-section { @apply mt-5; }
   .section-label { @apply mb-2; }
-  .game-filter { @apply inline-flex w-auto gap-2 px-2 py-2 text-xs; }
+  .game-filter { @apply inline-flex min-h-11 w-auto gap-2 px-2 py-2 text-sm; }
   .game-filter .game-badge { @apply h-6 w-6 text-xs; }
   .check-indicator { @apply ml-1; }
-  .main-content { @apply ml-0 px-4 py-7; }
+  .main-content { @apply ml-0 flex min-w-0 flex-col px-3 py-5; }
+  .page-header { @apply mb-5; }
   .page-header h1 { @apply text-2xl; }
   .timezone-badge { @apply hidden; }
-  .summary-grid { @apply gap-2; }
+  .summary-grid { @apply order-2 gap-2; }
   .summary-card { @apply px-3 py-4; }
   .summary-icon { @apply hidden; }
   .calendar-toolbar, .type-toolbar { @apply px-4; }
+  .calendar-toolbar { @apply gap-3 py-4; }
+  .range-navigation { @apply w-full justify-between gap-2; }
+  .range-navigation h2 { @apply text-sm; }
+  .calendar-panel .small-button { @apply min-h-11 text-sm; }
   .toolbar-actions { @apply w-full justify-between; }
+  .search-box { @apply min-h-11 min-w-0 flex-1; }
+  .search-box input { @apply min-w-0 w-full text-base; }
+  .type-filters { @apply gap-1; }
+  .type-filter { @apply min-h-11 px-2 text-sm; }
   .timeline-controls { @apply px-4; }
+  .timeline-controls .icon-button { @apply h-11 w-11; }
   .timeline-controls > div > span { @apply hidden; }
+  .timeline-scroll { max-height: min(640px, 70svh); }
+  .timeline-label { @apply flex-col items-start justify-center gap-1 px-3 text-sm; }
+  .timeline-label > span { @apply text-xs; }
+  .timeline-game-heading { @apply h-auto min-h-14 gap-1.5 px-2 py-2; }
+  .timeline-game-heading h3 { @apply text-sm leading-5; overflow-wrap: anywhere; }
+  .timeline-game-heading .game-badge { @apply h-5 w-5; }
+  .timeline-date { @apply h-22 text-sm; }
+  .timeline-date .day-number { @apply h-8 w-8 text-xl; }
+  .timeline-ending-cell { @apply h-12; }
+  .ending-count { @apply min-h-11 px-2 text-sm; }
+  .ending-preview { position-anchor: auto; top: auto; bottom: 12px; left: 12px; max-height: calc(100svh - 24px); overflow-y: auto; }
+  .ending-preview-heading { @apply flex-wrap gap-2; }
+  .ending-preview-heading h3 { @apply min-w-0 flex-1 leading-6; }
+  .ending-preview-heading .icon-button { @apply h-11 w-11; }
+  .ending-preview-list { max-height: 50svh; }
+  .timeline-lane { @apply h-20; }
+  .timeline-bar { @apply h-18 gap-1 px-2; }
+  .timeline-short-bar { padding-inline: 0; }
+  .timeline-bar-content { @apply gap-0; left: calc(var(--timeline-label-width) + 8px); max-width: min(calc(100% - 3.25rem), 24rem, calc(100vw - var(--timeline-label-width) - 5rem)); }
+  .timeline-bar-content > .game-badge, .timeline-event-image { @apply hidden; }
+  .timeline-bar-meta { @apply gap-1; }
+  .timeline-bar-meta > span:last-child { @apply hidden; }
+  .timeline-bar-title { @apply whitespace-normal text-base leading-5 text-foreground; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  .timeline-bar > .event-detail-button { @apply right-1; }
+  .event-detail-button { @apply h-11 w-11 text-xl; }
   .type-toolbar > span { @apply hidden; }
   .calendar-legend { @apply gap-3 px-4; }
   .legend-help { @apply ml-0 w-full; }
-  .day-event { @apply flex-wrap; }
-  .day-event-end { @apply ml-11 w-full; }
-  .page-footer { @apply flex-col gap-2; }
+  .day-panel { @apply order-1 mt-4; }
+  .panel-heading { @apply px-4 py-4; }
+  .panel-heading h2 { @apply text-base; }
+  .day-event { @apply items-start gap-2 px-4; }
+  .day-event-toggle { @apply flex-wrap; }
+  .day-event-content { @apply flex-1; }
+  .day-event-content strong { @apply text-base leading-6; overflow-wrap: anywhere; }
+  .day-event-meta { @apply leading-5; }
+  .day-event-end { @apply ml-11 w-full text-sm; }
+  .planner-panel { @apply order-3; }
+  .page-footer { @apply order-4 flex-col gap-2; }
   .event-dialog { @apply max-w-11/12 p-5; }
 }

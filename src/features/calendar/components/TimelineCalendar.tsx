@@ -115,6 +115,7 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
                 aria-label={`${dayDate(day).getUTCMonth() + 1}월 ${dayDate(day).getUTCDate()}일 종료 일정 ${ending.length}개`}
                 aria-expanded={endingPreviewDay === day && Boolean(previewEvents?.length)}
                 aria-controls={endingPreviewDay === day && previewEvents?.length ? 'ending-preview' : undefined}
+                onClick={() => { handleKeepPreview(); setEndingPreviewDay(day); }}
                 onMouseEnter={() => { handleKeepPreview(); setEndingPreviewDay(day); }}
                 onMouseLeave={(event) => {
                   const target = event.relatedTarget;
@@ -172,7 +173,8 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
         if (!(target instanceof Element && target.closest('.ending-count-active'))) handleClosePreview();
       }}>
       <div className="ending-preview-heading"><h3>{dayDate(endingPreviewDay).getUTCMonth() + 1}월 {dayDate(endingPreviewDay).getUTCDate()}일 종료 · {previewEvents.length}개 · 완료 {previewEvents.filter(isCompleted).length}/{previewEvents.filter(canComplete).length}</h3>
-        <span className="ending-remaining" title="아직 종료되지 않은 일정 중 가장 빠른 종료 기준">{previewCountdown?.label}</span></div>
+        <span className="ending-remaining" title="아직 종료되지 않은 일정 중 가장 빠른 종료 기준">{previewCountdown?.label}</span>
+        <button type="button" className="icon-button" aria-label="종료 일정 목록 닫기" onClick={handleClosePreview}>×</button></div>
       <div className="ending-preview-list">{previewEvents.map((event) => <div className={cn('ending-preview-event', isCompleted(event) && 'task-completed', isCompleted(event) && Date.parse(event.endAt) > now ? 'ending-completed' : `ending-${endingCountdown(event.endAt, now).tone}`)} key={event.id}>
         <button type="button" className="ending-preview-toggle" aria-pressed={canComplete(event) ? isCompleted(event) : undefined}
           onClick={() => { if (canComplete(event)) onToggleCompletion(event); else { handleClosePreview(); onSelectEvent(event); } }}>
