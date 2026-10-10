@@ -1,4 +1,4 @@
-import { isRecord, type CalendarEvent } from '../../../shared/calendar';
+import { isRecord, type CalendarEvent } from '../../../../../shared/calendar';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 const CONTENTS = [
@@ -53,13 +53,13 @@ export const updateWuwaChallengeEnds = (data: unknown, history: unknown, now: nu
 };
 
 export const collectWuwaChallengeCycles = async (data: unknown, sourceUrl: string) => {
-  const path = new URL('../../../.cache/wuwa-cycle-boundaries.json', import.meta.url);
+  const path = new URL('../../../../../.cache/wuwa-cycle-boundaries.json', import.meta.url);
   let history: unknown;
   try { history = JSON.parse(await readFile(path, 'utf8')); }
   catch (error) { if (!isRecord(error) || error.code !== 'ENOENT') console.error('[wuwa] cycle history unavailable'); }
   const updated = updateWuwaChallengeEnds(data, history, Date.now());
   const result = buildWuwaChallengeCycles(updated.current, sourceUrl);
-  await mkdir(new URL('../../../.cache/', import.meta.url), { recursive: true });
+  await mkdir(new URL('../../../../../.cache/', import.meta.url), { recursive: true });
   await writeFile(path, JSON.stringify(updated.history));
   return result;
 };

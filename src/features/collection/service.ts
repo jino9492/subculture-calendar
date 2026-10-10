@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import type { CollectionRun, RunContext } from '../../../shared/collection-runs';
 import { GAME_IDS, isCalendarEvent, isRecord, type CalendarEvent, type CollectedCalendar, type GameId, type SourceStatus } from '../../../shared/calendar';
-import { fetchGame } from './providers';
+import { fetchGame } from './fetch-game';
 import { isCollectionIssue, type CollectionIssue } from '../../../shared/admin';
 import { restoreKnownScheduleNames } from './names';
 import { reconcileSchedules, resolveScheduleId } from './reconciliation';

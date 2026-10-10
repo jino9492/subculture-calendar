@@ -1,7 +1,7 @@
 import { isRecord } from '../../../../shared/calendar';
-import type { WuwaArticle } from './parsers';
+import type { CollectionArticle } from '../parsers';
 
-export const parseWuwaNaverFeed = (value: unknown): WuwaArticle | null => {
+export const parseWuwaNaverFeed = (value: unknown): CollectionArticle | null => {
   if (!isRecord(value) || !isRecord(value.feed) || !isRecord(value.user) || value.user.userRoleCode !== 'game_manager') return null;
   const feed = value.feed;
   if (feed.loungeId !== 'WutheringWaves' || typeof feed.feedId !== 'number' || !Number.isSafeInteger(feed.feedId)

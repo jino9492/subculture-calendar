@@ -1,27 +1,16 @@
-import { isImageUrl, isRecord, type CalendarEvent, type GameId } from '../../../../shared/calendar';
+import { isImageUrl, isRecord, type CalendarEvent, type GameId } from '../../../shared/calendar';
+import type { CollectionIssue } from '../../../shared/admin';
 import { parseLocalDate } from './parsers';
-import type { CollectionIssue } from '../../../../shared/admin';
-import { attachHoyoNames, translateScheduleNames, type KoreanNames } from '../names';
-import type { Announcement } from './announcements';
+import { fetchJson } from './http';
+import { attachHoyoNames } from './hoyo/names';
+import { translateScheduleNames, type KoreanNames } from './names';
+import type { Announcement } from './hoyo/announcements';
+import { STAR_RAIL_CHALLENGE_PREFIXES } from './starrail/custom/names';
+import { ZENLESS_NAMES } from './zenless/custom/names';
 
 export const SRA_GAMES = { genshin: 'ys', starrail: 'sr', zenless: 'zzz', endfield: 'end' };
 
-// 공식 한국어 업데이트 공지로 대조한 원본 이벤트 이름 사전
-const ZENLESS_NAMES: Record<string, string> = {
-  'All-New Program': '신규 프로그램',
-  'Angels Support Operation': '천사 응원하기 대작전',
-  'Potential Hypothesis: Reforged in Fire': '잠재력 예행·작열의 망치',
-  'Clink, Clank, Pinball Knight!': '「핀볼 히어로」 팅탕!',
-  'Shadow Chase Showdown': '가상 그림자 추격전',
-  'Advanced Bounty: Area Patrol': '선발 현상금-구역 순찰',
-  'Surprise Screening Plan': '깜짝 상영 기획',
-  'Diary of an Orbie Parent': '짜잔! 동글이 성장 일기',
-  '"En-Nah" Into Your Lap': '하늘에서 떨어진 「웅나」',
-  'Chronicles of the Hobbling Crow': '절름발이 까마귀 탐정록',
-  'Data Bounty: Combat Simulation': '데이터 현상금-실전 시뮬레이션',
-};
-
-const date = (value: unknown) => {
+export const structuredDate = (value: unknown) => {
   if (typeof value !== 'string') return null;
   const explicit = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(Z|([+-])(\d{2}):(\d{2}))$/.exec(value);
   if (explicit) {
@@ -51,8 +40,7 @@ export const learnStructuredActivityNames = (game: Exclude<GameId, 'wuwa' | 'end
     const name = names[item.localization_key];
     if (name) linkName(item.name, name, item.localization_key);
   }
-  const challengeTypes: Record<string, string> = { ChallengeTypeBoss: 'Apocalyptic Shadow', ChallengeTypeChasm: 'Memory of Chaos',
-    ChallengeTypeStory: 'Pure Fiction', ChallengeTypePeak: 'Anomaly Arbitration' };
+  const challengeTypes = STAR_RAIL_CHALLENGE_PREFIXES;
   for (const item of (Array.isArray(linked.challenges) ? linked.challenges : []).filter(isRecord)) {
     if (typeof item.name !== 'string' || typeof item.localization_key !== 'string' || typeof item.type_name !== 'string') continue;
     const name = names[item.localization_key];
@@ -110,8 +98,8 @@ export const parseStructuredActivities = (raw: unknown, sourceUrl: string, game:
       issues.push({ id: `sra:${game}:invalid:${index}`, game, title: '이벤트 형식 확인', reason: '원본 구조화 이벤트의 제목·형식 확인 필요', sourceUrl, excerpt: '' });
       continue;
     }
-    const startAt = date(item.startTime);
-    const endAt = date(item.endTime);
+    const startAt = structuredDate(item.startTime);
+    const endAt = structuredDate(item.endTime);
     const title = game === 'zenless' && Object.hasOwn(ZENLESS_NAMES, item.name) ? ZENLESS_NAMES[item.name] : undefined;
     const key = `sra:${game}:event:${encodeURIComponent(String(item.id ?? item.name))}`;
     const learnedName = names[key] ?? names[`sra:${game}:event:${encodeURIComponent(item.name)}`];
@@ -134,30 +122,10 @@ export const parseStructuredActivities = (raw: unknown, sourceUrl: string, game:
   return { events, issues };
 };
 
-export const learnEndfieldChallengeNames = (raw: unknown, events: CalendarEvent[], names: KoreanNames): KoreanNames => {
-  const result = { ...names };
-  if (!isRecord(raw) || !Array.isArray(raw.activities)) return result;
-  for (const item of raw.activities.filter(isRecord)) {
-    if (typeof item.name !== 'string' || !/\(Echoes of War\)/.test(item.name)) continue;
-    const startAt = date(item.startTime), endAt = date(item.endTime);
-    if (!startAt || !endAt) continue;
-    const matches = events.filter((event) => event.game === 'endfield' && event.kind === 'challenge'
-      && event.title.startsWith('전쟁의 메아리 · ') && Math.abs(Date.parse(event.startAt) - Date.parse(startAt)) <= 60000
-      && Math.abs(Date.parse(event.endAt) - Date.parse(endAt)) <= 60000);
-    const titles = [...new Set(matches.map((event) => event.title))];
-    const match = matches[0];
-    if (titles.length !== 1 || !match) continue;
-    result[`sra:endfield:event:${encodeURIComponent(String(item.id ?? item.name))}`] = {
-      title: match.title, sourceUrl: match.sourceUrl, kind: 'challenge',
-    };
-  }
-  return result;
-};
-
 export const supplementStructuredVersion = (events: CalendarEvent[], raw: unknown, sourceUrl: string, game: Exclude<GameId, 'wuwa'>) => {
   if (!isRecord(raw) || typeof raw.version !== 'string' || !/^\d+\.\d+$/.test(raw.version) || !Array.isArray(raw.activities)) throw new Error('Invalid activity calendar');
-  const startAt = date(raw.startTime);
-  const endAt = date(raw.endTime);
+  const startAt = structuredDate(raw.startTime);
+  const endAt = structuredDate(raw.endTime);
   if (!startAt || !endAt || endAt <= startAt || Date.parse(endAt) - Date.parse(startAt) > 100 * 86400000) throw new Error('Invalid structured version period');
   const match = events.find((event) => event.game === game && event.kind === 'version'
     && (game === 'endfield' || event.title === `버전 ${raw.version}`)
@@ -172,4 +140,10 @@ export const supplementStructuredVersion = (events: CalendarEvent[], raw: unknow
     delete next.versionEndBasis;
     return next;
   });
+};
+
+export const fetchStructuredVersion = async (game: Exclude<GameId, 'wuwa'>) => {
+  const url = new URL(`activity/${SRA_GAMES[game]}-en-US.json`, process.env.SRA_API_BASE ?? 'https://starrailassistant.top/api/v1/');
+  try { return { raw: await fetchJson(url), sourceUrl: url.href }; }
+  catch (error) { console.error(`[${game}] original version API unavailable`, error); return null; }
 };

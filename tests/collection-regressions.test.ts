@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import type { CalendarEvent } from '../shared/calendar';
+import { parseEndfieldApiEvents } from '../src/features/collection/endfield';
 import { parseHoyoCalendar, parseEndfieldEvents, parseStructuredActivities, mergeScheduleSources, buildVersionEvents, supplementStructuredVersion } from '../src/features/collection';
 
 const source = 'https://example.com/calendar';
@@ -14,6 +15,24 @@ const characterCycles: CalendarEvent[] = [
 ].map(([name, startAt, endAt], index) => ({ id: `character:${index}`, game: 'endfield', kind: 'banner',
   title: `「${name}」 특별 허가 헤드헌팅`, startAt: startAt!, endAt: endAt!, sourceUrl: `${source}/${index}`,
   description: '', sourceLanguage: 'ko-kr' }));
+
+test('엔필 원본 파서는 조건부 무기 신청 기간을 만들지 않고 custom에서 보완', () => {
+  const article = { id: 'weapon', title: '「한기 신청」 기간 한정 판매 설명',
+    content: '<p>· 개방 기간: 2026/09/02 12:00 개방, 「특별 허가 헤드헌팅」 3회 진행 후 종료(「겨울 사냥」부터 집계)</p>' };
+  const raw = parseEndfieldApiEvents(article, []);
+  assert.equal(raw.events.length, 0);
+  assert.equal(raw.skipped, 1);
+  assert.ok(raw.unresolvedPeriods[0]?.includes('후속 픽업 일정 확인 필요'));
+  const supplemented = parseEndfieldEvents(article, [], characterCycles);
+  assert.equal(supplemented.events[0]?.endAt, characterCycles[2]?.endAt);
+  assert.equal(supplemented.skipped, 0);
+});
+
+test('API에 명시된 엔필 기간은 custom 적용 전후 동일', () => {
+  const article = { id: 'event', title: '「시험 행사」 이벤트',
+    content: '<p>· 이벤트 기간: 2026/09/02 12:00 - 2026/09/09 12:00</p>' };
+  assert.deepEqual(parseEndfieldEvents(article, [], characterCycles), parseEndfieldApiEvents(article, []));
+});
 
 test('무기 신청은 중복·재구축을 제외한 실제 캐릭터 픽업 세 회의 종료일까지 유지', () => {
   const unrelated = { ...characterCycles[1]!, id: 'rerun', title: '「찬란한 색채」 재구축 헤드헌팅#1' };

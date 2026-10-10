@@ -1,18 +1,16 @@
 import { isRecord, type CalendarEvent, type GameId } from '../../../../shared/calendar';
-import { parseLocalDate, stripHtml, type VersionBoundary } from './parsers';
+import { parseLocalDate, stripHtml, type VersionBoundary } from '../parsers';
 import type { CollectionIssue } from '../../../../shared/admin';
 import { reconcileSchedules, isSameScheduleCycle } from '../reconciliation';
 import { parseHoyoTimeRange, ZONED_TIME_PATTERN } from '../time-evidence';
+import { HOYO_ANNOUNCEMENT_SETTINGS } from './config';
+import { supplementStarrailChallenges } from '../starrail/announcements';
 
 type HoyoGame = Exclude<GameId, 'wuwa' | 'endfield'>;
 export interface Announcement { id: string; title: string; description: string; url: string }
 
 export const hoyoAnnouncementUrl = (game: HoyoGame, language: 'ko-kr' | 'en-us' = 'ko-kr') => {
-  const settings = {
-    genshin: { base: 'https://sg-hk4e-api.hoyoverse.com/common/hk4e_global/', game: 'hk4e', region: 'os_asia', level: '8' },
-    starrail: { base: 'https://sg-hkrpg-api.hoyoverse.com/common/hkrpg_global/', game: 'hkrpg', region: 'prod_official_asia', level: '70' },
-    zenless: { base: 'https://sg-announcement-static.hoyoverse.com/common/nap_global/', game: 'nap', region: 'prod_gf_jp', level: '60' },
-  }[game];
+  const settings = HOYO_ANNOUNCEMENT_SETTINGS[game];
   const url = new URL('announcement/api/getAnnContent', settings.base);
   url.search = new URLSearchParams({ game: settings.game, game_biz: `${settings.game}_global`, bundle_id: `${settings.game}_global`,
     platform: 'pc', region: settings.region, uid: '0', level: settings.level, lang: language, channel_id: '1' }).toString();
@@ -109,45 +107,7 @@ export const supplementHoyoCalendar = (game: HoyoGame, parsed: { events: Calenda
       }
     }
   }
-  const challengeTargets = game === 'starrail' ? reconcileSchedules(parsed.events).events : [];
-  if (game === 'starrail') for (const article of announcements) {
-    const lines = article.description.split('\n').map((line) => line.trim()).filter(Boolean);
-    const normalize = (value: string) => value.replace(/[^\p{L}\p{N}]/gu, '');
-    for (const [index, line] of lines.entries()) {
-      if (!['혼돈의 기억', '허구 이야기', '종말의 환영'].some((name) => line.startsWith(name)) || line.length > 80) continue;
-      const section = lines[index + 1] ?? '';
-      const evidence = parseHoyoTimeRange(section, boundaries, article.url);
-      if (!evidence) continue;
-      const native = challengeTargets.filter((event) => event.kind === 'challenge' && normalize(event.title) === normalize(line)
-        && isSameScheduleCycle(event, { ...event, startAt: evidence.start.at, endAt: evidence.end.at, sourceUrl: article.url }, true));
-      const event = native.length === 1 ? native[0] : undefined;
-      if (!event) continue;
-      const identityKey = event.identityKey ?? event.localizationKey ?? `notice-target:${game}:${event.id}`;
-      for (const candidate of events) if (candidate.id === event.id) candidate.identityKey = identityKey;
-      events.push({ ...event, id: `${game}:announcement:${article.id}:challenge:${index}:${evidence.start.at}`,
-        startAt: evidence.start.at, endAt: evidence.end.at, collectionSources: undefined,
-        collectionMethod: 'announcement', identityKey,
-        localizationKey: undefined, sourceUrl: article.url, timeEvidence: evidence,
-        description: `공식 한국어 인게임 공지의 기간. ${line}\n${section}` });
-    }
-    if (/「이상 중재」[^\n]*버전에 따라 업데이트/.test(article.description)) {
-      const theme = /이번 회차 테마:\s*「([^」]+)」/.exec(article.description)?.[1];
-      const version = /(\d+\.\d+)\s*버전/.exec(article.title)?.[1];
-      const boundary = boundaries.find((candidate) => candidate.version === version);
-      if (theme && boundary) for (const event of events) {
-        if (event.kind !== 'challenge' || normalize(event.title) !== normalize(theme)
-          || Math.abs(Date.parse(event.startAt) - Date.parse(boundary.startAt)) > 86400000
-          || Date.parse(boundary.startAt) >= Date.parse(event.endAt)) continue;
-        const startEvidence = event.timeEvidence?.start;
-        if (startEvidence && Date.parse(startEvidence.at) === Date.parse(event.startAt)
-          && ['manual', 'official', 'version-update'].includes(startEvidence.basis)) continue;
-        event.collectionSources ??= [{ id: event.id, title: event.title, startAt: event.startAt, endAt: event.endAt, sourceUrl: event.sourceUrl }];
-        event.startAt = boundary.startAt;
-        event.timeEvidence = { ...event.timeEvidence, start: { at: boundary.startAt,
-          basis: 'version-cycle', precision: 'minute', sourceUrl: article.url } };
-      }
-    }
-  }
+  if (game === 'starrail') supplementStarrailChallenges(events, parsed.events, announcements, boundaries);
   const reconciled = reconcileSchedules(events);
   return { events: reconciled.events, issues: [...issues, ...reconciled.issues], skipped: Math.max(0, parsed.skipped - resolved) };
 };

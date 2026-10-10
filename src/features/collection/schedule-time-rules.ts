@@ -1,16 +1,16 @@
 import type { CalendarEvent } from '../../../shared/calendar';
 import type { CollectionIssue } from '../../../shared/admin';
+import { isStarrailGift } from './starrail/custom/time-rules';
 
 const DAY = 86400000;
 const SEOUL = 9 * 3600000;
-const giftName = (title: string) => /^(?:별의선물|giftofodyssey)$/i.test(title.normalize('NFKC').replace(/[^\p{L}\p{N}]/gu, ''));
+
 
 export const applyScheduleTimeRules = (event: CalendarEvent, issues: CollectionIssue[] = []): CalendarEvent => {
   const evidence = event.timeEvidence?.end;
   if (evidence && Date.parse(evidence.at) === Date.parse(event.endAt) && ['manual', 'official'].includes(evidence.basis)
     || event.versionEndBasis === 'manual' || event.versionEndBasis === 'official' || event.versionEndBasis === 'next-maintenance') return event;
-  const gift = event.game === 'starrail' && event.kind === 'event'
-    && [event.title, ...(event.collectionSources ?? []).map((source) => source.title)].some(giftName);
+  const gift = isStarrailGift(event);
   const unpublished = event.game !== 'endfield' && (event.periodBasis === 'community-cycle'
     || event.versionEndBasis === 'default-42-days' || event.versionEndBasis === 'announced-date');
   if (!gift && !unpublished) return event;

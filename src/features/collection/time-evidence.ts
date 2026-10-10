@@ -1,5 +1,5 @@
 import type { TimeEvidence } from '../../../shared/calendar';
-import { parseLocalDate, type VersionBoundary } from './providers/parsers';
+import { parseLocalDate, type VersionBoundary } from './parsers';
 
 export const LOCAL_TIME_PATTERN = '\\d{4}[/-]\\d{1,2}[/-]\\d{1,2}\\s+\\d{1,2}:\\d{2}(?::\\d{2})?';
 export const ZONED_TIME_PATTERN = `${LOCAL_TIME_PATTERN}(?:\\s*\\([^()]*\\))?`;

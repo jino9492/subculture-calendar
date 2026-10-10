@@ -98,7 +98,18 @@ HoYo 3종은 한국어 구조화 API `/mihoyo/{genshin|starrail|zenless}/calenda
 src/features/calendar/   캘린더 컴포넌트·상태·시간 및 행 배치
 src/features/admin/      확인 항목·처리 메모·일정 보정 화면
 src/utils/cn.ts          공통 클래스 조합
-src/features/collection/ 외부 수집·원문 검증·기간 파싱·캐시·엔드콘텐츠 주기
+src/features/collection/ 공통 요청·기간 파싱·이름 저장·일정 병합·캐시
+  genshin/              원신 수집 진입점·공식 공지 설정
+    custom/             개발자가 정의한 엔드콘텐츠 분류
+  starrail/             스타레일 수집 진입점·공식 도전 공지 파싱
+    custom/             도전 이름·버전 주기 시작 시각·보상 만료 규칙
+  zenless/              젠존제 수집 진입점·공식 공지 설정
+    custom/             개발자가 작성한 한국어 이름 사전
+  wuwa/                 명조 수집기·공식 CDN/네이버·공개 일정·픽업 연결
+    custom/             콘텐츠 이름·주간 분류·도전 주기 보완
+  endfield/             엔필 수집기·공식 CMS/HTML 파싱·구조화 시즌 이름 연결
+    custom/             무기고 신청 기간 계산·버전 공개 날짜 경계 보완
+  hoyo/                 HoYo 3종의 공통 수집기·일정/공지 파싱·이름/기간 보완
 server/calendar-service.ts  수집 결과와 관리자 보정 연결
 server/admin-store.ts    관리 기록 저장 및 수동 일정 병합
 server/admin-service.ts  수집 진단·영문 일정·기간 수집 누락 버전 확인 항목
@@ -107,6 +118,8 @@ shared/calendar.ts      클라이언트/서버 공통 계약 및 런타임 검�
 shared/admin.ts         관리 API 계약 및 입력 검증
 tests/calendar.test.ts  날짜 경계·행 배치·수집 파서 테스트
 ```
+
+게임별 `custom/`은 개발자가 직접 정의한 이름·분류·기간 보완 규칙을 모읍니다. API에 명시된 날짜 파싱, 시간대 변환, 공식 공지에서 가져온 이름 연결은 각 게임의 수집·파싱 코드에 유지합니다. API가 제공한 반복 주기도 원본 수집에 포함하며, 공통 요청·캐시·병합과 여러 게임이 공유하는 기간 규칙은 `collection/`에 남깁니다. 엔필의 `parseEndfieldApiEvents`는 원본 기간을 파싱하고, `custom/`의 `parseEndfieldEvents`는 캐릭터 픽업을 이용해 무기고 신청 기간을 보완합니다.
 
 ## 환경 설정
 
