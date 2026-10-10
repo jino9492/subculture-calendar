@@ -1,3 +1,5 @@
+import { CUSTOM_SCHEDULE_IMAGES } from './schedule-images';
+
 export const GAME_IDS = ['genshin', 'starrail', 'zenless', 'wuwa', 'endfield'] as const;
 export type GameId = (typeof GAME_IDS)[number];
 export const EVENT_KINDS = ['version', 'event', 'banner', 'challenge', 'weekly'] as const;
@@ -60,6 +62,7 @@ export const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 export const isImageUrl = (value: unknown): value is string => {
   if (typeof value !== 'string' || value.length > 2048) return false;
+  if (Object.values(CUSTOM_SCHEDULE_IMAGES).some((path) => path === value)) return true;
   try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password; }
   catch { return false; }
 };

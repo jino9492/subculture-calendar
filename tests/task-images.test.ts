@@ -12,6 +12,14 @@ const payload = { events: [{ id: 1, name: '시험 이벤트', start_time: 179074
 
 test('버전 분류를 가장 먼저 배치', () => { assert.equal(EVENT_KINDS[0], 'version'); });
 
+test('프로젝트에 등록한 custom 이미지 경로만 로컬 이미지로 허용', () => {
+  assert.equal(isImageUrl('/images/custom/starrail-weekly.png'), true);
+  assert.equal(isImageUrl('/images/custom/zenless-weekly.png'), true);
+  for (const path of ['/images/custom/unknown.png', '/images/custom/../secret.png', '//example.com/image.png']) {
+    assert.equal(isImageUrl(path), false);
+  }
+});
+
 test('이벤트 대표 이미지와 픽업 최고 등급 캐릭터 이미지 수집', () => {
   const result = parseHoyoCalendar('zenless', payload, source);
   assert.deepEqual(result.events[0]?.imageUrls, [image]);

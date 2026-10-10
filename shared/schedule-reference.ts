@@ -1,11 +1,13 @@
 import { EVENT_KINDS, GAME_IDS, isRecord, type CalendarEvent } from './calendar';
-import { isWuwaWeeklyKey } from './content-kind';
+import { isWuwaWeeklyKey, WUWA_COMBINED_WEEKLY_KEY, WUWA_WEEKLY_IDENTITIES } from './content-kind';
 
 export interface ScheduleReference {
   game: CalendarEvent['game']; kind: CalendarEvent['kind']; ids: string[]; identities: string[]; startAt: string; endAt: string;
 }
 export const scheduleIdentifiers = (event: CalendarEvent) => [...new Set([event.id, ...(event.collectionSources ?? []).map((source) => source.id)])];
-export const scheduleIdentities = (event: CalendarEvent) => [...new Set([event.identityKey, event.localizationKey].filter((key): key is string => Boolean(key)))];
+export const scheduleIdentities = (event: CalendarEvent) => [...new Set([event.identityKey, event.localizationKey,
+  ...(event.game === 'wuwa' && event.kind === 'weekly' && event.identityKey === WUWA_COMBINED_WEEKLY_KEY ? WUWA_WEEKLY_IDENTITIES : [])]
+  .filter((key): key is string => Boolean(key)))];
 export const scheduleReference = (event: CalendarEvent): ScheduleReference => ({ game: event.game, kind: event.kind,
   ids: scheduleIdentifiers(event), identities: scheduleIdentities(event), startAt: event.startAt, endAt: event.endAt });
 const validKeys = (value: unknown): value is string[] => Array.isArray(value) && value.length <= 110

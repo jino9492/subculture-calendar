@@ -6,6 +6,7 @@ import { fetchGame } from './fetch-game';
 import { isCollectionIssue, type CollectionIssue } from '../../../shared/admin';
 import { restoreKnownScheduleNames } from './names';
 import { reconcileSchedules, resolveScheduleId } from './reconciliation';
+import { refreshCustomSchedules } from './custom-schedules';
 
 interface Snapshot { events: CalendarEvent[]; issues: CollectionIssue[]; fetchedAt: string; skipped: number; partial: boolean; message: string }
 const SNAPSHOT_VERSION = 21;
@@ -107,7 +108,8 @@ export const createCalendarCollector = (dependencies: { fetcher?: typeof fetchGa
       pending.set(game, promise);
       return promise;
     }));
-    const calendar: CollectedCalendar = { events: [...new Map(results.flatMap((result) => result.events).map((event) => [event.id, event])).values()],
+    const now = clock();
+    const calendar: CollectedCalendar = { events: [...new Map(results.flatMap((result) => refreshCustomSchedules(result.source.game, result.events, now)).map((event) => [event.id, event])).values()],
       sources: results.map((result) => result.source), server: 'Asia', displayTimeZone: 'Asia/Seoul' };
     return { calendar, issues: results.flatMap((result) => result.issues) };
   };

@@ -6,6 +6,7 @@ import type { CalendarResponse, EventKind, GameId } from '../types';
 import { todayDay } from '../utils/calendar';
 import { restoreFilterPreferences } from '../utils/filterPreferences';
 import { apiUrl } from '../../../utils/api';
+import { weeklyStartAt } from '../../../../shared/weekly';
 
 interface CalendarState {
   selectedDay: number; focusRevision: number;
@@ -68,17 +69,23 @@ export const useCalendar = () => {
   const [now, setNow] = useState(Date.now);
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
+    let currentWeek = weeklyStartAt(Date.now());
     const update = () => {
       clearTimeout(timer);
       const now = Date.now();
       setNow(now);
+      const nextWeek = weeklyStartAt(now);
+      if (currentWeek !== nextWeek) {
+        currentWeek = nextWeek;
+        void state.load();
+      }
       // 정각에도 갱신되도록 실제 시계의 30초 경계에 맞춰 예약
       timer = setTimeout(update, 30000 - now % 30000);
     };
     update();
     document.addEventListener('visibilitychange', update);
     return () => { clearTimeout(timer); document.removeEventListener('visibilitychange', update); };
-  }, []);
+  }, [state.load]);
   useEffect(() => { void state.load(); }, [state.load]);
   const selectedEvents = (state.data?.events ?? []).filter((event) => state.games.includes(event.game) && state.kinds.includes(event.kind));
   const events = selectedEvents.filter((event) => event.title.toLocaleLowerCase().includes(state.query.trim().toLocaleLowerCase()));
