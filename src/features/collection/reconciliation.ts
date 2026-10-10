@@ -1,4 +1,5 @@
 import type { CalendarEvent, TimeEvidence } from '../../../shared/calendar';
+import { normalizeContentKind } from '../../../shared/content-kind';
 import type { CollectionIssue } from '../../../shared/admin';
 import { isPendingScheduleName } from './names';
 import { applyScheduleTimeRules } from './schedule-time-rules';
@@ -103,6 +104,7 @@ const compare = (a: CalendarEvent, b: CalendarEvent) => priority(a) - priority(b
   || JSON.stringify(a).localeCompare(JSON.stringify(b));
 
 export const reconcileSchedules = (candidates: CalendarEvent[]) => {
+  candidates = candidates.map(normalizeContentKind);
   const groups: CalendarEvent[][] = [];
   const issues: CollectionIssue[] = [];
   const named = candidates.map((event) => {

@@ -1,6 +1,6 @@
 export const GAME_IDS = ['genshin', 'starrail', 'zenless', 'wuwa', 'endfield'] as const;
 export type GameId = (typeof GAME_IDS)[number];
-export const EVENT_KINDS = ['version', 'event', 'banner', 'challenge'] as const;
+export const EVENT_KINDS = ['version', 'event', 'banner', 'challenge', 'weekly'] as const;
 export type EventKind = (typeof EVENT_KINDS)[number];
 
 export interface TimeEvidence {

@@ -16,6 +16,10 @@ const CONTENTS = [
   { path: 'events/towerofadversity', key: 'tower', sourceId: 100300002, name: '역경의 탑' },
   { path: 'events/whimperingwastes', key: 'ruins', sourceId: 100390001, name: '죽음의 노래와 바닷속 폐허' },
 ];
+const WEEKLY_CONTENTS = [
+  { sourceId: 103600001, name: '수많은 문의 환상' },
+  { sourceId: 105500002, name: '환상의 놀이공원 · 망상' },
+];
 
 const dateTime = (value: unknown) => {
   if (typeof value !== 'string') return null;
@@ -112,7 +116,10 @@ export const parseWuwaStructuredCalendar = (raw: unknown, calendar: unknown, sou
     if (group.id !== 3 || !Array.isArray(group.child)) continue;
     for (const row of group.child.filter(isRecord)) {
       if (CONTENTS.some((content) => content.sourceId === row.sourceId)) continue;
+      const weekly = WEEKLY_CONTENTS.find((content) => content.sourceId === row.sourceId);
+      const kind: EventKind = weekly ? 'weekly' : 'challenge';
       const key = `wuwa:wiki:challenge:${String(row.sourceId ?? row.id)}`;
+      if (weekly && !dictionary[key]) dictionary[key] = { title: weekly.name, sourceUrl };
       if (language === 'ko-kr' && typeof row.title === 'string' && /[가-힣]/.test(row.title)) dictionary[key] = { title: row.title, sourceUrl };
       let period = periodFrom(row.time, serverIndex);
       const time = Array.isArray(row.time) && Array.isArray(row.time[serverIndex]) ? row.time[serverIndex] : [];
@@ -132,10 +139,11 @@ export const parseWuwaStructuredCalendar = (raw: unknown, calendar: unknown, sou
       }
       if (period.end <= now - 100 * 86400000) continue;
       const imageUrl = wuwaImageUrl(row.tabImg);
-      const translated = translateScheduleNames([{ id: `${key}:${period.end}`, game: 'wuwa', kind: 'challenge',
+      const translated = translateScheduleNames([{ id: `${key}:${period.end}`, game: 'wuwa', kind,
         title: String(row.title ?? row.id), localizationKey: key, startAt: new Date(period.start).toISOString(), endAt: new Date(period.end).toISOString(),
         sourceUrl, sourceLanguage: language, periodBasis: recurring ? 'community-cycle' : 'community-data',
-        ...(imageUrl ? { imageUrls: [imageUrl] } : {}), description: '구조화 API에 명시된 신규 엔드콘텐츠 기간·주기 기준' }], dictionary);
+        collectionMethod: 'structured',
+        ...(imageUrl ? { imageUrls: [imageUrl] } : {}), description: `구조화 API에 명시된 ${weekly ? '주간콘텐츠' : '신규 엔드콘텐츠'} 기간·주기 기준` }], dictionary);
       events.push(...translated.events);
       issues.push(...translated.issues);
     }

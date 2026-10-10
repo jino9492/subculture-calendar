@@ -9,7 +9,7 @@ import { loadKoreanNames, attachHoyoNames, rememberKoreanNames, learnKoreanSched
 import { parseWuwaStructuredCalendar, wuwaAsiaIndex, WUWA_PUBLIC_EVENTS_URL } from './wuwa-public';
 import { mergeHoyoStructured, linkWuwaSources } from '../priority';
 import type { VersionBoundary } from './parsers';
-import { SRA_GAMES, supplementStructuredVersion, parseStructuredActivities, learnStructuredActivityNames } from './sra';
+import { SRA_GAMES, supplementStructuredVersion, parseStructuredActivities, learnStructuredActivityNames, learnEndfieldChallengeNames } from './sra';
 
 export const fetchJson = async (url: URL): Promise<unknown> => {
   const response = await fetch(url, { signal: AbortSignal.timeout(15000), headers: { Accept: 'application/json' } });
@@ -396,7 +396,8 @@ const fetchEndfield = async () => {
   let events = all;
   if (structuredVersion) {
     try {
-      const supplementary = parseStructuredActivities(structuredVersion.raw, structuredVersion.sourceUrl, 'endfield', await loadKoreanNames('endfield'));
+      const names = learnEndfieldChallengeNames(structuredVersion.raw, events, await loadKoreanNames('endfield'));
+      const supplementary = parseStructuredActivities(structuredVersion.raw, structuredVersion.sourceUrl, 'endfield', names);
       events = [...supplementary.events, ...events];
       issues.push(...supplementary.issues);
     } catch (error) { console.error('[endfield] original activity validation failed', error); }
@@ -405,7 +406,7 @@ const fetchEndfield = async () => {
   const remainingIssues = issues.filter((issue) => !issue.id.startsWith('endfield:release:')
     || !events.some((event) => event.id === issue.eventId && event.periodBasis === 'community-data'));
   return { events, skipped, issues: remainingIssues, partial: true,
-    message: `버전·이벤트는 원본 구조화 API 대조 · 누락은 공식 한국어 ${cmsAvailable ? '뉴스 API(최근 100일 전체)' : '뉴스 페이지'}에서 보완. ${skipped}개 기간은 상대 종료·상시/조건부·이미지 등으로 표시 제외. 엔드콘텐츠는 대상 제외.` };
+    message: `버전·이벤트는 원본 구조화 API 대조 · 누락은 공식 한국어 ${cmsAvailable ? '뉴스 API(최근 100일 전체)' : '뉴스 페이지'}에서 보완. ${skipped}개 기간은 상대 종료·상시/조건부·이미지 등으로 표시 제외. 전쟁의 메아리는 공식 시즌 기간 수집.` };
 };
 
 export const fetchGame = (game: GameId) => game === 'wuwa' ? fetchWuwa() : game === 'endfield' ? fetchEndfield() : fetchHoyo(game);

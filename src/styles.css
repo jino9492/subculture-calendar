@@ -198,6 +198,7 @@
   .kind-event { --kind-border: var(--kind-event-border); }
   .kind-banner { --kind-border: var(--kind-banner-border); }
   .kind-challenge { --kind-border: var(--kind-challenge-border); }
+  .kind-weekly { --kind-border: var(--kind-challenge-border); }
   .kind-version { --kind-border: var(--kind-version-border); }
   .timeline-empty { @apply sticky left-0 w-fit px-6 py-10 text-sm text-muted; }
   .continues-before { @apply rounded-l-none; }

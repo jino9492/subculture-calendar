@@ -6,4 +6,4 @@ export const GAMES: Record<GameId, { name: string; icon: string; className: stri
   wuwa: { name: '명조', icon: '/icons/wutheringwave_thumb.png', className: 'game-wuwa' },
   endfield: { name: '명일방주: 엔드필드', icon: '/icons/endfield_thumb.png', className: 'game-endfield' },
 };
-export const KIND_LABELS: Record<EventKind, string> = { event: '이벤트', banner: '픽업', challenge: '엔드 콘텐츠', version: '버전' };
+export const KIND_LABELS: Record<EventKind, string> = { event: '이벤트', banner: '픽업', challenge: '엔드 콘텐츠', weekly: '주간 콘텐츠', version: '버전' };

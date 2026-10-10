@@ -4,6 +4,7 @@ import { parseLocalDate, parseVersionEnd, stripHtml, type VersionBoundary, type 
 const DATE = '\\d{4}[/-]\\d{1,2}[/-]\\d{1,2}\\s+\\d{1,2}:\\d{2}(?::\\d{2})?';
 const normalizeDates = (text: string) => text.replace(/(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일/g, '$1/$2/$3');
 export const WUWA_END_CONTENT = /종말 매트릭스|역경의 탑|죽음의 노래와 바닷속 폐허/;
+export const WUWA_WEEKLY_CONTENT = /수많은 문의 환상|환상의 놀이공원/;
 
 export const parseWuwaBannerAliases = (article: WuwaArticle) => {
   const lines = [article.title, ...stripHtml(article.content).split('\n')].map((line) => line.trim()).filter(Boolean);
@@ -45,7 +46,7 @@ export const parseWuwaKoreanEvents = (article: WuwaArticle, boundaries: VersionB
     const endAt = end ? parseLocalDate(end, 9) : null;
     if (!startAt || !endAt || endAt <= startAt) { skipped++; continue; }
     const heading = lines.slice(0, index).reverse().find((candidate) => candidate.length < 140
-      && (/^[✦■●\d.\s]*[\[「].+[\]」].*(?:이벤트|튜닝|콘텐츠)/.test(candidate) || WUWA_END_CONTENT.test(candidate)));
+      && (/^[✦■●\d.\s]*[\[「].+[\]」].*(?:이벤트|튜닝|콘텐츠)/.test(candidate) || WUWA_END_CONTENT.test(candidate) || WUWA_WEEKLY_CONTENT.test(candidate)));
     const title = heading ?? article.title;
     const overview = [...title.matchAll(/((?:「[^」]+」[、,\s]*)+)(캐릭터|무기) 이벤트 튜닝/g)];
     if (overview.length === 2 && overview.some((group) => group[2] === '캐릭터') && overview.some((group) => group[2] === '무기')) {
@@ -57,7 +58,7 @@ export const parseWuwaKoreanEvents = (article: WuwaArticle, boundaries: VersionB
       completeBannerPeriods.push(`${startAt}:${endAt}`);
       continue;
     }
-    const kind: EventKind = WUWA_END_CONTENT.test(title) ? 'challenge' : /튜닝/.test(title) ? 'banner' : 'event';
+    const kind: EventKind = WUWA_WEEKLY_CONTENT.test(title) ? 'weekly' : WUWA_END_CONTENT.test(title) ? 'challenge' : /튜닝/.test(title) ? 'banner' : 'event';
     events.push({ id: `wuwa:kr:${article.id}:${index}`, game: 'wuwa', kind, title, startAt, endAt,
       sourceUrl: article.sourceUrl ?? `https://wutheringwaves.kurogames.com/kr/main/news/detail/${article.id}`, description: section, sourceLanguage: 'ko-kr' });
   }
@@ -159,8 +160,11 @@ export const parseEndfieldEvents = (article: WuwaArticle, boundaries: VersionBou
     || text.includes(`「${boundary.version}」버전`) || text.includes(`「${boundary.version}」 버전`));
   let skipped = 0;
   for (const [index, line] of lines.entries()) {
-    if (!/(?:이벤트|개방)\s*(?:기간|시간)(?:[:：]|\s*$)/.test(line) || /물자 교환|교환소/.test(line)) continue;
-    const heading = lines.slice(0, index).reverse().find((candidate) => candidate.length < 150
+    const contentHeading = lines.slice(0, index).reverse().find((candidate) => /^\d+\.\s*「/.test(candidate));
+    const echoSeason = /시즌 업데이트[:：]/.test(line) && Boolean(contentHeading?.includes('「전쟁의 메아리」'));
+    if (!echoSeason && (!/(?:이벤트|개방)\s*(?:기간|시간)(?:[:：]|\s*$)/.test(line) || /물자 교환|교환소/.test(line))) continue;
+    const seasonHeading = echoSeason ? lines.slice(0, index).reverse().find((candidate) => /^○\s*「[^」]+」/.test(candidate)) : undefined;
+    const heading = echoSeason ? `전쟁의 메아리 · ${/「([^」]+)」/.exec(seasonHeading ?? '')?.[1] ?? '시즌'}` : lines.slice(0, index).reverse().find((candidate) => candidate.length < 150
       && !/^·|(?:이벤트|헤드헌팅|신청) 설명[:：]/.test(candidate)
       && /「.+」/.test(candidate) && /이벤트|헤드헌팅|신청|개방|출석 체크/.test(candidate)
       && (/^(?:\d+\.\s*|▼\/\/\s*)/.test(candidate)
@@ -168,7 +172,7 @@ export const parseEndfieldEvents = (article: WuwaArticle, boundaries: VersionBou
         || /「[^」]+」.*이벤트.*함께 개방/.test(candidate))) ?? article.title;
     const sectionLines = lines.slice(index, index + 7);
     const nextSection = sectionLines.findIndex((candidate, offset) => offset > 0
-      && /Americas|Europe 서버|이벤트 설명|(?:이벤트|개방)\s*(?:기간|시간)(?:[:：]|\s*$)|^\d+\.\s*「/.test(candidate));
+      && /Americas|Europe 서버|이벤트 설명|업데이트 설명|시즌 업데이트[:：]|^○\s*「|(?:이벤트|개방)\s*(?:기간|시간)(?:[:：]|\s*$)|^\d+\.\s*「/.test(candidate));
     const section = (nextSection >= 0 ? sectionLines.slice(0, nextSection) : sectionLines).join(' ');
     const clean = section.replace(/\(서버 시간\)/g, '');
     const weaponPeriod = /신청/.test(heading) ? endfieldWeaponPeriod(clean, ownVersion, banners) : null;
@@ -208,7 +212,7 @@ export const parseEndfieldEvents = (article: WuwaArticle, boundaries: VersionBou
       const combinedBanners = [...heading.matchAll(/「[^」]+」\s*재구축\s*(?:헤드헌팅|신청)(?:#\d+)?/g)].map((match) => match[0]);
       const headings = combinedBanners.length > 1 ? combinedBanners : [heading];
       for (const [headingIndex, item] of headings.entries()) {
-        const kind: EventKind = /헤드헌팅|신청/.test(item) ? 'banner' : 'event';
+        const kind: EventKind = echoSeason ? 'challenge' : /헤드헌팅|신청/.test(item) ? 'banner' : 'event';
         const title = weaponPeriod ? `${/「[^」]+」/.exec(item)?.[0] ?? item} 무기고 신청`
           : /함께 개방/.test(item) ? `${/「[^」]+」/.exec(item)?.[0] ?? item} 이벤트`
           : item.replace(/^(?:\d+\.\s*|▼\/\/\s*)/, '').replace(/\s*설명$/, '');

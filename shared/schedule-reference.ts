@@ -1,4 +1,5 @@
 import { EVENT_KINDS, GAME_IDS, isRecord, type CalendarEvent } from './calendar';
+import { isWuwaWeeklyKey } from './content-kind';
 
 export interface ScheduleReference {
   game: CalendarEvent['game']; kind: CalendarEvent['kind']; ids: string[]; identities: string[]; startAt: string; endAt: string;
@@ -16,7 +17,9 @@ export const isScheduleReference = (value: unknown): value is ScheduleReference 
   && typeof value.endAt === 'string' && Date.parse(value.endAt) > Date.parse(value.startAt);
 
 export const matchesScheduleReference = (record: ScheduleReference, event: CalendarEvent) => {
-  if (record.game !== event.game || record.kind !== event.kind) return false;
+  const migratedWeekly = record.game === 'wuwa' && record.kind === 'challenge' && event.kind === 'weekly'
+    && [...record.ids, ...record.identities].some(isWuwaWeeklyKey);
+  if (record.game !== event.game || record.kind !== event.kind && !migratedWeekly) return false;
   if (!scheduleIdentifiers(event).some((id) => record.ids.includes(id)) && !scheduleIdentities(event).some((key) => record.identities.includes(key))) return false;
   const a = Date.parse(record.startAt), b = Date.parse(event.startAt), c = Date.parse(record.endAt), d = Date.parse(event.endAt);
   const overlap = Math.min(c, d) - Math.max(a, b);

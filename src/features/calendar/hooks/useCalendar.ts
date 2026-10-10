@@ -38,10 +38,12 @@ export const useCalendarStore = create<CalendarState>()(persist((set, get) => ({
   },
 }), {
   name: 'subculture-calendar-filters',
-  version: 2,
-  migrate: (saved) => {
+  version: 3,
+  migrate: (saved, version) => {
     const filters = restoreFilterPreferences(saved);
-    return { ...filters, games: filters.games.length === 4 ? filters.games.concat('endfield') : filters.games };
+    return { ...filters,
+      games: version < 2 && filters.games.length === 4 ? filters.games.concat('endfield') : filters.games,
+      kinds: filters.kinds.includes('challenge') && !filters.kinds.includes('weekly') ? [...filters.kinds, 'weekly' as const] : filters.kinds };
   },
   storage: createJSONStorage(() => ({
     getItem: (name) => {

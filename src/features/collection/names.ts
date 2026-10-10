@@ -6,10 +6,10 @@ import { createHash } from 'node:crypto';
 interface NameEntry { title: string; sourceUrl: string; kind?: EventKind; identityKey?: string }
 export type KoreanNames = Record<string, NameEntry>;
 interface ForeignSchedule extends Omit<CalendarEvent, 'title'> { title: string; localizationKey: string }
-const KIND_NAMES = { event: '이벤트', banner: '픽업', challenge: '엔드콘텐츠', version: '버전' };
+const KIND_NAMES = { event: '이벤트', banner: '픽업', challenge: '엔드콘텐츠', weekly: '주간콘텐츠', version: '버전' };
 
 export const isPendingScheduleName = (event: CalendarEvent) => event.displayLanguage !== 'ko-kr' && !event.sourceLanguage.startsWith('ko')
-  && /^(?:이벤트|픽업|엔드콘텐츠|버전) · 한국어 이름 확인$/.test(event.title);
+  && /^(?:이벤트|픽업|엔드콘텐츠|주간콘텐츠|버전) · 한국어 이름 확인$/.test(event.title);
 
 export const attachHoyoNames = (game: GameId, raw: unknown, names: KoreanNames, language: 'ko-kr' | 'en-us') => {
   if (!isRecord(raw)) throw new Error('Invalid calendar data');
