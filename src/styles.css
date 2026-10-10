@@ -42,12 +42,12 @@
   color-scheme: dark;
   --color-canvas: #141a22;
   --color-panel: #1e2732;
-  --color-surface: #273341;
+  --color-surface: #232e3b;
   --color-hover: #2e3b4b;
   --color-selected: #2a4060;
   --color-line: #344152;
   --color-timeline-grid: #2d3846;
-  --color-control-line: #4a5b70;
+  --color-control-line: #344152;
   --color-muted: #acb8c8;
   --color-accent: #8bb8ff;
   --color-accent-ink: #14243c;
