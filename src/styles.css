@@ -7,7 +7,7 @@
   --color-panel: #ffffff;
   --color-line: #d8e0e7;
   --color-muted: #52616d;
-  --color-accent: #176b43;
+  --color-accent: #70acff;
   --color-foreground: #17242e;
   --color-soft-text: #354656;
   --timeline-day-width: 88px;
@@ -36,7 +36,7 @@
   --color-panel: #191f23;
   --color-line: #2a3237;
   --color-muted: #8d9aa2;
-  --color-accent: #b8efcf;
+  --color-accent: #70acff;
   --color-foreground: #f1f5f9;
   --color-soft-text: #cbd5e1;
   --ending-normal-color: #ffffff;
@@ -113,7 +113,7 @@
   .type-filter { @apply rounded-md border border-transparent px-3 py-1.5 text-xs transition-colors hover:bg-line; color: var(--kind-border, var(--color-muted)); opacity: .65; }
   .type-active { @apply border-current bg-line; opacity: 1; }
   .selected-date { @apply bg-line; }
-  .day-number { @apply inline-flex h-6 w-6 items-center justify-center; }
+  .day-number { @apply inline-flex h-6 w-6 shrink-0 items-center justify-center leading-none tracking-normal; }
   .timeline-controls { @apply flex items-center justify-between gap-3 border-t border-line px-6 py-3 text-xs text-muted; }
   .timeline-calendar { @apply relative; }
   .timeline-ending-row { @apply border-t border-line; }
@@ -167,11 +167,11 @@
   .timeline-corner { @apply z-40 bg-canvas font-medium text-foreground; }
   .timeline-date { @apply flex h-20 shrink-0 flex-col items-center justify-center gap-1 border-r border-line text-xs text-muted transition-colors hover:bg-line; width: var(--timeline-day-width); }
   .timeline-month { @apply text-xs text-muted; }
-  .timeline-date .day-number { @apply text-sm font-semibold text-foreground; }
+  .timeline-date .day-number { @apply text-sm leading-none font-semibold text-foreground; }
   .timeline-sunday .day-number { color: var(--ending-urgent-color); }
   .timeline-saturday .day-number { color: var(--game-genshin-color); }
   .timeline-today { @apply text-accent; }
-  .timeline-today .day-number { @apply rounded-full bg-accent text-canvas; }
+  .timeline-today .day-number { @apply rounded-full bg-accent text-white; }
   .timeline-game { @apply border-b border-line; }
   .timeline-game-heading { @apply sticky left-0 flex h-12 items-center gap-2 bg-panel px-4; width: var(--timeline-label-width); }
   .timeline-game-heading h3 { @apply text-xs font-semibold; }
@@ -285,7 +285,7 @@
   .detail-dates dt { @apply text-muted; }
   .detail-description { @apply mt-5 whitespace-pre-line text-sm leading-7 text-soft-text; }
   .muted { @apply mt-3 text-xs leading-6 text-muted; }
-  .source-link { @apply mt-6 inline-flex rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-canvas; }
+  .source-link { @apply mt-6 inline-flex rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white; }
 }
 @media (max-width: 1100px) {
   .sidebar { @apply w-52 px-4; }
@@ -328,7 +328,7 @@
   .timeline-game-heading h3 { @apply text-sm leading-5; overflow-wrap: anywhere; }
   .timeline-game-heading .game-badge { @apply h-5 w-5; }
   .timeline-date { @apply h-22 text-sm; }
-  .timeline-date .day-number { @apply h-8 w-8 text-xl; }
+  .timeline-date .day-number { @apply h-8 w-8 text-xl leading-none; }
   .timeline-ending-cell { @apply h-12; }
   .ending-count { @apply min-h-11 px-2 text-sm; }
   .ending-preview { position-anchor: auto; top: auto; bottom: 12px; left: 12px; max-height: calc(100svh - 24px); overflow-y: auto; }
