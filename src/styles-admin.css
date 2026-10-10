@@ -14,22 +14,22 @@
   .admin-toolbar { @apply my-5 flex flex-wrap items-center gap-3 rounded-xl border border-line bg-panel p-4; }
   .admin-toolbar > label { @apply flex items-center gap-2 text-xs text-muted; }
   .admin-toolbar .search-box { @apply ml-auto; }
-  .admin-toolbar select { @apply rounded-md border border-line bg-canvas px-3 py-2 text-sm text-foreground; }
+  .admin-toolbar select { @apply rounded-md border border-control-line bg-canvas px-3 py-2 text-sm text-foreground; }
   .admin-workspace { @apply grid items-start gap-5 lg:grid-cols-2; }
   .admin-list { @apply max-h-160 overflow-y-auto rounded-xl border border-line bg-panel; }
-  .admin-list-item { @apply flex w-full flex-col gap-2 border-b border-line px-5 py-4 text-left transition-colors hover:bg-line; }
+  .admin-list-item { @apply flex w-full flex-col gap-2 border-b border-line px-5 py-4 text-left transition-colors hover:bg-hover; }
   .admin-list-item:last-child { @apply border-b-0; }
   .admin-list-item > span { @apply text-xs text-muted; }
   .admin-list-item strong { @apply text-sm font-medium; }
   .admin-list-item p { @apply text-xs leading-5 text-muted; }
-  .admin-selected { @apply border-accent bg-accent/5; }
+  .admin-selected { @apply border-accent bg-selected; }
   .admin-editor { @apply min-w-0 rounded-xl border border-line bg-panel; }
   .admin-editor .panel-heading { @apply border-b border-line; }
   .admin-editor .panel-heading > span { @apply text-accent; }
   .admin-form { @apply flex flex-col gap-4 px-5 pb-5; }
   .admin-fields { @apply grid gap-4 sm:grid-cols-2; }
   .admin-form label, .admin-note { @apply flex min-w-0 flex-col gap-2 text-sm text-muted; }
-  .admin-form input, .admin-form select, .admin-form textarea, .admin-note textarea { @apply w-full min-w-0 rounded-md border border-line bg-canvas px-3 py-2 text-sm text-foreground; }
+  .admin-form input, .admin-form select, .admin-form textarea, .admin-note textarea { @apply w-full min-w-0 rounded-md border border-control-line bg-canvas px-3 py-2 text-sm text-foreground; }
   .admin-form .admin-checkbox { @apply flex-row items-center; }
   .admin-form .admin-checkbox input { @apply w-4; }
   .admin-actions { @apply flex flex-wrap items-center gap-2; }
