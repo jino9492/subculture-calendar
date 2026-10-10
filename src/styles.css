@@ -79,7 +79,7 @@
 }
 @layer components {
   .app-shell { @apply min-h-screen; }
-  .sidebar { @apply fixed inset-y-0 left-0 z-10 flex w-60 flex-col border-r border-line bg-canvas px-6 py-9; }
+  .sidebar { @apply fixed inset-y-0 left-0 z-10 flex w-60 flex-col border-r border-line bg-canvas px-5 py-9; }
   .brand { @apply flex items-center gap-3 text-xs tracking-widest; }
   .brand b { @apply text-sm font-bold; }
   .brand-symbol { @apply h-10 w-10 shrink-0; }
@@ -88,7 +88,7 @@
   .sidebar-section { @apply mt-9; }
   .section-label { @apply mb-4 flex items-center justify-between text-xs text-muted; }
   .section-label span { @apply text-xs; }
-  .game-filter { @apply mb-2 flex w-full items-center gap-3 rounded-lg px-1 py-3 text-left text-sm transition-colors hover:bg-hover; }
+  .game-filter { @apply mb-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm transition-colors hover:bg-hover; }
   .filter-off { @apply text-muted; }
   .filter-off .game-badge { filter: grayscale(1); opacity: .65; }
   .game-badge { @apply block h-8 w-8 shrink-0 rounded-lg object-cover; }
