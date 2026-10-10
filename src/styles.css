@@ -9,6 +9,7 @@
   --color-hover: #e7edf4;
   --color-selected: #e5efff;
   --color-line: #d7e0e9;
+  --color-timeline-grid: #e4eaf0;
   --color-control-line: #b8c5d3;
   --color-muted: #4d5e70;
   --color-accent: #245fc0;
@@ -44,6 +45,7 @@
   --color-hover: #2e3b4b;
   --color-selected: #2a4060;
   --color-line: #344152;
+  --color-timeline-grid: #2d3846;
   --color-control-line: #4a5b70;
   --color-muted: #acb8c8;
   --color-accent: #8bb8ff;
@@ -171,7 +173,8 @@
   .timeline-scroll { @apply max-h-160 overflow-auto border-y border-line; scrollbar-color: var(--color-muted) var(--color-canvas); }
   .timeline-content { position: relative; width: max-content; min-width: 100%; }
   .timeline-body { position: relative; }
-  .timeline-time-line { position: absolute; top: 0; bottom: 0; z-index: 10; width: 1px; background: color-mix(in srgb, var(--color-accent) 55%, transparent); pointer-events: none; }
+  .timeline-time-overlay { position: absolute; inset: 0; z-index: 10; pointer-events: none; clip-path: inset(0 0 0 calc(var(--timeline-label-width) + var(--timeline-scroll-left, 0px))); }
+  .timeline-time-line { position: absolute; top: 0; bottom: 0; z-index: 10; width: 1px; background: color-mix(in srgb, var(--color-accent) 40%, transparent); pointer-events: none; }
   .timeline-time-line::before { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 10px; height: 7px; background: var(--color-accent); clip-path: polygon(0 0, 100% 0, 50% 100%); }
   .timeline-time-label { position: absolute; top: 4px; left: 6px; padding: 2px 4px; border-radius: 3px; background: var(--color-panel); color: var(--color-accent); font-size: 10px; white-space: nowrap; }
   .timeline-row { @apply flex items-center; }
@@ -190,11 +193,11 @@
   .timeline-today { @apply text-accent; }
   .timeline-today .day-number { @apply rounded-full bg-accent text-accent-ink; }
   .timeline-game { @apply border-b border-line; }
-  .timeline-game-heading { @apply sticky left-0 flex h-12 items-center gap-2 bg-surface px-4; width: var(--timeline-label-width); }
+  .timeline-game-heading { @apply sticky left-0 z-20 flex h-12 items-center gap-2 bg-surface px-4; width: var(--timeline-label-width); }
   .timeline-game-heading h3 { @apply text-xs font-semibold; }
   .timeline-game-heading .game-badge { @apply h-6 w-6 text-xs; }
   .timeline-group { @apply border-t border-line; }
-  .timeline-lane { @apply h-15; background-image: repeating-linear-gradient(to right, transparent 0, transparent calc(var(--timeline-day-width) - 1px), var(--color-line) calc(var(--timeline-day-width) - 1px), var(--color-line) var(--timeline-day-width)); background-position: var(--timeline-label-width) 0; }
+  .timeline-lane { @apply h-15; background-image: repeating-linear-gradient(to right, transparent 0, transparent calc(var(--timeline-day-width) - 1px), var(--color-timeline-grid) calc(var(--timeline-day-width) - 1px), var(--color-timeline-grid) var(--timeline-day-width)); background-position: var(--timeline-label-width) 0; }
   .timeline-tracks { @apply relative h-full shrink-0; }
   .timeline-bar { @apply absolute top-1 flex h-13 min-w-0 items-center justify-between gap-2 rounded-md border-l-2 px-3 text-left; box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 18%, transparent); }
   .timeline-bar:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 55%, transparent); }

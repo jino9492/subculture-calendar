@@ -35,8 +35,10 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
     ...(timePosition ? [`${scope} .timeline-time-line { left: calc(var(--timeline-label-width) + var(--timeline-day-width) * ${timePosition.position}); }`] : []),
     ...segments.map((segment) => `${scope} .timeline-bar[data-start="${segment.start}"][data-end="${segment.end}"] { left: calc(var(--timeline-day-width) * ${segment.start}); width: calc(var(--timeline-day-width) * ${segment.end - segment.start}); }`),
   ].join('\n');
-  const timeLine = timePosition && <div className="timeline-time-line" aria-hidden="true">
-    <span className="timeline-time-label">{String(timePosition.hour).padStart(2, '0')}시</span>
+  const timeLine = timePosition && <div className="timeline-time-overlay" aria-hidden="true">
+    <div className="timeline-time-line">
+      <span className="timeline-time-label">{String(timePosition.hour).padStart(2, '0')}시</span>
+    </div>
   </div>;
   const endingGroups = groupEndingEvents(endingEvents, first, last);
   const [endingPreviewDay, setEndingPreviewDay] = useState<number | null>(null);
@@ -73,6 +75,7 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
       scroll.scrollTo({ left, top: scrollPosition.current.top, behavior: 'instant' });
     }
     scrollPosition.current = { left: scroll.scrollLeft, top: scroll.scrollTop };
+    scroll.style.setProperty('--timeline-scroll-left', `${scroll.scrollLeft}px`);
   }, [first, last, selectedDay, focusRevision]);
 
   const handleScroll = (direction: number) => {
@@ -87,7 +90,11 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
       <button type="button" className="icon-button" aria-label="앞쪽 날짜 보기" onClick={() => handleScroll(-1)}>‹</button>
       <button type="button" className="icon-button" aria-label="뒤쪽 날짜 보기" onClick={() => handleScroll(1)}>›</button></div></div>
     <div ref={scrollRef} className="timeline-scroll" tabIndex={0} aria-label="전체 일정 타임라인, 날짜를 가로로 스크롤"
-      onScroll={(event) => { scrollPosition.current = { left: event.currentTarget.scrollLeft, top: event.currentTarget.scrollTop }; }}>
+      onScroll={(event) => {
+        const scroll = event.currentTarget;
+        scrollPosition.current = { left: scroll.scrollLeft, top: scroll.scrollTop };
+        scroll.style.setProperty('--timeline-scroll-left', `${scroll.scrollLeft}px`);
+      }}>
       <div className="timeline-content" data-days={days.length}>
         <div className="timeline-date-header">
         <div className="timeline-row">
