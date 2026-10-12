@@ -1,0 +1,423 @@
+{
+  "version": "9.0",
+  "scheduleDates": [
+    {
+      "startDate": "2026-8-20 0:0:0",
+      "endDate": "2026-8-28 0:0:0"
+    },
+    {
+      "startDate": "2026-8-28 0:0:0",
+      "endDate": "2026-9-4 0:0:0"
+    },
+    {
+      "startDate": "2026-9-4 0:0:0",
+      "endDate": "2026-9-11 0:0:0"
+    },
+    {
+      "startDate": "2026-9-11 0:0:0",
+      "endDate": "2026-9-18 0:0:0"
+    },
+    {
+      "startDate": "2026-9-18 0:0:0",
+      "endDate": "2026-9-25 0:0:0"
+    },
+    {
+      "startDate": "2026-9-25 0:0:0",
+      "endDate": "2026-10-2 0:0:0"
+    },
+    {
+      "startDate": "2026-10-2 0:0:0",
+      "endDate": "2026-10-9 0:0:0"
+    },
+    {
+      "startDate": "2026-10-9 0:0:0",
+      "endDate": "2026-10-16 0:0:0"
+    },
+    {
+      "startDate": "2026-10-16 0:0:0",
+      "endDate": "2026-10-22 0:0:0"
+    }
+  ],
+  "scheduleActivities": [
+    {
+      "row": "BATTLESUIT SUPPLY A",
+      "content": []
+    },
+    {
+      "row": "EQUIPMENT SUPPLY A",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 7,
+          "miniature": {
+            "titleTop": "Fenghuang of Vicissitude DLC",
+            "titleMid": null,
+            "titleAlign": "center",
+            "image_right": "/images/Timelines/9_0/ESA_1_1.webp",
+            "image_center": null,
+            "image_left": "/images/Timelines/9_0/ESA_1_2.webp",
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "BATTLESUIT SUPPLY B",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "Jovial Deception: Shadowdimmer",
+            "titleMid": null,
+            "titleAlign": "center",
+            "image_right": "/images/Timelines/7_6/BSE_1.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EQUIPMENT SUPPLY B",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "Jovial Deception Equipment",
+            "titleMid": null,
+            "titleAlign": "center",
+            "image_right": "/images/Timelines/7_6/ESA_1_2.webp",
+            "image_center": null,
+            "image_left": "/images/Timelines/7_6/ESA_1_1.webp",
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "ASTRAL OP SUPPLY",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 7,
+          "miniature": {
+            "titleTop": "Senadina",
+            "titleMid": null,
+            "titleAlign": "center",
+            "image_right": "/images/Timelines/Icons/Senadina_aop.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "OUTFIT",
+      "content": [
+        {
+          "startWeek": 2,
+          "endWeek": 4,
+          "miniature": {
+            "titleTop": "Crane of Taixuan",
+            "titleMid": null,
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/7_9/OF_1.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "ASCENSION SUPPLY",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 4,
+          "miniature": {
+            "titleTop": "Mad Pleasure",
+            "titleMid": null,
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/7_5/BSE_2.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        },
+        {
+          "startWeek": 4,
+          "endWeek": 7,
+          "miniature": {
+            "titleTop": "Lone",
+            "titleMid": "Destruction",
+            "titleAlign": "center",
+            "image_right": "/images/Timelines/7_5/BSE_1.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        },
+        {
+          "startWeek": 7,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "Planar Armament",
+            "titleMid": null,
+            "titleAlign": "center",
+            "image_right": "/images/Timelines/8_3/BSA_1.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "ARMAMENT ASCENSION",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 4,
+          "miniature": {
+            "titleTop": "Mad Pleasure Equipment",
+            "titleMid": null,
+            "titleAlign": "center",
+            "image_right": "/images/Timelines/7_4/FA_1_1.webp",
+            "image_center": null,
+            "image_left": "/images/Timelines/7_4/FA_1_2.webp",
+            "titleSize": "medium"
+          }
+        },
+        {
+          "startWeek": 4,
+          "endWeek": 7,
+          "miniature": {
+            "titleTop": "Lone Destruction",
+            "titleMid": "Equipment",
+            "titleAlign": "center",
+            "image_right": "/images/Timelines/7_5/ESA_1_1.webp",
+            "image_center": null,
+            "image_left": "/images/Timelines/7_5/ESA_1_2.webp",
+            "titleSize": "medium"
+          }
+        },
+        {
+          "startWeek": 7,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "PAWS Equipment",
+            "titleMid": null,
+            "titleAlign": "center",
+            "image_right": "/images/Timelines/8_3/ESA_1_1.webp",
+            "image_center": null,
+            "image_left": "/images/Timelines/8_3/ESA_1_2.png",
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 1",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "Topop Event",
+            "titleMid": "100USD to get up to 3x Sparkle/Mini-Dudu stamps",
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/9_0/EV_7.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 2",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "7-Day Login:",
+            "titleMid": "120 crystal, 1 FoV DLC stigma box and more materials",
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/9_0/EV_1.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 3",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 7,
+          "miniature": {
+            "titleTop": "7-Day Login:",
+            "titleMid": "300 crystals (cont from v8.9)",
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/9_0/EV_2.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 4",
+      "content": [
+        {
+          "startWeek": 1,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "Captain's Wishing Tree Secrets",
+            "titleMid": null,
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/9_0/EV_3.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 5",
+      "content": [
+        {
+          "startWeek": 2,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "8-Day Login: 5 Equip Cards",
+            "titleMid": null,
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/9_0/EV_4.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 6",
+      "content": [
+        {
+          "startWeek": 3,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "P2 Finale",
+            "titleMid": "It's finally over 🙏",
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/9_0/EV_5.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 7",
+      "content": [
+        {
+          "startWeek": 4,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "Flying to Oxia invitation Contest",
+            "titleMid": null,
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/9_0/EV_6.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 8",
+      "content": [
+        {
+          "startWeek": 4,
+          "endWeek": 7,
+          "miniature": {
+            "titleTop": "Cabbage Farm",
+            "titleMid": "Starts on Monday",
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/9_0/EV_8.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 9",
+      "content": [
+        {
+          "startWeek": 7,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "Star-Tempering Clash",
+            "titleMid": null,
+            "titleAlign": "left",
+            "image_right": "/images/Timelines/9_0/EV_9.webp",
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 10",
+      "content": [
+        {
+          "startWeek": 9,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "10th Anniversary",
+            "titleMid": "7 Day Login",
+            "titleAlign": "center",
+            "image_right": null,
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "small"
+          }
+        }
+      ]
+    },
+    {
+      "row": "EVENT 11",
+      "content": [
+        {
+          "startWeek": 9,
+          "endWeek": 10,
+          "miniature": {
+            "titleTop": "Thelema / Lantern / JD",
+            "titleMid": "Selector Box",
+            "titleAlign": "center",
+            "image_right": null,
+            "image_center": null,
+            "image_left": null,
+            "titleSize": "small"
+          }
+        }
+      ]
+    }
+  ]
+}

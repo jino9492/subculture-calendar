@@ -85,7 +85,9 @@ const combine = (members: CalendarEvent[], issues: CollectionIssue[]): CalendarE
     const evidence = event.timeEvidence?.[field];
     return evidence && Date.parse(evidence.at) === Date.parse(field === 'start' ? event.startAt : event.endAt) ? [evidence] : [];
   })
-    .sort((a, b) => evidencePriority[a.basis] - evidencePriority[b.basis] || a.sourceUrl.localeCompare(b.sourceUrl) || a.at.localeCompare(b.at))[0];
+    .sort((a, b) => evidencePriority[a.basis] - evidencePriority[b.basis]
+      || (preferred.game === 'honkai' ? Number(a.precision === 'date') - Number(b.precision === 'date') : 0)
+      || a.sourceUrl.localeCompare(b.sourceUrl) || a.at.localeCompare(b.at))[0];
   const start = selectTime('start'), end = selectTime('end');
   const startAt = start?.at ?? preferred.startAt, endAt = end?.at ?? preferred.endAt;
   const valid = Date.parse(endAt) > Date.parse(startAt);

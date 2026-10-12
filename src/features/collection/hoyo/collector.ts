@@ -8,7 +8,7 @@ import { mergeHoyoStructured } from './priority';
 import { fetchJson } from '../http';
 import { fetchStructuredVersion, supplementStructuredVersion, parseStructuredActivities, learnStructuredActivityNames } from '../sra';
 
-export const fetchHoyo = async (game: Exclude<GameId, 'wuwa' | 'endfield'>) => {
+export const fetchHoyo = async (game: Exclude<GameId, 'honkai' | 'wuwa' | 'endfield'>) => {
   const structuredVersion = await fetchStructuredVersion(game);
   const base = process.env.HOYO_API_BASE ?? 'https://api.ennead.cc/mihoyo/';
   let calendarUrl = new URL(`${game}/calendar?lang=ko-kr`, base);

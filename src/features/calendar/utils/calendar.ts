@@ -17,7 +17,15 @@ export const todayDay = () => dayNumber(new Date().toISOString());
 export const formatTime = (iso: string) => new Intl.DateTimeFormat('ko-KR', {
   timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false,
 }).format(new Date(iso));
-export const formatEventEnd = (event: CalendarEvent) => formatTime(event.endAt);
+const formatEventBoundary = (event: CalendarEvent, boundary: 'start' | 'end') => {
+  const at = boundary === 'start' ? event.startAt : event.endAt;
+  return event.timeEvidence?.[boundary]?.precision === 'date'
+    ? `${new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric' }).format(new Date(at))} (날짜 기준)`
+    : formatTime(at);
+};
+export const formatEventStart = (event: CalendarEvent) => formatEventBoundary(event, 'start');
+export const formatEventEnd = (event: CalendarEvent) => formatEventBoundary(event, 'end');
+export const isEstimatedPeriod = (event: CalendarEvent) => event.game === 'honkai' && event.periodBasis === 'community-data';
 
 export const monthRange = (year: number, month: number) => {
   const first = Date.UTC(year, month, 1) / DAY_MS;

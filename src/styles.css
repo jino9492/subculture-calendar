@@ -27,6 +27,7 @@
   --ending-urgent-color: #c32e3b;
   --ending-expired-color: #64748b;
   --ending-completed-color: #176b43;
+  --game-honkai-color: #a33348;
   --game-genshin-color: #12627a;
   --game-starrail-color: #65429a;
   --game-zenless-color: #855800;
@@ -59,6 +60,7 @@
   --ending-urgent-color: #f87171;
   --ending-expired-color: #9ca3af;
   --ending-completed-color: #b8efcf;
+  --game-honkai-color: #fda4af;
   --game-genshin-color: #a5f3fc;
   --game-starrail-color: #ddd6fe;
   --game-zenless-color: #fde68a;
@@ -203,8 +205,8 @@
   .timeline-tracks { @apply relative h-full shrink-0; }
   .timeline-bar { @apply absolute top-1 flex h-13 min-w-0 items-center justify-between gap-2 rounded-md border-l-2 px-3 text-left; box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 18%, transparent); }
   .timeline-bar:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 55%, transparent); }
+  .timeline-bar { container-type: inline-size; container-name: timeline-bar; overflow: clip; }
   .timeline-short-bar { overflow: hidden; padding-inline: 0; gap: 0; border-left-width: 0; }
-  .timeline-short-bar .timeline-bar-content { display: none; }
   .timeline-task-toggle { @apply absolute inset-0 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent; }
   .task-completed, .task-completed:hover { opacity: .55; }
   .completion-mark { @apply shrink-0 font-semibold; }
@@ -220,6 +222,15 @@
   .timeline-bar-meta { @apply flex min-w-0 items-center gap-3 text-xs; }
   .timeline-bar-meta > span:last-child { @apply truncate text-xs text-muted; }
   .timeline-bar-title { @apply block w-full truncate text-sm font-medium text-foreground; }
+  @container timeline-bar (max-width: 360px) {
+    .timeline-bar-content { gap: 6px; overflow: clip; }
+    .timeline-bar-content > .game-badge { display: none; }
+    .timeline-event-image { width: clamp(16px, 15cqw, 56px); min-width: 0; flex-shrink: 1; }
+    .timeline-bar-text { flex: 1; }
+    .timeline-bar-meta { gap: 4px; overflow: clip; }
+    .timeline-bar-meta > span { min-width: 0; }
+    .kind-badge { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
   .kind-badge { @apply shrink-0 rounded border px-2 py-0.5 text-xs font-semibold leading-none; color: var(--kind-border); border-color: var(--kind-border); }
   .kind-event { --kind-border: var(--kind-event-border); }
   .kind-banner { --kind-border: var(--kind-banner-border); }
@@ -229,6 +240,7 @@
   .timeline-empty { @apply sticky left-0 w-fit px-6 py-10 text-sm text-muted; }
   .continues-before { @apply rounded-l-none; }
   .continues-after { @apply rounded-r-none; }
+  .game-honkai { color: var(--game-honkai-color); border-color: currentColor; background-color: color-mix(in srgb, currentColor 13%, var(--color-panel)); }
   .game-genshin { color: var(--game-genshin-color); border-color: currentColor; background-color: color-mix(in srgb, currentColor 13%, var(--color-panel)); }
   .game-starrail { color: var(--game-starrail-color); border-color: currentColor; background-color: color-mix(in srgb, currentColor 13%, var(--color-panel)); }
   .game-zenless { color: var(--game-zenless-color); border-color: currentColor; background-color: color-mix(in srgb, currentColor 13%, var(--color-panel)); }

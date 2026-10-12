@@ -14,7 +14,7 @@ const collectNames = (value: unknown): string[] => Array.isArray(value)
   ? value.filter(isRecord).filter((item) => item.rarity === 5 || item.rarity === '5' || item.rarity === 'S')
     .flatMap((item) => typeof item.name === 'string' ? [item.name] : []) : [];
 
-export const parseHoyoCalendar = (game: Exclude<GameId, 'wuwa' | 'endfield'>, data: unknown, sourceUrl: string, sourceLanguage: 'ko-kr' | 'en-us' = 'ko-kr') => {
+export const parseHoyoCalendar = (game: Exclude<GameId, 'honkai' | 'wuwa' | 'endfield'>, data: unknown, sourceUrl: string, sourceLanguage: 'ko-kr' | 'en-us' = 'ko-kr') => {
   if (!isRecord(data) || !Array.isArray(data.events) || !Array.isArray(data.banners) || !Array.isArray(data.challenges)) {
     throw new Error('Unexpected calendar schema');
   }

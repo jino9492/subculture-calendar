@@ -7,6 +7,7 @@ const SEOUL = 9 * 3600000;
 
 
 export const applyScheduleTimeRules = (event: CalendarEvent, issues: CollectionIssue[] = []): CalendarEvent => {
+  if (event.game === 'honkai') return event;
   const evidence = event.timeEvidence?.end;
   if (evidence && Date.parse(evidence.at) === Date.parse(event.endAt) && ['manual', 'official'].includes(evidence.basis)
     || event.versionEndBasis === 'manual' || event.versionEndBasis === 'official' || event.versionEndBasis === 'next-maintenance') return event;

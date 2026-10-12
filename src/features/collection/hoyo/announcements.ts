@@ -6,7 +6,7 @@ import { parseHoyoTimeRange, ZONED_TIME_PATTERN } from '../time-evidence';
 import { HOYO_ANNOUNCEMENT_SETTINGS } from './config';
 import { supplementStarrailChallenges } from '../starrail/announcements';
 
-type HoyoGame = Exclude<GameId, 'wuwa' | 'endfield'>;
+type HoyoGame = Exclude<GameId, 'honkai' | 'wuwa' | 'endfield'>;
 export interface Announcement { id: string; title: string; description: string; url: string }
 
 export const hoyoAnnouncementUrl = (game: HoyoGame, language: 'ko-kr' | 'en-us' = 'ko-kr') => {

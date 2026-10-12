@@ -9,3 +9,14 @@ export const restoreFilterPreferences = (value: unknown) => {
     kinds: Array.isArray(kinds) ? [...new Set(kinds.filter((item: unknown): item is EventKind => EVENT_KINDS.some((kind) => kind === item)))] : [...EVENT_KINDS],
   };
 };
+
+export const migrateFilterPreferences = (saved: unknown, version: number) => {
+  const filters = restoreFilterPreferences(saved);
+  let games = filters.games;
+  if (version < 2 && games.length === 4 && !games.includes('honkai') && !games.includes('endfield')) games = [...games, 'endfield'];
+  if (version < 4 && GAME_IDS.filter((game) => game !== 'honkai').every((game) => games.includes(game))) {
+    games = ['honkai', ...games.filter((game) => game !== 'honkai')];
+  }
+  return { games, kinds: version < 3 && filters.kinds.includes('challenge') && !filters.kinds.includes('weekly')
+    ? [...filters.kinds, 'weekly' as const] : filters.kinds };
+};

@@ -23,7 +23,7 @@ export const structuredDate = (value: unknown) => {
   return parseLocalDate(value.replace('T', ' '), 8);
 };
 
-export const learnStructuredActivityNames = (game: Exclude<GameId, 'wuwa' | 'endfield'>, original: unknown, names: KoreanNames,
+export const learnStructuredActivityNames = (game: Exclude<GameId, 'honkai' | 'wuwa' | 'endfield'>, original: unknown, names: KoreanNames,
   koreanAnnouncements: Announcement[] = [], originalAnnouncements: Announcement[] = []): KoreanNames => {
   const linked = isRecord(original) ? attachHoyoNames(game, original, names, 'ko-kr') : {};
   const result = { ...names };
@@ -89,7 +89,7 @@ export const learnStructuredActivityNames = (game: Exclude<GameId, 'wuwa' | 'end
   return result;
 };
 
-export const parseStructuredActivities = (raw: unknown, sourceUrl: string, game: Exclude<GameId, 'wuwa'> = 'zenless', names: KoreanNames = {}) => {
+export const parseStructuredActivities = (raw: unknown, sourceUrl: string, game: Exclude<GameId, 'honkai' | 'wuwa'> = 'zenless', names: KoreanNames = {}) => {
   if (!isRecord(raw) || !Array.isArray(raw.activities)) throw new Error('Invalid activity calendar');
   const events: CalendarEvent[] = [];
   const issues: CollectionIssue[] = [];
@@ -122,7 +122,7 @@ export const parseStructuredActivities = (raw: unknown, sourceUrl: string, game:
   return { events, issues };
 };
 
-export const supplementStructuredVersion = (events: CalendarEvent[], raw: unknown, sourceUrl: string, game: Exclude<GameId, 'wuwa'>) => {
+export const supplementStructuredVersion = (events: CalendarEvent[], raw: unknown, sourceUrl: string, game: Exclude<GameId, 'honkai' | 'wuwa'>) => {
   if (!isRecord(raw) || typeof raw.version !== 'string' || !/^\d+\.\d+$/.test(raw.version) || !Array.isArray(raw.activities)) throw new Error('Invalid activity calendar');
   const startAt = structuredDate(raw.startTime);
   const endAt = structuredDate(raw.endTime);
@@ -142,7 +142,7 @@ export const supplementStructuredVersion = (events: CalendarEvent[], raw: unknow
   });
 };
 
-export const fetchStructuredVersion = async (game: Exclude<GameId, 'wuwa'>) => {
+export const fetchStructuredVersion = async (game: Exclude<GameId, 'honkai' | 'wuwa'>) => {
   const url = new URL(`activity/${SRA_GAMES[game]}-en-US.json`, process.env.SRA_API_BASE ?? 'https://starrailassistant.top/api/v1/');
   try { return { raw: await fetchJson(url), sourceUrl: url.href }; }
   catch (error) { console.error(`[${game}] original version API unavailable`, error); return null; }

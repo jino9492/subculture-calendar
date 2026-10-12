@@ -1,4 +1,7 @@
 export const CUSTOM_SCHEDULE_IMAGES = {
+  honkaiSuperstring: '/images/custom/honkai-superstring.png',
+  honkaiMemorialArena: '/images/custom/honkai-memorial-arena.png',
+  honkaiElysianRealm: '/images/custom/honkai-elysian-realm.png',
   genshinSpiralAbyss: '/images/custom/genshin-spiral-abyss.png',
   genshinImaginariumTheater: '/images/custom/genshin-imaginarium-theater.png',
   endfieldEchoesOfWar: '/images/custom/endfield-echoes-of-war.png',

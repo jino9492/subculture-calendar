@@ -3,6 +3,7 @@ import { type CollectionIssue } from '../shared/admin';
 import { readAdminState, normalizeAdminState } from './admin-store';
 
 const SOURCE_URLS = {
+  honkai: 'https://api.ennead.cc/mihoyo/honkai/news/notices?lang=ko-kr',
   genshin: 'https://api.ennead.cc/mihoyo/genshin/calendar?lang=ko-kr',
   starrail: 'https://api.ennead.cc/mihoyo/starrail/calendar?lang=ko-kr',
   zenless: 'https://api.ennead.cc/mihoyo/zenless/calendar?lang=ko-kr',

@@ -1,6 +1,6 @@
 import { CUSTOM_SCHEDULE_IMAGES } from './schedule-images';
 
-export const GAME_IDS = ['genshin', 'starrail', 'zenless', 'wuwa', 'endfield'] as const;
+export const GAME_IDS = ['honkai', 'genshin', 'starrail', 'zenless', 'wuwa', 'endfield'] as const;
 export type GameId = (typeof GAME_IDS)[number];
 export const EVENT_KINDS = ['version', 'event', 'banner', 'challenge', 'weekly'] as const;
 export type EventKind = (typeof EVENT_KINDS)[number];
@@ -10,6 +10,8 @@ export interface TimeEvidence {
   basis: 'manual' | 'official' | 'schedule-rule' | 'version-update' | 'version-cycle' | 'community-data';
   precision: 'second' | 'minute' | 'date';
   sourceUrl: string;
+  ruleDateAt?: string;
+  ruleOriginalAt?: string;
 }
 
 export interface CalendarEvent {
@@ -26,6 +28,7 @@ export interface CalendarEvent {
   displayLanguage?: 'ko-kr';
   localizationKey?: string;
   identityKey?: string;
+  versionStartId?: string;
   collectionMethod?: 'structured' | 'announcement';
   collectionSources?: { id: string; title: string; startAt: string; endAt: string; sourceUrl: string }[];
   periodBasis?: 'community-data' | 'community-cycle';
@@ -80,6 +83,7 @@ export const isCalendarEvent = (value: unknown): value is CalendarEvent => {
     && (value.displayLanguage === undefined || value.displayLanguage === 'ko-kr')
     && (value.localizationKey === undefined || typeof value.localizationKey === 'string' && value.localizationKey.length <= 500)
     && (value.identityKey === undefined || typeof value.identityKey === 'string' && value.identityKey.length <= 500)
+    && (value.versionStartId === undefined || typeof value.versionStartId === 'string' && value.versionStartId.length <= 500)
     && (value.collectionMethod === undefined || value.collectionMethod === 'structured' || value.collectionMethod === 'announcement')
     && (value.collectionSources === undefined || Array.isArray(value.collectionSources) && value.collectionSources.length <= 100
       && value.collectionSources.every((source) => isRecord(source) && typeof source.id === 'string' && source.id.length <= 1000
@@ -95,6 +99,8 @@ export const isCalendarEvent = (value: unknown): value is CalendarEvent => {
         return evidence === undefined || isRecord(evidence) && typeof evidence.at === 'string' && Number.isFinite(Date.parse(evidence.at))
           && ['manual', 'official', 'schedule-rule', 'version-update', 'version-cycle', 'community-data'].includes(String(evidence.basis))
           && ['second', 'minute', 'date'].includes(String(evidence.precision))
+          && (evidence.ruleDateAt === undefined || evidence.basis === 'schedule-rule' && typeof evidence.ruleDateAt === 'string' && Number.isFinite(Date.parse(evidence.ruleDateAt)))
+          && (evidence.ruleOriginalAt === undefined || evidence.basis === 'schedule-rule' && typeof evidence.ruleOriginalAt === 'string' && Number.isFinite(Date.parse(evidence.ruleOriginalAt)))
           && typeof evidence.sourceUrl === 'string' && /^https:\/\//.test(evidence.sourceUrl);
       }));
 };

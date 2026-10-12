@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { EVENT_KINDS, GAME_IDS } from '../../../../shared/calendar';
 import { cn } from '../../../utils/cn';
 import type { CalendarEvent } from '../types';
-import { dayDate, dayNumber, endingCountdown, formatEventEnd, formatTime, groupEndingEvents, nearestEnding, packTimeRange, preserveTimelineScroll, timelineTimePosition } from '../utils/calendar';
+import { dayDate, dayNumber, endingCountdown, formatEventEnd, formatEventStart, isEstimatedPeriod, groupEndingEvents, nearestEnding, packTimeRange, preserveTimelineScroll, timelineTimePosition } from '../utils/calendar';
 import { GAMES, KIND_LABELS } from '../utils/games';
 import { EventImage } from './EventImage';
 import { allEndingTasksCompleted, canComplete } from '../../completion';
@@ -155,11 +155,11 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
                   onClick={() => canComplete(segment.event) ? onToggleCompletion(segment.event) : onSelectEvent(segment.event)}
                   aria-pressed={canComplete(segment.event) ? isCompleted(segment.event) : undefined}
                   aria-label={`${GAMES[game].name} · ${segment.event.title} · ${canComplete(segment.event) ? isCompleted(segment.event) ? '완료 취소' : '완료 표시' : '상세 보기'}`}
-                  title={`${segment.event.title}\n${formatTime(segment.event.startAt)} ~ ${kind === 'version' && Date.parse(segment.event.endAt) - Date.parse(segment.event.startAt) <= 1000 ? '—' : formatEventEnd(segment.event)}`}
+                  title={`${segment.event.title}${isEstimatedPeriod(segment.event) ? ' · 예상 기간' : ''}\n${formatEventStart(segment.event)} ~ ${kind === 'version' && Date.parse(segment.event.endAt) - Date.parse(segment.event.startAt) <= 1000 ? '—' : formatEventEnd(segment.event)}`}
                   />
                   <span className="timeline-bar-content"><img className="game-badge task-game-icon" src={GAMES[game].icon} alt="" />{segment.event.imageUrls?.slice(0, 2).map((url) =>
                     <EventImage key={url} url={url} className="timeline-event-image" />)}
-                    <span className="timeline-bar-text"><span className="timeline-bar-meta"><span className={cn('kind-badge', `kind-${kind}`)}>{KIND_LABELS[kind]}</span>{isCompleted(segment.event) && <span className="completion-mark">✓ 완료</span>}
+                    <span className="timeline-bar-text"><span className="timeline-bar-meta"><span className={cn('kind-badge', `kind-${kind}`)}>{KIND_LABELS[kind]}</span>{isEstimatedPeriod(segment.event) && <span>예상 기간</span>}{isCompleted(segment.event) && <span className="completion-mark">✓ 완료</span>}
                     <span>{segment.continuesBefore ? '‹ 표시 범위 이전부터' : ''}{segment.continuesAfter ? ' 표시 범위 이후까지 ›' : ''}</span></span>
                     <span className="timeline-bar-title">{segment.event.title}</span></span></span>
                     <button type="button" className="event-detail-button" aria-label={`${segment.event.title} 상세 보기`} onClick={() => onSelectEvent(segment.event)}>⋯</button>

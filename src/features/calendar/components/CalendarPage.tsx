@@ -71,7 +71,7 @@ export const CalendarPage = () => {
         {dayEvents.length ? <div className="day-list">{dayEvents.map((event) => <div className={cn('day-event', completion.isCompleted(event) && 'task-completed')} key={event.id}>
           <button type="button" className="day-event-toggle" aria-pressed={canComplete(event) ? completion.isCompleted(event) : undefined} onClick={() => canComplete(event) ? completion.toggle(event) : setSelectedEvent(event)}>
           <img className="game-badge" src={GAMES[event.game].icon} alt="" />
-          <span className="day-event-content"><span className="day-event-meta">{GAMES[event.game].name} · {KIND_LABELS[event.kind]}</span><strong>{completion.isCompleted(event) ? '✓ ' : ''}{event.title}</strong></span>
+          <span className="day-event-content"><span className="day-event-meta">{GAMES[event.game].name} · {KIND_LABELS[event.kind]}{event.game === 'honkai' && event.periodBasis === 'community-data' ? ' · 예상 기간' : ''}</span><strong>{completion.isCompleted(event) ? '✓ ' : ''}{event.title}</strong></span>
           <span className="day-event-end">{event.kind === 'version' && Date.parse(event.endAt) - Date.parse(event.startAt) <= 1000 ? '시작 시점' : `${formatEventEnd(event)} 종료`} <span>↗</span></span>
         </button><button type="button" className="event-detail-button" aria-label={`${event.title} 상세 보기`} onClick={() => setSelectedEvent(event)}>⋯</button></div>)}</div> : <p className="empty-day">이 날짜에는 표시할 일정이 없습니다.</p>}
       </section>

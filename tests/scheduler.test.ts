@@ -7,7 +7,7 @@ import { CollectionScheduler } from '../server/collection-scheduler';
 import { RunStore } from '../server/run-store';
 import { createCalendarCollector } from '../src/features/collection';
 import { isRunPage, type CollectionRun } from '../shared/collection-runs';
-import type { CalendarEvent, GameId } from '../shared/calendar';
+import { GAME_IDS, type CalendarEvent, type GameId } from '../shared/calendar';
 
 const start = Date.parse('2099-01-01T00:00:00Z');
 const event = (id: string, game: GameId = 'genshin'): CalendarEvent => ({ id, game, kind: 'event', title: id,
@@ -27,7 +27,7 @@ const fakeClock = () => {
 test('스케줄러는 완료 후 예약하고 긴 수집·절전 구간에 중복 실행하지 않음', async () => {
   const clock = fakeClock(); let calls = 0; let finish: () => void = () => {};
   const scheduler = new CollectionScheduler(async (games, scheduledAt) => {
-    calls++; assert.equal(games.length, 5); assert.equal(scheduledAt, new Date(start + 100).toISOString());
+    calls++; assert.deepEqual(games, [...GAME_IDS]); assert.equal(scheduledAt, new Date(start + 100).toISOString());
     await new Promise<void>((resolve) => { finish = resolve; });
   }, clock, 100);
   scheduler.start(); clock.advance(1000); await tick();

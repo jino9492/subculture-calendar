@@ -3,7 +3,7 @@ import { attachHoyoNames } from './names';
 import { learnKoreanScheduleNames, type KoreanNames } from '../names';
 import { parseHoyoCalendar } from './parsers';
 
-export const mergeHoyoStructured = (game: Exclude<GameId, 'wuwa' | 'endfield'>, korean: unknown, foreign: unknown, koreanUrl: string, foreignUrl: string, names: KoreanNames) => {
+export const mergeHoyoStructured = (game: Exclude<GameId, 'honkai' | 'wuwa' | 'endfield'>, korean: unknown, foreign: unknown, koreanUrl: string, foreignUrl: string, names: KoreanNames) => {
   const koRaw = attachHoyoNames(game, korean, names, 'ko-kr');
   const koParsed = parseHoyoCalendar(game, koRaw, koreanUrl);
   const learned = learnKoreanScheduleNames(koParsed.events, names);

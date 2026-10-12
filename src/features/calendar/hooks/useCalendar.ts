@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { GAME_IDS, EVENT_KINDS, isCalendarResponse } from '../../../../shared/calendar';
 import type { CalendarResponse, EventKind, GameId } from '../types';
 import { todayDay } from '../utils/calendar';
-import { restoreFilterPreferences } from '../utils/filterPreferences';
+import { restoreFilterPreferences, migrateFilterPreferences } from '../utils/filterPreferences';
 import { apiUrl } from '../../../utils/api';
 import { weeklyStartAt } from '../../../../shared/weekly';
 
@@ -39,13 +39,8 @@ export const useCalendarStore = create<CalendarState>()(persist((set, get) => ({
   },
 }), {
   name: 'subculture-calendar-filters',
-  version: 3,
-  migrate: (saved, version) => {
-    const filters = restoreFilterPreferences(saved);
-    return { ...filters,
-      games: version < 2 && filters.games.length === 4 ? filters.games.concat('endfield') : filters.games,
-      kinds: filters.kinds.includes('challenge') && !filters.kinds.includes('weekly') ? [...filters.kinds, 'weekly' as const] : filters.kinds };
-  },
+  version: 4,
+  migrate: migrateFilterPreferences,
   storage: createJSONStorage(() => ({
     getItem: (name) => {
       try { return localStorage.getItem(name); }

@@ -1,5 +1,6 @@
 import type { EventKind, GameId } from '../types';
 export const GAMES: Record<GameId, { name: string; icon: string; className: string }> = {
+  honkai: { name: '붕괴3rd', icon: '/icons/honkai_thumb.png', className: 'game-honkai' },
   genshin: { name: '원신', icon: '/icons/genshin_thumb.png', className: 'game-genshin' },
   starrail: { name: '붕괴: 스타레일', icon: '/icons/hsr_thumb.png', className: 'game-starrail' },
   zenless: { name: '젠레스 존 제로', icon: '/icons/zzz_thumb.png', className: 'game-zenless' },
