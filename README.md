@@ -4,6 +4,8 @@
 
 ## 실행
 
+https://subculture-calendar.pages.dev/
+
 Node.js 22 이상과 pnpm이 필요합니다.
 
 ```powershell
