@@ -11,6 +11,14 @@
 }
 */
 @font-face {
+    font-family: 'DancingPeople';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2610082345@dancingpeoples-dance-vf/dancingpeoples-dance-vf/DancingPeoples-Dance-VF.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+
+@font-face {
     font-family: 'YeogiOttaeJalnan';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
     font-weight: normal;
@@ -20,6 +28,6 @@
 @theme {
   --tracking-site: 0.1em;
   /* 앞쪽 폰트부터 적용, 미설치 폰트나 지원하지 않는 글자는 다음 폰트로 대체 */
-  --font-sans: 'YeogiOttaeJalnan', "Segoe UI", "Malgun Gothic", sans-serif;
+  --font-sans: 'DancingPeople','YeogiOttaeJalnan', "Segoe UI", "Malgun Gothic", sans-serif;
   /* 로컬 폰트 예시: --font-sans: "TestFont", "Malgun Gothic", sans-serif; */
 }
