@@ -1,0 +1,244 @@
+{
+  "raw": {
+    "meta": {
+      "version": "v1d6"
+    },
+    "gameplay": [
+      {
+        "id": "activity_timelimited_inn",
+        "name": {
+          "ko-kr": "불꽃으로 맺은 인연",
+          "en-us": "Yuanyuan's Blazing Stoves"
+        },
+        "visual": {
+          "label": "MEDIA",
+          "tone": "gameplayOne",
+          "assetKey": "gameplay.0.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "gameplayOne",
+          "assetKey": "gameplay.0.thumbnail",
+          "kind": "image"
+        }
+      },
+      {
+        "id": "activity_map02_guide_010",
+        "name": {
+          "ko-kr": "먹에서 피어난 색채",
+          "en-us": "All the Inky Hues"
+        },
+        "visual": {
+          "label": "MEDIA",
+          "tone": "gameplayOne",
+          "assetKey": "gameplay.8.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "gameplayOne",
+          "assetKey": "gameplay.8.thumbnail",
+          "kind": "image"
+        }
+      },
+      {
+        "id": "activity_contingency_contract_1",
+        "name": {
+          "ko-kr": "위기 협약 · 잿빛 실험 작전",
+          "en-us": "Contingency Contract: Indigo Experimental Operation"
+        },
+        "visual": {
+          "label": "MEDIA",
+          "tone": "gameplayTwo",
+          "assetKey": "gameplay.1.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "gameplayTwo",
+          "assetKey": "gameplay.1.thumbnail",
+          "kind": "image"
+        }
+      },
+      {
+        "id": "activity_gambling_dungeon",
+        "name": {
+          "ko-kr": "다채로운 연무",
+          "en-us": "Arena of Games"
+        },
+        "visual": {
+          "label": "MEDIA",
+          "tone": "gameplayThree",
+          "assetKey": "gameplay.2.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "gameplayThree",
+          "assetKey": "gameplay.2.thumbnail",
+          "kind": "image"
+        }
+      },
+      {
+        "id": "activity_phototaking_carly_3",
+        "name": {
+          "ko-kr": "칼리의 꽃과 풀 동화",
+          "en-us": "Carly's Verdant Anthology"
+        },
+        "visual": {
+          "label": "MEDIA",
+          "tone": "gameplayOne",
+          "assetKey": "gameplay.4.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "gameplayOne",
+          "assetKey": "gameplay.4.thumbnail",
+          "kind": "image"
+        }
+      },
+      {
+        "id": "activity_high_difficulty_v1d6",
+        "name": {
+          "ko-kr": "기억의 흔적 · 악몽의 숲",
+          "en-us": "Monumental Etching: Forest of Maras"
+        },
+        "visual": {
+          "label": "MEDIA",
+          "tone": "gameplayFour",
+          "assetKey": "gameplay.3.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "gameplayFour",
+          "assetKey": "gameplay.3.thumbnail",
+          "kind": "image"
+        }
+      },
+      {
+        "id": "activity_seasontower_0",
+        "name": {
+          "ko-kr": "「전쟁의 메아리」 상시 도전 콘텐츠 업데이트",
+          "en-us": "[Echoes of War] Permanent Challenge Mode Update"
+        },
+        "visual": {
+          "label": "MEDIA",
+          "tone": "gameplayThree",
+          "assetKey": "gameplay.6.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "gameplayThree",
+          "assetKey": "gameplay.6.thumbnail",
+          "kind": "image"
+        }
+      },
+      {
+        "id": "web_activity_v1d6_ghost",
+        "name": {
+          "ko-kr": "모든 영혼에 바치는 새로운 빛과 그림자",
+          "en-us": "New Era for the Myriad Souls"
+        },
+        "visual": {
+          "label": "MEDIA",
+          "tone": "gameplayTwo",
+          "assetKey": "gameplay.5.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "gameplayTwo",
+          "assetKey": "gameplay.5.thumbnail",
+          "kind": "image"
+        }
+      },
+      {
+        "id": "activity_puzzle_1",
+        "name": {
+          "ko-kr": "「숨겨진 구역의 여행자」 공간 그룹 업데이트",
+          "en-us": "[Delver of the Cryptic] Spatial Set Update"
+        },
+        "visual": {
+          "label": "MEDIA",
+          "tone": "gameplayFour",
+          "assetKey": "gameplay.7.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "gameplayFour",
+          "assetKey": "gameplay.7.thumbnail",
+          "kind": "image"
+        }
+      }
+    ],
+    "story": [
+      {
+        "id": "e12m1",
+        "name": {
+          "ko-kr": "단청 속으로 스며들리라",
+          "en-us": "Enter the Painted World"
+        },
+        "visual": {
+          "label": "STORY",
+          "tone": "storyOne",
+          "assetKey": "story.0.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "storyOne",
+          "assetKey": "story.0.thumbnail",
+          "kind": "image"
+        }
+      },
+      {
+        "id": "CharacterGuide_minghe",
+        "name": {
+          "ko-kr": "야생으로",
+          "en-us": "Back to the Rustics"
+        },
+        "visual": {
+          "label": "STORY",
+          "tone": "storyTwo",
+          "assetKey": "story.1.visual",
+          "kind": "image"
+        },
+        "thumbnail": {
+          "label": "IMAGE",
+          "tone": "storyTwo",
+          "assetKey": "story.1.thumbnail",
+          "kind": "image"
+        }
+      }
+    ]
+  },
+  "assets": {
+    "gameplay.0.thumbnail": "assets/imgs/thumbnail.0ab0c1.jpg",
+    "gameplay.0.visual": "assets/imgs/visual.cea556.png",
+    "gameplay.1.thumbnail": "assets/imgs/thumbnail.0952be.jpg",
+    "gameplay.1.visual": "assets/imgs/visual.f211dc.png",
+    "gameplay.2.thumbnail": "assets/imgs/thumbnail.33ee37.jpg",
+    "gameplay.2.visual": "assets/imgs/visual.02a48b.png",
+    "gameplay.3.thumbnail": "assets/imgs/thumbnail.c59b9f.jpg",
+    "gameplay.3.visual": "assets/imgs/visual.22cf84.png",
+    "gameplay.4.thumbnail": "assets/imgs/thumbnail.71776c.jpg",
+    "gameplay.4.visual": "assets/imgs/visual.b9a76f.png",
+    "gameplay.5.thumbnail": "assets/imgs/thumbnail.b9a7b5.jpg",
+    "gameplay.5.visual": "assets/imgs/visual.853cd2.png",
+    "gameplay.6.thumbnail": "assets/imgs/thumbnail.614a75.jpg",
+    "gameplay.6.visual": "assets/imgs/visual.feb939.png",
+    "gameplay.7.thumbnail": "assets/imgs/thumbnail.ab83b6.jpg",
+    "gameplay.7.visual": "assets/imgs/visual.72c320.png",
+    "gameplay.8.thumbnail": "assets/imgs/thumbnail.2ff83e.jpg",
+    "gameplay.8.visual": "assets/imgs/visual.d483e1.png",
+    "story.0.thumbnail": "assets/imgs/thumbnail.87e6e8.jpg",
+    "story.0.visual": "assets/imgs/visual.1b3117.jpg",
+    "story.1.thumbnail": "assets/imgs/thumbnail.8cbe72.png",
+    "story.1.visual": "assets/imgs/visual.275d97.jpg"
+  }
+}

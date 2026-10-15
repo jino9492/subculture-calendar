@@ -65,7 +65,7 @@ test('무기 공지가 먼저 수집되어도 캐릭터 세 회차와 연결하�
     assert.equal(weapon?.endAt, '2099-04-01T03:59:00.000Z');
     assert.equal(weapon?.periodBasis, undefined);
     assert.equal(confirmed.skipped, 0);
-    assert.equal(confirmed.issues.length, 0);
+    assert.deepEqual(confirmed.issues.map((issue) => issue.id), ['endfield:guide:unavailable']);
   } finally {
     globalThis.fetch = originalFetch;
   }

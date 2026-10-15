@@ -8,9 +8,10 @@ import { fetchStructuredVersion, supplementStructuredVersion, parseStructuredAct
 import { learnEndfieldChallengeNames } from './structured';
 import { parseEndfieldEvents } from './custom';
 import { supplementEndfieldReleaseDates } from './custom/version-boundaries';
+import { applyEndfieldGuide, fetchEndfieldGuide, ENDFIELD_GUIDE_URL } from './guide';
 
 export const fetchEndfield = async () => {
-  const structuredVersion = await fetchStructuredVersion('endfield');
+  const [structuredVersion, versionGuide] = await Promise.all([fetchStructuredVersion('endfield'), fetchEndfieldGuide()]);
   const base = process.env.ENDFIELD_NEWS_BASE ?? 'https://endfield.gryphline.com/ko-kr/news/';
   const cms = process.env.ENDFIELD_CMS_BASE ?? 'https://web-news.gryphline.com/';
   let cmsAvailable = true;
@@ -102,8 +103,12 @@ export const fetchEndfield = async () => {
     } catch (error) { console.error('[endfield] original activity validation failed', error); }
   }
   const skipped = failed + parsed.reduce((sum, item) => sum + item.skipped, 0);
+  if (versionGuide.guide) events = applyEndfieldGuide(events, versionGuide.guide);
+  if (versionGuide.stale) issues.push({ id: 'endfield:guide:unavailable', game: 'endfield', title: '공식 버전 가이드 이미지 수집 확인',
+    sourceUrl: ENDFIELD_GUIDE_URL, reason: versionGuide.guide ? '버전 가이드 갱신 실패. 마지막으로 확인한 콘텐츠별 이미지를 유지합니다.'
+      : '버전 가이드 수집 실패. 기존 공식 공지와 이미지 수집 결과를 유지합니다.', excerpt: '' });
   const remainingIssues = issues.filter((issue) => !issue.id.startsWith('endfield:release:')
     || !events.some((event) => event.id === issue.eventId && event.periodBasis === 'community-data'));
   return { events, skipped, issues: remainingIssues, partial: true,
-    message: `버전·이벤트는 원본 구조화 API 대조 · 누락은 공식 한국어 ${cmsAvailable ? '뉴스 API(최근 100일 전체)' : '뉴스 페이지'}에서 보완. ${skipped}개 기간은 상대 종료·상시/조건부·이미지 등으로 표시 제외. 전쟁의 메아리는 공식 시즌 기간 수집.` };
+    message: `이미지는 공식 버전 가이드의 콘텐츠별 리소스 우선 · 기간은 공식 한국어 공지와 원본 구조화 API 대조. 누락은 공식 한국어 ${cmsAvailable ? '뉴스 API(최근 100일 전체)' : '뉴스 페이지'}에서 보완. ${skipped}개 기간은 상대 종료·상시/조건부·이미지 등으로 표시 제외. 전쟁의 메아리는 공식 시즌 기간 수집.` };
 };
