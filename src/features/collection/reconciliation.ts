@@ -10,6 +10,7 @@ const normalize = (title: string) => title.normalize('NFKC').replace(/[^\p{L}\p{
 export const scheduleTitleKey = (event: CalendarEvent): string => {
   if (isPendingScheduleName(event) || /한국어 이름 확인/.test(event.title)) return '';
   let title = event.title.replace(/^이벤트 예고\s*\|\s*/, '').trim();
+  if (event.game === 'genshin' && event.kind === 'event') title = title.replace(/^「일곱 성인의 소환」\s+/, '');
   // 픽업 종류와 회차는 보존하고 공지 제목의 개방·안내 문구만 비교에서 제외
   if (event.kind === 'banner' && /^(?:「[^」]+」|\[[^\]]+\]).*(?:기원|워프|채널|튜닝|헤드헌팅|신청)(?:\s*#\s*\d+)?\s+(?:개방(?:\s*안내)?|안내|오픈)[.!\s]*$/.test(title)) {
     title = title.replace(/\s+(?:개방(?:\s*안내)?|안내|오픈)[.!\s]*$/, '');

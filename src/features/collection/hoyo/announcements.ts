@@ -1,7 +1,7 @@
 import { isRecord, type CalendarEvent, type GameId } from '../../../../shared/calendar';
 import { parseLocalDate, stripHtml, type VersionBoundary } from '../parsers';
 import type { CollectionIssue } from '../../../../shared/admin';
-import { reconcileSchedules, isSameScheduleCycle } from '../reconciliation';
+import { reconcileSchedules, isSameScheduleCycle, scheduleTitleKey } from '../reconciliation';
 import { parseHoyoTimeRange, ZONED_TIME_PATTERN } from '../time-evidence';
 import { HOYO_ANNOUNCEMENT_SETTINGS } from './config';
 import { supplementStarrailChallenges } from '../starrail/announcements';
@@ -66,7 +66,7 @@ export const supplementHoyoCalendar = (game: HoyoGame, parsed: { events: Calenda
         ?? [...preceding].reverse().find((line) => /「[^」]+」|\[[^\]]+\]/.test(line)
         && /이벤트|기원|워프|채널|출석\s*체크/.test(line) && !/설명|조건|보상|참여|획득|확률/.test(line));
       const articleTitle = headers.length > 1 || /버전.*업데이트/.test(article.title) ? heading : article.title;
-      const periods = ranges.length ? ranges.map((range) => {
+      let periods = ranges.length ? ranges.map((range) => {
         const prefix = section.slice(0, range.index).split('\n').at(-1)?.replace(/[〓✦■]/g, '').trim() ?? '';
         const label = /(.+?)\s*(?:기간|시간)\s*[:：]\s*$/.exec(prefix)?.[1]?.trim();
         const evidence = parseHoyoTimeRange(range[0], boundaries, article.url);
@@ -77,6 +77,22 @@ export const supplementHoyoCalendar = (game: HoyoGame, parsed: { events: Calenda
           const evidence = parseHoyoTimeRange(section, boundaries, article.url);
           return [{ startAt: evidence?.start.at, endAt: evidence?.end.at, evidence, label: undefined }];
         })();
+      if (game === 'genshin' && articleTitle && periods.length > 1
+        && periods.every((period) => period.startAt && period.endAt && period.endAt > period.startAt)) {
+        const first = [...periods].sort((a, b) => a.startAt!.localeCompare(b.startAt!))[0]!;
+        const last = [...periods].sort((a, b) => b.endAt!.localeCompare(a.endAt!))[0]!;
+        const matches = parsed.events.filter((event) => event.kind === 'event' && event.collectionMethod === 'structured'
+          && scheduleTitleKey(event) === scheduleTitleKey({ ...event, title: articleTitle })
+          && isSameScheduleCycle(event, { ...event, collectionSources: undefined,
+            startAt: first.startAt!, endAt: last.endAt!, sourceUrl: article.url }, false));
+        // 동일 구조화 이벤트의 전체 기간과 일치하는 세부 단계는 설명에 보존하고 한 일정으로 보완
+        if (matches.length === 1) {
+          periods = [{ startAt: first.startAt, endAt: last.endAt, label: undefined,
+            evidence: first.evidence && last.evidence ? { start: first.evidence.start, end: last.evidence.end } : undefined }];
+          const native = events.find((event) => event.id === matches[0]!.id);
+          if (native && !native.description.includes(section)) native.description = `${native.description}\n\n공식 공지 세부 기간:\n${section}`.trim();
+        }
+      }
       for (const [periodIndex, { startAt, endAt, label, evidence }] of periods.entries()) {
         if (!startAt || !endAt || endAt <= startAt || !articleTitle) {
           issues.push({ id: `${game}:announcement:${article.id}:period:${header}`, game, title: articleTitle ?? article.title,
