@@ -7,6 +7,7 @@ import { isCollectionIssue, type CollectionIssue } from '../../../shared/admin';
 import { restoreKnownScheduleNames } from './names';
 import { reconcileSchedules, resolveScheduleId } from './reconciliation';
 import { refreshCustomSchedules } from './custom-schedules';
+import { preserveHonkaiReferences } from './honkai/official';
 
 interface Snapshot { events: CalendarEvent[]; issues: CollectionIssue[]; fetchedAt: string; skipped: number; partial: boolean; message: string }
 const SNAPSHOT_VERSION = 23;
@@ -34,7 +35,7 @@ export const createCalendarCollector = (dependencies: { fetcher?: typeof fetchGa
         return { events: reconciled.events,
           issues: [...(Array.isArray(raw.issues) && raw.issues.every(isCollectionIssue) ? raw.issues : []), ...reconciled.issues]
             .map((issue) => issue.eventId ? { ...issue, eventId: resolveScheduleId(reconciled.events, issue.eventId) } : issue),
-          fetchedAt: raw.schemaVersion === SNAPSHOT_VERSION && (game !== 'honkai' || raw.collectorRevision === 6) ? raw.fetchedAt : '1970-01-01T00:00:00.000Z',
+          fetchedAt: raw.schemaVersion === SNAPSHOT_VERSION && (game !== 'honkai' || raw.collectorRevision === 15) ? raw.fetchedAt : '1970-01-01T00:00:00.000Z',
           skipped: raw.skipped, partial: raw.partial, message: raw.message };
       }
     } catch (error) {
@@ -62,6 +63,7 @@ export const createCalendarCollector = (dependencies: { fetcher?: typeof fetchGa
       const result = await (dependencies.fetcher ?? fetchGame)(game);
       const collected = result.events.length;
       result.events = restoreKnownScheduleNames(snapshot?.events ?? [], result.events);
+      if (game === 'honkai') result.events = preserveHonkaiReferences(snapshot?.events ?? [], result.events);
       const reconciled = reconcileSchedules(result.events);
       result.events = reconciled.events;
       result.issues = [...result.issues, ...reconciled.issues].map((issue) => issue.eventId

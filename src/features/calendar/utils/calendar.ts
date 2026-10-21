@@ -25,7 +25,11 @@ const formatEventBoundary = (event: CalendarEvent, boundary: 'start' | 'end') =>
 };
 export const formatEventStart = (event: CalendarEvent) => formatEventBoundary(event, 'start');
 export const formatEventEnd = (event: CalendarEvent) => formatEventBoundary(event, 'end');
-export const isEstimatedPeriod = (event: CalendarEvent) => event.game === 'honkai' && event.periodBasis === 'community-data';
+export const isEstimatedPeriod = (event: CalendarEvent) => event.game === 'honkai'
+  && (event.versionEndBasis === 'default-42-days' || event.periodBasis === 'community-data'
+    && !['official', 'manual'].includes(event.timeEvidence?.end?.basis ?? ''));
+export const visibleCalendarEvents = (events: CalendarEvent[]) => events.filter((event) => event.game !== 'honkai'
+  || event.displayLanguage === 'ko-kr' || event.sourceLanguage.startsWith('ko'));
 
 export const monthRange = (year: number, month: number) => {
   const first = Date.UTC(year, month, 1) / DAY_MS;

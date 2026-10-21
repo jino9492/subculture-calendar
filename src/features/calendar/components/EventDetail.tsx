@@ -14,7 +14,7 @@ export const EventDetail = ({ event, isCompleted, onToggleCompletion, onClose }:
     <div className="dialog-header"><img className="game-badge" src={GAMES[event.game].icon} alt="" />
       <span>{GAMES[event.game].name} / {KIND_LABELS[event.kind]}</span><button type="button" className="icon-button" onClick={onClose} aria-label="상세 닫기">×</button></div>
     <h2>{event.title}</h2>
-    {isEstimatedPeriod(event) && <p className="notice">예상 기간 · 한국 공식 개방 안내와 지역 서버용 공개 일정을 대조한 날짜입니다. 실제 종료 시각은 다를 수 있습니다.</p>}
+    {isEstimatedPeriod(event) && <p className="notice">예상 기간 · 공식 종료 기간이 확인되지 않아 예상 종료를 표시합니다. 실제 한국 일정과 다를 수 있습니다.</p>}
     {canComplete(event) && <button type="button" className="detail-completion-button small-button" aria-pressed={isCompleted} onClick={onToggleCompletion}>{isCompleted ? '✓ 완료 · 체크 취소' : '완료 표시'}</button>}
     {Boolean(event.imageUrls?.length) && <div className="detail-images">{event.imageUrls?.map((url) =>
       <EventImage key={url} url={url} alt={event.title} className="detail-image" />)}</div>}

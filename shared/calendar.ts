@@ -32,6 +32,7 @@ export interface CalendarEvent {
   collectionMethod?: 'structured' | 'announcement';
   collectionSources?: { id: string; title: string; startAt: string; endAt: string; sourceUrl: string }[];
   periodBasis?: 'community-data' | 'community-cycle';
+  crossChecked?: boolean;
   versionEndBasis?: 'official' | 'next-maintenance' | 'announced-date' | 'default-42-days' | 'manual';
   versionEndSourceUrl?: string;
   timeEvidence?: { start?: TimeEvidence; end?: TimeEvidence };
@@ -91,6 +92,7 @@ export const isCalendarEvent = (value: unknown): value is CalendarEvent => {
         && typeof source.endAt === 'string' && Date.parse(source.endAt) > Date.parse(source.startAt)
         && typeof source.sourceUrl === 'string' && /^https:\/\//.test(source.sourceUrl)))
     && (value.periodBasis === undefined || value.periodBasis === 'community-data' || value.periodBasis === 'community-cycle')
+    && (value.crossChecked === undefined || typeof value.crossChecked === 'boolean')
     && (value.versionEndBasis === undefined || ['official', 'next-maintenance', 'announced-date', 'default-42-days', 'manual'].some((basis) => basis === value.versionEndBasis))
     && (value.versionEndSourceUrl === undefined || typeof value.versionEndSourceUrl === 'string' && /^https:\/\//.test(value.versionEndSourceUrl))
     && (value.timeEvidence === undefined || isRecord(value.timeEvidence)

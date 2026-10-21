@@ -12,7 +12,7 @@ export const supplementHonkaiAuditedSchedules = (events: CalendarEvent[], articl
   const sourceUrl = 'https://marisaimpact.com/calendar90';
   const event: CalendarEvent = { id: 'honkai:custom:9.0:elysia-equipment', game: 'honkai', kind: 'banner',
     title: '무결의 사랑 · 사법의 시인 · 장비 보급', startAt, endAt: version.endAt,
-    sourceUrl, sourceLanguage: 'ko-kr', collectionMethod: 'structured', periodBasis: 'community-data',
+    sourceUrl, sourceLanguage: 'ko-kr', collectionMethod: 'structured', periodBasis: 'community-data', crossChecked: true,
     description: '한국 공식 주간 공지에서 10월 2일 개방 확인. AruStats 누락 슬롯을 지역 서버용 공개 일정으로 보완. 종료일·시각은 예상 규칙.',
     timeEvidence: { start: { at: startAt, basis: 'official', precision: 'date', sourceUrl: notice.url },
       end: { at: version.endAt, basis: 'community-data', precision: 'date', sourceUrl } } };

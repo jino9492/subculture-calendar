@@ -45,6 +45,7 @@ export const applyHonkaiTimeRules = (events: CalendarEvent[]): CalendarEvent[] =
       && Date.parse(event.startAt) < Date.parse(version.endAt));
     if (owning.length !== 1) return event;
     const version = owning[0]!;
+    if (version.versionEndBasis === 'default-42-days') return event;
     if (Date.parse(event.endAt) <= Date.parse(version.endAt)) return event;
     const end = event.timeEvidence?.end;
     // 버전 마지막 보급의 종료를 점검 시작 경계에 제한하고 원래 종료 근거 보존

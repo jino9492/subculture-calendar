@@ -1,12 +1,13 @@
 import { fetchJson } from '../http';
 import type { CollectionIssue } from '../../../../shared/admin';
-import { isHonkaiScheduleArticle, parseHonkaiNews, parseHonkaiPost, parseHonkaiSchedules } from './parsers';
+import { isHonkaiScheduleArticle, parseHonkaiNews, parseHonkaiPost, parseHonkaiSchedules, type HonkaiArticle } from './parsers';
 import { fetchHonkaiCafe, HONKAI_CAFE_URL } from './cafe';
 import { fetchHonkaiPublicTimeline, HONKAI_TIMELINE_BASE } from './public';
-import { scheduleTitleKey } from '../reconciliation';
 import { fetchLinkedHonkaiArticles } from './linked';
 import { applyHonkaiTimeRules } from './custom/time-rules';
+import { collectHonkaiOfficialItems, mergeHonkaiScheduleSources, resolveHonkaiOfficialItems } from './official';
 import { supplementHonkaiAuditedSchedules } from './custom/audited-schedules';
+import type { CalendarEvent } from '../../../../shared/calendar';
 
 export const fetchHonkai = async () => {
   const base = process.env.HOYO_API_BASE ?? 'https://api.ennead.cc/mihoyo/';
@@ -32,7 +33,7 @@ export const fetchHonkai = async () => {
       const response = await fetch(url, { signal: AbortSignal.timeout(15000), headers: { Accept: 'application/json', 'x-rpc-language': 'ko-kr' } });
       if (!response.ok) throw new Error(`Honkai post HTTP ${response.status}`);
       const korean = parseHonkaiPost(await response.json(), article);
-      if (/버전.*업데이트 공지/.test(article.title)) {
+      if (/버전.*(?:업데이트 공지|이벤트 일람)/.test(article.title)) {
         try {
           const original = await fetch(url, { signal: AbortSignal.timeout(15000), headers: { Accept: 'application/json', 'x-rpc-language': 'en-us' } });
           if (original.ok) korean.englishDescription = parseHonkaiPost(await original.json(), article, 'en-us').description;
@@ -52,36 +53,54 @@ export const fetchHonkai = async () => {
   }
   const linked = await fetchLinkedHonkaiArticles(cafe.articles);
   const officialArticles = [...new Map([...linked, ...fullArticles, ...cafe.articles].map((article) => [article.id, article])).values()];
+  return collectHonkaiArticleSchedules(officialArticles, { issues });
+};
+
+export const collectHonkaiArticleSchedules = async (officialArticles: HonkaiArticle[], options: {
+  now?: number;
+  issues?: CollectionIssue[];
+  fetchTimeline?: typeof fetchHonkaiPublicTimeline;
+} = {}) => {
+  const issues = [...(options.issues ?? [])];
+  const now = options.now ?? Date.now();
   const parsed = parseHonkaiSchedules(officialArticles);
-  const versions = parsed.events.filter((event) => event.kind === 'version' && Date.parse(event.endAt) > Date.now() - 100 * 86400000);
+  const inventory = collectHonkaiOfficialItems(officialArticles, parsed.events);
+  const supplements: CalendarEvent[] = [];
+  let skipped = 0;
+  const versions = parsed.events.filter((event) => event.kind === 'version' && Date.parse(event.endAt) > now - 100 * 86400000);
   for (const version of versions) {
     try {
-      const timeline = await fetchHonkaiPublicTimeline(version, officialArticles);
-      const added = timeline.events.filter((candidate) => !parsed.events.some((event) => !event.periodBasis && event.kind === candidate.kind
-        && scheduleTitleKey(event) === scheduleTitleKey(candidate) && Date.parse(event.endAt) > Date.parse(candidate.startAt)
-        && Date.parse(event.startAt) < Date.parse(candidate.endAt)));
-      parsed.events.push(...added);
+      const timeline = await (options.fetchTimeline ?? fetchHonkaiPublicTimeline)(version, officialArticles, true);
+      parsed.events[parsed.events.indexOf(version)] = timeline.version;
+      supplements.push(...timeline.events);
       issues.push(...timeline.issues);
+      skipped += timeline.skipped;
     } catch (error) {
       console.error('[honkai] public timeline unavailable', error);
       issues.push({ id: `honkai:timeline:fetch:${version.id}`, game: 'honkai', title: '공개 예상 일정 수집 실패',
         reason: '지역 서버용 일정 데이터 또는 한국 버전 기간 대조 실패. 다음 수집에서 재시도', sourceUrl: HONKAI_TIMELINE_BASE, excerpt: '' });
     }
   }
-  issues.push(...parsed.issues.filter((issue) => !issue.id.includes(':candidate:') || !parsed.events.some((event) =>
-    event.title === issue.title || event.title.startsWith(`${issue.title} · `))), { id: 'honkai:coverage', game: 'honkai', title: '붕괴3rd 자동 수집 범위',
-    reason: '한국 공식 공지·카페와 AruStats 지역 서버용 예상 일정 자동 대조. 한국 공지에 없는 콘텐츠는 제외. 예상 기간은 실제 종료 시각과 다를 수 있음',
+  const collectedVersions = parsed.events.filter((event) => event.kind === 'version');
+  const officialPeriods = inventory.flatMap((item) => item.periods);
+  const audited = supplementHonkaiAuditedSchedules([...collectedVersions, ...officialPeriods, ...supplements], officialArticles)
+    .filter((event) => event.kind !== 'version');
+  const resolved = mergeHonkaiScheduleSources(resolveHonkaiOfficialItems(inventory, audited), audited, inventory);
+  issues.push(...resolved.issues, { id: 'honkai:coverage', game: 'honkai', title: '붕괴3rd 자동 수집 범위',
+    reason: '공식 공지와 공개 원본을 독립 수집 후 병합. 이름·분류·한국 기간 대조 실패도 원본 표시를 막지 않으며 원문과 예상 기간 유지. 공식 정보는 별도로 보완하고 미연결·충돌은 관리자에 유지',
     sourceUrl: HONKAI_CAFE_URL, excerpt: '' });
-  const events = applyHonkaiTimeRules(supplementHonkaiAuditedSchedules(parsed.events, officialArticles));
+  const events = applyHonkaiTimeRules([...parsed.events.filter((event) => event.kind === 'version'), ...resolved.events]);
   for (const event of events.filter((event) => event.kind !== 'version'
     && (event.timeEvidence?.start?.precision === 'date' || event.timeEvidence?.end?.precision === 'date'))) {
     issues.push({ id: `honkai:time-rule:${event.id}`, game: 'honkai', title: event.title, sourceUrl: event.sourceUrl,
       reason: '시각 규칙 적용 시 기간 역전 또는 근거 불일치. 원본 날짜 유지 및 새 공식 시각 수집 필요', excerpt: `${event.startAt} ~ ${event.endAt}` });
   }
-  const estimated = events.filter((event) => event.periodBasis).length;
-  const verified = events.filter((event) => event.kind !== 'version' && !event.periodBasis).length;
+  const schedules = events.filter((event) => event.kind !== 'version');
+  const estimated = schedules.filter((event) => event.periodBasis).length;
+  const verified = schedules.length - estimated;
+  const unlinked = schedules.filter((event) => !event.crossChecked).length;
   return { events, issues,
-    skipped: issues.filter((issue) => issue.id.includes(':period') || issue.id.includes(':candidate:')).length,
-    partial: true, collectorRevision: 6,
-    message: `이벤트·픽업 ${verified + estimated}개 자동 수집: 공식 기간 ${verified}개 · 예상 기간 ${estimated}개. 한국 공지 우선, 버전 17시 시작·11시 종료, 이벤트 04시·보급 12시 기본값 적용.` };
+    skipped: skipped + resolved.issues.length,
+    partial: true, collectorRevision: 15,
+    message: `공식 목록 ${inventory.length}개 · 표시 일정 ${schedules.length}개(공식 기간 ${verified}개 · 공개 원본 기간 ${estimated}개) · 이름·기간 미대조 ${unlinked}개 원문 표시 · 공식 기간 미확정 ${resolved.issues.length}개 관리자 확인.` };
 };

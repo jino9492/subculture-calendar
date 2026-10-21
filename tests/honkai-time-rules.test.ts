@@ -100,7 +100,8 @@ test('한국어 상세 공지의 세나디아 정확한 기간을 예상 기간�
   const raw = JSON.parse(readFileSync(new URL('./fixtures/honkai-timeline.json', import.meta.url), 'utf8'));
   const articles = [{ id: '46171269', title: '신규 S급 협력 캐릭터 「세나디아」 등장', createdAt: 1786000000,
     url: 'https://www.hoyolab.com/article/46171269', description: '9.0 버전 업데이트 후~10월 2일 12:00 기간 협력 보급 개방.' }];
-  const event = applyHonkaiTimeRules([version, ...parseHonkaiPublicTimeline(raw, version, articles, url).events])[1]!;
+  const event = applyHonkaiTimeRules([version, ...parseHonkaiPublicTimeline(raw, version, articles, url).events])
+    .find((event) => event.title === '세나디아 · 협력 보급')!;
   assert.equal(event.startAt, version.startAt); assert.equal(event.endAt, '2026-10-02T03:00:00.000Z');
   assert.equal(event.periodBasis, undefined); assert.equal(event.timeEvidence?.end?.basis, 'official');
 });

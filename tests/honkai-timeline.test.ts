@@ -19,8 +19,9 @@ const official: HonkaiArticle[] = [{ id: '123', title: '9.0 버전 내용', crea
 
 test('실제 공개 JSON 주차를 종료 주차 미포함으로 해석하고 한국 개방일 우선', () => {
   const result = parseHonkaiPublicTimeline(raw, version, official, source);
-  assert.equal(result.events.filter((event) => event.kind === 'banner').length, 10);
-  assert.equal(result.events.filter((event) => event.kind === 'event').length, 9);
+  assert.equal(result.events.filter((event) => event.kind === 'banner' && event.crossChecked).length, 10);
+  assert.equal(result.events.filter((event) => event.kind === 'event' && event.crossChecked).length, 9);
+  assert.equal(result.events.length, raw.scheduleActivities.reduce((count: number, row: { content: unknown[] }) => count + row.content.length, 0));
   assert.ok(result.events.every(isCalendarEvent));
   const banner = result.events.find((event) => event.title === '차원 무장·카오스 · 랭크업 보급')!;
   assert.equal(banner.startAt, '2026-10-01T15:00:00.000Z'); assert.equal(banner.endAt, version.endAt);
@@ -28,15 +29,20 @@ test('실제 공개 JSON 주차를 종료 주차 미포함으로 해석하고 �
   assert.equal(event.startAt, '2026-09-30T15:00:00.000Z'); assert.equal(event.timeEvidence?.start?.basis, 'official');
   assert.equal(event.timeEvidence?.end?.basis, 'community-data'); assert.equal(event.timeEvidence?.end?.precision, 'date');
   assert.equal(result.events.find((item) => item.title === '별들의 텃밭')?.startAt, '2026-09-20T15:00:00.000Z');
-  assert.ok(!result.events.some((item) => /10th|Selector/.test(item.title)));
+  assert.ok(result.events.some((item) => /10th|Selector/.test(item.title) && !item.crossChecked));
 });
 
-test('한국 공지에 없는 콘텐츠와 다른 버전·손상된 주차는 사용하지 않음', () => {
-  assert.equal(parseHonkaiPublicTimeline(raw, version, [], source).events.length, 0);
+test('한국 공지에 없는 콘텐츠는 원문 보존하고 다른 버전·손상된 주차는 사용하지 않음', () => {
+  const original = parseHonkaiPublicTimeline(raw, version, [], source).events;
+  assert.equal(original.length, raw.scheduleActivities.reduce((count: number, row: { content: unknown[] }) => count + row.content.length, 0));
+  assert.ok(original.every((event) => !event.crossChecked && !event.displayLanguage));
   assert.throws(() => parseHonkaiPublicTimeline({ ...raw, version: '9.1' }, version, official, source));
   assert.throws(() => parseHonkaiPublicTimeline({ ...raw, scheduleDates: [{ startDate: '2026-2-30 0:0:0', endDate: '2026-3-7 0:0:0' }] }, version, official, source));
   const changed = structuredClone(raw); changed.scheduleDates[0].startDate = '2026-8-19 0:0:0';
-  assert.throws(() => parseHonkaiPublicTimeline(changed, version, official, source));
+  const mismatched = parseHonkaiPublicTimeline(changed, version, official, source);
+  assert.equal(mismatched.events.length, original.length);
+  assert.ok(mismatched.events.every((event) => !event.crossChecked && !event.versionStartId));
+  assert.ok(mismatched.issues.some((issue) => issue.id.endsWith(':region')));
   assert.throws(() => parseHonkaiTimelinePage('<html>upstream unavailable</html>'));
 });
 
@@ -50,7 +56,7 @@ test('주차 범위 검증과 시작 보정 후 안정된 완료 식별자', () 
   assert.ok(result.issues.some((issue) => /주차/.test(issue.reason)));
 });
 
-test('새 콘텐츠의 영문·한국어 공식 제목 연결과 예상 기간 표시', () => {
+test('새 콘텐츠의 한국어 제목 연결 후에도 공식 종료 미확정은 예상 배지 유지', () => {
   const timeline = { ...raw, scheduleActivities: [{ row: 'EVENT 1', content: [{ startWeek: 1, endWeek: 10,
     miniature: { titleTop: 'Future Event', titleMid: null } }] }] };
   const articles = [{ ...official[0]!, description: '★ 테마 이벤트——「새로운 행사」', englishDescription: '★ Featured Event: Future Event' }];

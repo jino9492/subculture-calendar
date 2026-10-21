@@ -1,6 +1,6 @@
 import { isImageUrl, isRecord, type CalendarEvent, type TimeEvidence } from '../../../../shared/calendar';
 import type { CollectionIssue } from '../../../../shared/admin';
-import { parseLocalDate, stripHtml } from '../parsers';
+import { buildVersionEvents, parseLocalDate, stripHtml, type VersionBoundary } from '../parsers';
 import { createHash } from 'node:crypto';
 
 export interface HonkaiArticle { id: string; title: string; description: string; url: string; createdAt: number; imageUrl?: string; englishDescription?: string }
@@ -27,7 +27,8 @@ export const parseHonkaiPost = (raw: unknown, article: HonkaiArticle, language =
   return { ...article, description: stripHtml(post.content) };
 };
 
-const communityEvent = (article: HonkaiArticle) => /웹\s*이벤트|댓글|추첨|호요랜드|HoYo FEST|오프라인|공모전|굿즈|설문/i.test(article.title)
+const communityEvent = (article: HonkaiArticle) => /웹\s*이벤트|댓글|호요랜드|HoYo FEST|오프라인|공모전|굿즈|설문/i.test(article.title)
+  || /추첨/.test(article.title) && /커뮤니티|리트윗|팔로우|공유|좋아요/.test(article.title)
   || !/버전|보급|테마 이벤트/.test(article.title) && /댓글.*추첨|좋아요.*댓글/.test(article.description);
 export const isHonkaiScheduleArticle = (article: HonkaiArticle) => !communityEvent(article)
   && /이벤트|보급|버전.*(?:업데이트|점검)|점검.*안내|코스튬 정보|신규.*캐릭터/.test(article.title);
@@ -42,13 +43,18 @@ const articleYear = (article: HonkaiArticle, month: number) => {
 export const parseHonkaiSchedules = (articles: HonkaiArticle[]) => {
   const events: CalendarEvent[] = [];
   const issues: CollectionIssue[] = [];
-  const maintenance = new Map<string, { at: string; sourceUrl: string; published: number }[]>();
+  const maintenance = new Map<string, { at: string; boundary: VersionBoundary; sourceUrl: string; published: number }[]>();
   for (const article of articles.filter((candidate) => /버전 점검 공지/.test(candidate.title))) {
     const version = /(\d+\.\d+)\s*버전/.exec(article.title)?.[1];
-    const time = /(\d+)월\s*(\d+)일\s*\d{1,2}:\d{2}\s*[~～–-]\s*(\d{1,2}:\d{2})\s*\(UTC\+9\)에\s*업데이트 점검/.exec(stripHtml(article.description));
+    const time = /(\d+)월\s*(\d+)일\s*(\d{1,2}:\d{2})\s*[~～–-]\s*(\d{1,2}:\d{2})\s*\(UTC\+9\)에\s*업데이트 점검/.exec(stripHtml(article.description));
     if (!version || !time) continue;
-    const at = parseLocalDate(`${articleYear(article, Number(time[1]))}/${time[1]}/${time[2]} ${time[3]}`, 9);
-    if (at) maintenance.set(version, [...maintenance.get(version) ?? [], { at, sourceUrl: article.url, published: article.createdAt }]);
+    const date = `${articleYear(article, Number(time[1]))}/${time[1]}/${time[2]}`;
+    const at = parseLocalDate(`${date} ${time[4]}`, 9);
+    const maintenanceStart = parseLocalDate(`${date} ${time[3]}`, 9);
+    if (at && maintenanceStart && at > maintenanceStart) maintenance.set(version, [...maintenance.get(version) ?? [], {
+      at, sourceUrl: article.url, published: article.createdAt,
+      boundary: { version, startAt: at, maintenanceStart, sourceUrl: article.url, imageUrl: article.imageUrl },
+    }]);
   }
   for (const article of articles.filter(isHonkaiScheduleArticle)) {
     const text = stripHtml(article.description);
@@ -99,6 +105,8 @@ export const parseHonkaiSchedules = (articles: HonkaiArticle[]) => {
       parsed++;
     }
     const candidates = lines.flatMap((line) => {
+      const opening = /^\d+월\s*\d+일.*?「([^」]+)」.*(?:이벤트 개방|업데이트)/.exec(line);
+      if (opening) return [{ title: opening[1]!, excerpt: line }];
       const item = /^(.{2,100}?)\s*\|\s*(.+)$/.exec(line);
       return item && /이벤트|보급|로그인|BP|복귀/.test(line) ? [{ title: item[1]!.trim(), excerpt: line }] : [];
     });
@@ -110,6 +118,23 @@ export const parseHonkaiSchedules = (articles: HonkaiArticle[]) => {
     if (!parsed && !candidates.length) issues.push({ id: `honkai:announcement:${article.id}:period`, game: 'honkai', title: article.title,
       reason: '이벤트·보급의 확정된 시작·종료 시각 미수집. 이미지 또는 업데이트 후 표기 확인 필요', sourceUrl: article.url, excerpt: text.slice(0, 6000) });
   }
+  const uniqueEvents = [...new Map(events.map((event) => [event.id, event])).values()];
+  const boundaries = [...maintenance.values()].map((candidates) => [...candidates]
+    .sort((a, b) => b.published - a.published || a.sourceUrl.localeCompare(b.sourceUrl))[0]!.boundary);
+  for (const version of buildVersionEvents('honkai', boundaries)) {
+    const existing = uniqueEvents.find((event) => event.id === version.id);
+    if (!existing) uniqueEvents.push({ ...version, title: `${version.title.replace('버전 ', '')} 버전`,
+      timeEvidence: { start: { at: version.startAt, basis: 'official', precision: 'minute', sourceUrl: version.sourceUrl },
+        ...(version.versionEndBasis === 'next-maintenance' ? { end: { at: version.endAt, basis: 'official' as const,
+          precision: 'minute' as const, sourceUrl: version.versionEndSourceUrl ?? version.sourceUrl } } : {}) } });
+    else if (version.versionEndBasis === 'next-maintenance') {
+      existing.endAt = version.endAt;
+      existing.versionEndBasis = 'next-maintenance';
+      existing.versionEndSourceUrl = version.versionEndSourceUrl;
+      existing.timeEvidence = { ...existing.timeEvidence, end: { at: version.endAt, basis: 'official', precision: 'minute',
+        sourceUrl: version.versionEndSourceUrl ?? version.sourceUrl } };
+    }
+  }
   const uniqueIssues = [...new Map(issues.map((issue) => [issue.id, issue])).values()];
-  return { events: [...new Map(events.map((event) => [event.id, event])).values()], issues: uniqueIssues, skipped: uniqueIssues.length };
+  return { events: uniqueEvents, issues: uniqueIssues, skipped: uniqueIssues.length };
 };

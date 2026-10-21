@@ -26,8 +26,16 @@ export const fetchLinkedHonkaiArticles = async (articles: HonkaiArticle[]) => {
       if (!isRecord(raw) || !isRecord(raw.data) || !isRecord(raw.data.post) || !isRecord(raw.data.post.post)) throw new Error('Unexpected linked Honkai post');
       const post = raw.data.post.post;
       if (typeof post.subject !== 'string' || typeof post.created_at !== 'number') throw new Error('Invalid linked Honkai post');
-      return parseHonkaiPost(raw, { id, title: post.subject, createdAt: post.created_at,
+      const article = parseHonkaiPost(raw, { id, title: post.subject, createdAt: post.created_at,
         description: '', url: `https://www.hoyolab.com/article/${id}` });
+      if (/버전.*(?:업데이트 공지|이벤트 일람)/.test(article.title)) {
+        try {
+          const original = await fetch(`https://bbs-api-os.hoyolab.com/community/post/wapi/getPostFull?post_id=${id}`,
+            { signal: AbortSignal.timeout(15000), headers: { ...headers, 'x-rpc-language': 'en-us' } });
+          if (original.ok) article.englishDescription = parseHonkaiPost(await original.json(), article, 'en-us').description;
+        } catch { /* 한국어 본문 유지 및 영문 이름 대조 생략 */ }
+      }
+      return article;
     }));
     for (const result of results) if (result.status === 'fulfilled' && result.value) linked.push(result.value);
   }

@@ -118,12 +118,13 @@ test('과거 9.0 custom 값의 재사용 차단·정확한 공식 시각 병합 
   assert.equal(result.length, 1); assert.equal(result[0]!.startAt, exact.startAt);
 });
 
-test('새 분류·미번역 이름은 진단으로 남기고 오래된 다른 버전 이름 연결 차단', () => {
+test('새 분류·미번역 이름은 원문 표시하고 오래된 다른 버전 이름 연결 차단', () => {
   const raw = timeline(version, [row('NEW CATEGORY', 'Unknown'), row('EVENT 1', 'Unknown')]);
   const result = parseHonkaiPublicTimeline(raw, version, [], url);
-  assert.equal(result.events.length, 0); assert.equal(result.issues.length, 2);
+  assert.equal(result.events.length, 2); assert.equal(result.issues.length, 3);
+  assert.ok(result.events.every((event) => event.title === 'Unknown' && !event.crossChecked));
   const old = article('★ 이벤트——「다른 행사」', { title: '8.0 버전 업데이트 공지', englishDescription: '★ Event: Unknown' });
-  assert.equal(parseHonkaiPublicTimeline(raw, version, [old], url).events.length, 0);
+  assert.ok(parseHonkaiPublicTimeline(raw, version, [old], url).events.every((event) => event.title === 'Unknown' && !event.crossChecked));
 });
 
 test('실제 8.6 버전 연말 경계와 다른 날짜 점검 공지의 오연결 차단', () => {

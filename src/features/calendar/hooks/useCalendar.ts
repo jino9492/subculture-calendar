@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { GAME_IDS, EVENT_KINDS, isCalendarResponse } from '../../../../shared/calendar';
 import type { CalendarResponse, EventKind, GameId } from '../types';
-import { todayDay } from '../utils/calendar';
+import { todayDay, visibleCalendarEvents } from '../utils/calendar';
 import { restoreFilterPreferences, migrateFilterPreferences } from '../utils/filterPreferences';
 import { apiUrl } from '../../../utils/api';
 import { weeklyStartAt } from '../../../../shared/weekly';
@@ -82,7 +82,7 @@ export const useCalendar = () => {
     return () => { clearTimeout(timer); document.removeEventListener('visibilitychange', update); };
   }, [state.load]);
   useEffect(() => { void state.load(); }, [state.load]);
-  const selectedEvents = (state.data?.events ?? []).filter((event) => state.games.includes(event.game) && state.kinds.includes(event.kind));
+  const selectedEvents = visibleCalendarEvents(state.data?.events ?? []).filter((event) => state.games.includes(event.game) && state.kinds.includes(event.kind));
   const events = selectedEvents.filter((event) => event.title.toLocaleLowerCase().includes(state.query.trim().toLocaleLowerCase()));
   return { ...state, events, selectedEvents, now };
 };
