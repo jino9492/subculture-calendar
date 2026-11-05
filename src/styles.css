@@ -83,8 +83,8 @@
 @layer components {
   .app-shell { @apply min-h-screen; }
   .sidebar { @apply fixed inset-y-0 left-0 z-10 flex w-60 flex-col overflow-y-auto border-r border-line bg-panel px-5 py-8; }
-  .brand { @apply flex items-center gap-3 text-xs tracking-widest; }
-  .brand b { @apply text-sm font-bold; }
+  .brand { @apply flex items-center gap-3; }
+  .brand b { @apply whitespace-nowrap text-2xl font-bold leading-none tracking-tight; }
   .brand-symbol { @apply h-10 w-10 shrink-0; }
   .nav-current { @apply mt-9 flex items-center gap-3 rounded-xl border border-accent/20 bg-selected px-3 py-3 text-sm font-semibold text-accent; box-shadow: inset 3px 0 var(--color-accent); }
   .nav-dot { @apply ml-auto h-1.5 w-1.5 rounded-full bg-accent; }
@@ -340,7 +340,6 @@
 @media (max-width: 760px) {
   .timeline-calendar { --timeline-label-width: 96px; --timeline-day-width: 104px; }
   .sidebar { @apply static w-full border-b border-r-0 px-5 py-5; }
-  .brand { @apply text-xs; }
   .nav-current, .sidebar-note { @apply hidden; }
   .sidebar-section { @apply mt-5; }
   .section-label { @apply mb-2; }

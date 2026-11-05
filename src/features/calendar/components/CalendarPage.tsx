@@ -27,7 +27,7 @@ export const CalendarPage = () => {
 
   return <div className="app-shell">
     <aside className="sidebar">
-      <a href="/" className="brand"><img src="/favicon-cropped.png" className="brand-symbol" alt="" /><span>SUBCULTURE<br /><b>CALENDAR</b></span></a>
+      <a href="/" className="brand"><img src="/subdays-favicon-v4.png" className="brand-symbol" alt="" /><span><b>SUBDAYS</b></span></a>
       <div className="nav-current"><span>▦</span> 일정 캘린더 <span className="nav-dot" /></div>
       <div className="sidebar-section"><p className="section-label">게임 선택 <span>{calendar.games.length} / {GAME_IDS.length}</span></p>
         {GAME_IDS.map((game) => <button type="button" key={game} aria-pressed={calendar.games.includes(game)} onClick={() => calendar.toggleGame(game)}
@@ -75,7 +75,7 @@ export const CalendarPage = () => {
           <span className="day-event-end">{event.kind === 'version' && Date.parse(event.endAt) - Date.parse(event.startAt) <= 1000 ? '시작 시점' : `${formatEventEnd(event)} 종료`} <span>↗</span></span>
         </button><button type="button" className="event-detail-button" aria-label={`${event.title} 상세 보기`} onClick={() => setSelectedEvent(event)}>⋯</button></div>)}</div> : <p className="empty-day">이 날짜에는 표시할 일정이 없습니다.</p>}
       </section>
-      <footer className="page-footer">SUBCULTURE CALENDAR <span>아시아 서버 · 한국 시간</span></footer>
+      <footer className="page-footer">Subdays <span>아시아 서버 · 한국 시간</span></footer>
     </main>
     {selectedDetail && <EventDetail event={selectedDetail} isCompleted={completion.isCompleted(selectedDetail)} onToggleCompletion={() => completion.toggle(selectedDetail)} onClose={() => setSelectedEvent(null)} />}
   </div>;
