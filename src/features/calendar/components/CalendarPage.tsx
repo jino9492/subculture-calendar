@@ -7,6 +7,7 @@ import type { CalendarEvent } from '../types';
 import { calendarRange, dayDate, dayNumber, eventEndDay, formatEventEnd, formatTime, intersectsDay, isEstimatedPeriod, todayDay } from '../utils/calendar';
 import { GAMES, KIND_LABELS } from '../utils/games';
 import { EventDetail } from './EventDetail';
+import { EndingNotifications } from './EndingNotifications';
 import { TimelineCalendar } from './TimelineCalendar';
 import { canComplete, useCompletion } from '../../completion';
 import { PlannerPanel } from '../../planner';
@@ -41,7 +42,9 @@ export const CalendarPage = () => {
 
     <main className="main-content">
       <header className="page-header"><div><h1>게임 일정</h1>
-        <p className="page-subtitle">이벤트 · 픽업 · 엔드 콘텐츠 · 버전</p></div><div className="header-actions"><ThemeToggle /><span className="timezone-badge">한국 시간 <span>UTC+9</span></span></div></header>
+        <p className="page-subtitle">이벤트 · 픽업 · 엔드 콘텐츠 · 버전</p></div><div className="header-actions"><ThemeToggle /><span className="timezone-badge">한국 시간 <span>UTC+9</span></span>
+          <EndingNotifications events={calendar.selectedEvents} now={calendar.now} isLoading={calendar.isLoading && !calendar.data}
+            isUnavailable={Boolean(calendar.error) || calendar.data?.status === 'unavailable'} isCompleted={completion.isCompleted} onSelectEvent={setSelectedEvent} /></div></header>
       <section className="calendar-panel" aria-label="게임 일정 캘린더">
         <div className="calendar-toolbar"><div className="range-navigation"><h2>{range ? `${formatRangeDate(range.first)} ~ ${formatRangeDate(range.last)}` : '표시할 일정 없음'}</h2>
           <button type="button" className="small-button" onClick={calendar.goToday}>오늘</button></div>
