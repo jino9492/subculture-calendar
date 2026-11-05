@@ -22,6 +22,8 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
   const labelRef = useRef<HTMLDivElement>(null);
   const previousView = useRef<{ first: number; last: number; selectedDay: number; focusRevision: number } | null>(null);
   const scrollPosition = useRef({ left: 0, top: 0 });
+  const drag = useRef<{ pointerId: number; startX: number; startY: number; scrollLeft: number; active: boolean } | null>(null);
+  const suppressDragClick = useRef(false);
   const today = dayNumber(new Date(now).toISOString());
   const timePosition = timelineTimePosition(now, first, last);
   const layoutId = useId();
@@ -86,10 +88,60 @@ export const TimelineCalendar = ({ first, last, days, now, selectedDay, focusRev
   return <div className="timeline-calendar" data-layout={layoutId}
     onKeyDown={(event) => { if (event.key === 'Escape') handleClosePreview(); }}>
     <style>{layoutStyles}</style>
-    <div className="timeline-controls"><span>게임 · 분류별 일정</span><div><span>날짜를 가로로 스크롤</span>
+    <div className="timeline-controls"><span>게임 · 분류별 일정</span><div><span>드래그로 앞뒤 날짜 이동</span>
       <button type="button" className="icon-button" aria-label="앞쪽 날짜 보기" onClick={() => handleScroll(-1)}>‹</button>
       <button type="button" className="icon-button" aria-label="뒤쪽 날짜 보기" onClick={() => handleScroll(1)}>›</button></div></div>
-    <div ref={scrollRef} className="timeline-scroll" tabIndex={0} aria-label="전체 일정 타임라인, 날짜를 가로로 스크롤"
+    <div ref={scrollRef} className="timeline-scroll" tabIndex={0} aria-label="전체 일정 타임라인, 드래그 또는 가로 스크롤로 날짜 이동"
+      onPointerDown={(event) => {
+        if (event.pointerType !== 'mouse' || event.button !== 0 || !event.isPrimary) return;
+        suppressDragClick.current = false;
+        const scroll = event.currentTarget;
+        const bounds = scroll.getBoundingClientRect();
+        // Leave native scrollbar interaction to the browser.
+        if (event.clientX - bounds.left >= scroll.clientWidth || event.clientY - bounds.top >= scroll.clientHeight) return;
+        drag.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, scrollLeft: scroll.scrollLeft, active: false };
+      }}
+      onPointerMove={(event) => {
+        const gesture = drag.current;
+        if (!gesture || gesture.pointerId !== event.pointerId) return;
+        const deltaX = event.clientX - gesture.startX;
+        if (!gesture.active) {
+          if (Math.abs(deltaX) < 6) return;
+          if (Math.abs(deltaX) < Math.abs(event.clientY - gesture.startY)) {
+            drag.current = null;
+            return;
+          }
+          gesture.active = true;
+          suppressDragClick.current = true;
+          event.currentTarget.setPointerCapture(event.pointerId);
+          event.currentTarget.classList.add('timeline-dragging');
+          handleClosePreview();
+        }
+        event.preventDefault();
+        event.currentTarget.scrollLeft = gesture.scrollLeft - deltaX;
+      }}
+      onPointerUp={(event) => {
+        if (drag.current?.pointerId !== event.pointerId) return;
+        drag.current = null;
+        event.currentTarget.classList.remove('timeline-dragging');
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+      }}
+      onPointerCancel={(event) => {
+        drag.current = null;
+        event.currentTarget.classList.remove('timeline-dragging');
+      }}
+      onLostPointerCapture={(event) => {
+        drag.current = null;
+        event.currentTarget.classList.remove('timeline-dragging');
+      }}
+      onPointerLeave={() => { if (!drag.current?.active) drag.current = null; }}
+      onClickCapture={(event) => {
+        if (suppressDragClick.current && event.detail > 0) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }}
+      onDragStart={(event) => event.preventDefault()}
       onScroll={(event) => {
         const scroll = event.currentTarget;
         scrollPosition.current = { left: scroll.scrollLeft, top: scroll.scrollTop };
