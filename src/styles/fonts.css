@@ -26,8 +26,8 @@
 }
 
 @theme {
-  --tracking-site: 0.1em;
+  --tracking-site: -0.02em;
   /* 앞쪽 폰트부터 적용, 미설치 폰트나 지원하지 않는 글자는 다음 폰트로 대체 */
-  --font-sans: 'DancingPeople','YeogiOttaeJalnan', "Segoe UI", "Malgun Gothic", sans-serif;
+  --font-sans: "Pretendard", "SUIT", "Noto Sans KR", "Segoe UI", "Malgun Gothic", sans-serif;
   /* 로컬 폰트 예시: --font-sans: "TestFont", "Malgun Gothic", sans-serif; */
 }
