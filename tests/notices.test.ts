@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createNoticeStore } from '../server/notice-store';
-import { isNoticeInput, isNoticeList, type Notice } from '../shared/notices';
+import { isNoticeDelete, isNoticeInput, isNoticeList, type Notice } from '../shared/notices';
 import { markNoticesRead, parseReadNotices, unreadNotices } from '../src/features/notices/records';
 
 test('공지 입력은 빈 값, 잘못된 형식, 길이 초과를 거부', () => {
@@ -25,6 +25,36 @@ test('미확인 공지 전체 표시, 닫은 공지 재방문 제외, 이후 새
   assert.deepEqual(markNoticesRead('["other-tab", "old"]', notices), ['other-tab', 'old', 'new']);
   for (const value of [null, 'invalid', '{}']) assert.deepEqual(parseReadNotices(value), []);
   assert.deepEqual(parseReadNotices('["old", null, 3, "old"]'), ['old']);
+});
+
+test('공지 삭제 요청은 대상 ID와 삭제 동작을 검증', () => {
+  assert.ok(isNoticeDelete({ action: 'delete', id: 'notice-id' }));
+  for (const value of [null, {}, { action: 'delete' }, { action: 'delete', id: ' ' },
+    { action: 'delete', id: 1 }, { action: 'delete', id: 'a'.repeat(201) }, { action: 'publish', id: 'notice-id' }]) {
+    assert.equal(isNoticeDelete(value), false);
+  }
+});
+
+test('공지 삭제는 동시 등록을 유지하며 재조회·재시작 후 사용자 미확인 목록에서도 제외', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'subdays-notice-delete-'));
+  const url = pathToFileURL(join(directory, 'notices.json'));
+  try {
+    const store = createNoticeStore(url);
+    await store.publish({ title: '삭제 대상', content: '내용' });
+    await store.publish({ title: '유지 대상', content: '내용' });
+    const initial = await store.read();
+    const target = initial.find((notice) => notice.title === '삭제 대상');
+    assert.ok(target);
+    await Promise.all([store.remove(target.id), store.publish({ title: '동시 등록', content: '내용' })]);
+    const result = await createNoticeStore(url).read();
+    assert.deepEqual(result.map((notice) => notice.title), ['동시 등록', '유지 대상']);
+    assert.deepEqual(unreadNotices(result, []), result);
+    assert.ok(!result.some((notice) => notice.id === target.id));
+    await store.remove(target.id);
+    assert.deepEqual(await store.read(), result);
+    await Promise.all(result.map((notice) => store.remove(notice.id)));
+    assert.deepEqual(await createNoticeStore(url).read(), []);
+  } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
 test('서버 공지 저장은 동시 등록 유실 없이 유지되며 재시작 후에도 조회', async () => {

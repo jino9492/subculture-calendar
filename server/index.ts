@@ -11,7 +11,8 @@ import { parseAdminAllowedIps } from './admin-access';
 import { checkRequestAccess, parseAllowedOrigins } from './request-access';
 import { startCollectionRuntime, stopCollectionRuntime, collectionLogPage } from './collection-runtime';
 import { noticeStore } from './notice-store';
-import { isNoticeInput } from '../shared/notices';
+import { isNoticeDelete, isNoticeInput } from '../shared/notices';
+import { isRecord } from '../shared/calendar';
 
 const isProduction = process.argv.includes('--production');
 const port = Number(process.env.PORT ?? 5173);
@@ -46,6 +47,12 @@ const server = createServer(async (request, response) => {
       let input: unknown;
       try { input = JSON.parse(Buffer.concat(chunks).toString('utf8')); }
       catch { send(400, { message: '입력 형식을 확인해 주세요.' }); return; }
+      if (isRecord(input) && input.action === 'delete') {
+        if (!isNoticeDelete(input)) { send(400, { message: '삭제할 공지를 확인해 주세요.' }); return; }
+        await noticeStore.remove(input.id);
+        send(200, await noticeStore.read());
+        return;
+      }
       if (!isNoticeInput(input)) { send(400, { message: '제목(200자 이내)과 내용(10,000자 이내)을 입력해 주세요.' }); return; }
       await noticeStore.publish(input);
       send(201, await noticeStore.read());
