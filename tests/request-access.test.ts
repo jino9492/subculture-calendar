@@ -53,6 +53,10 @@ test('Pages CORS·관리자 preflight·HTTPS 출처·프록시 IP 제한을 실�
     assert.equal(options.headers['access-control-allow-methods'], 'GET, POST');
     assert.equal(options.headers['access-control-allow-headers'], 'Content-Type');
     assert.equal(options.headers['cache-control'], 'no-store');
+    assert.equal((await send('/api/admin/notices', 'OPTIONS', preflight)).status, 204);
+    assert.equal((await send('/api/notices', 'GET', { origin: pages })).status, 200);
+    assert.equal((await send('/api/notices', 'OPTIONS', preflight)).status, 403);
+    assert.equal((await send('/api/admin/notices', 'POST', { 'content-type': 'application/json' })).status, 403);
     assert.equal((await send('/api/calendar', 'OPTIONS', preflight)).status, 403);
     assert.equal((await send('/api/admin', 'OPTIONS', { ...preflight, 'access-control-request-headers': 'x-custom' })).status, 403);
     assert.equal((await send('/api/missing', 'OPTIONS', preflight)).status, 404);
@@ -77,7 +81,7 @@ test('Pages CORS·관리자 preflight·HTTPS 출처·프록시 IP 제한을 실�
     assert.equal((await send('/api/admin', 'POST', { ...httpsHeaders, 'x-forwarded-for': '192.168.0.3' })).status, 403);
     assert.equal((await send('/api/admin', 'OPTIONS', { ...preflight, 'x-forwarded-for': '192.168.0.2' })).status, 204);
     for (const forwarded of [undefined, '192.168.0.3', '192.168.0.2,203.0.113.2']) {
-      for (const path of ['/admin', '/api/admin', '/api/admin/logs', '/api/admin/refresh']) {
+      for (const path of ['/admin', '/api/admin', '/api/admin/logs', '/api/admin/refresh', '/api/admin/notices']) {
         assert.equal((await send(path, 'GET', { 'x-forwarded-for': forwarded })).status, 403);
       }
       assert.equal((await send('/api/admin', 'OPTIONS', { ...preflight, 'x-forwarded-for': forwarded })).status, 403);

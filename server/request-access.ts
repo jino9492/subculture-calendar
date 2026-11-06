@@ -32,8 +32,8 @@ const isAllowedOrigin = (request: IncomingMessage, access: RequestAccess): boole
 };
 
 const apiMethods = (pathname: string): string[] | undefined => {
-  if (pathname === '/api/calendar' || pathname === '/api/admin/logs') return ['GET'];
-  if (pathname === '/api/admin') return ['GET', 'POST'];
+  if (pathname === '/api/calendar' || pathname === '/api/notices' || pathname === '/api/admin/logs') return ['GET'];
+  if (pathname === '/api/admin' || pathname === '/api/admin/notices') return ['GET', 'POST'];
   if (pathname === '/api/admin/refresh') return ['POST'];
   return undefined;
 };

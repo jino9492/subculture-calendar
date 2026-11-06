@@ -10,6 +10,8 @@ import { rememberKoreanNames } from '../src/features/collection';
 import { parseAdminAllowedIps } from './admin-access';
 import { checkRequestAccess, parseAllowedOrigins } from './request-access';
 import { startCollectionRuntime, stopCollectionRuntime, collectionLogPage } from './collection-runtime';
+import { noticeStore } from './notice-store';
+import { isNoticeInput } from '../shared/notices';
 
 const isProduction = process.argv.includes('--production');
 const port = Number(process.env.PORT ?? 5173);
@@ -25,6 +27,30 @@ const server = createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url ?? '/', 'http://localhost').pathname);
     if (!checkRequestAccess(request, response, pathname, access)) return;
+    if (pathname === '/api/notices' || pathname === '/api/admin/notices') {
+      const admin = pathname === '/api/admin/notices';
+      const send = (status: number, value: unknown) => {
+        response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+        response.end(JSON.stringify(value));
+      };
+      if (request.method === 'GET') { send(200, await noticeStore.read()); return; }
+      if (!admin || request.method !== 'POST') { response.writeHead(405, { Allow: admin ? 'GET, POST' : 'GET' }); response.end(); return; }
+      const chunks: Buffer[] = [];
+      let length = 0;
+      for await (const chunk of request) {
+        const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk));
+        length += buffer.length;
+        if (length > 65536) { send(413, { message: '입력 내용이 너무 큽니다.' }); return; }
+        chunks.push(buffer);
+      }
+      let input: unknown;
+      try { input = JSON.parse(Buffer.concat(chunks).toString('utf8')); }
+      catch { send(400, { message: '입력 형식을 확인해 주세요.' }); return; }
+      if (!isNoticeInput(input)) { send(400, { message: '제목(200자 이내)과 내용(10,000자 이내)을 입력해 주세요.' }); return; }
+      await noticeStore.publish(input);
+      send(201, await noticeStore.read());
+      return;
+    }
     if (pathname === '/api/admin/logs') {
       if (request.method !== 'GET') { response.writeHead(405, { Allow: 'GET' }); response.end(); return; }
       response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });

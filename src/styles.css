@@ -352,6 +352,18 @@
   .dialog-header { @apply flex items-center gap-3 text-xs text-muted; }
   .dialog-header .icon-button { @apply ml-auto; }
   .event-dialog h2 { @apply mt-6 text-xl font-bold leading-8; }
+  .notice-dialog { width: min(42rem, calc(100vw - 2rem)); max-width: 42rem; max-height: 85dvh; padding: 0; }
+  .notice-dialog .dialog-header { @apply sticky top-0 z-10 border-b border-line bg-panel px-6 py-4; }
+  .notice-dialog .dialog-header h2 { @apply m-0 text-lg text-foreground; }
+  .notice-dialog .dialog-header h2 span { @apply ml-2 text-sm font-normal text-muted; }
+  .notice-entries { @apply px-6; }
+  .notice-entry { @apply min-w-0 border-b border-line py-5; overflow-wrap: anywhere; }
+  .notice-entry:last-child { @apply border-b-0; }
+  .notice-entry h3 { @apply text-base font-semibold leading-7; }
+  .notice-entry time, .notice-entry small { @apply mt-1 block text-xs text-muted; }
+  .notice-content { @apply mt-3 whitespace-pre-wrap text-sm leading-7; overflow-wrap: anywhere; }
+  .notice-dialog-footer { @apply sticky bottom-0 flex flex-wrap items-center justify-between gap-3 border-t border-line bg-panel px-6 py-4; }
+  .notice-dialog-footer > span { @apply text-xs text-muted; }
   .detail-dates { @apply mt-5 rounded-lg border border-line p-4; }
   .detail-dates > div { @apply flex justify-between gap-4 py-1.5 text-sm; }
   .detail-dates dt { @apply text-muted; }

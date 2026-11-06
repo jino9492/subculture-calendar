@@ -11,6 +11,7 @@ import { EndingNotifications } from './EndingNotifications';
 import { TimelineCalendar } from './TimelineCalendar';
 import { canComplete, useCompletion } from '../../completion';
 import { PlannerPanel } from '../../planner';
+import { NoticeModal } from '../../notices';
 
 export const CalendarPage = () => {
   const calendar = useCalendar();
@@ -79,6 +80,7 @@ export const CalendarPage = () => {
         </button><button type="button" className="event-detail-button" aria-label={`${event.title} 상세 보기`} onClick={() => setSelectedEvent(event)}>⋯</button></div>)}</div> : <p className="empty-day">이 날짜에는 표시할 일정이 없습니다.</p>}
       </section>
       <footer className="page-footer">Subdays <span>아시아 서버 · 한국 시간</span></footer>
+      <NoticeModal />
     </main>
     {selectedDetail && <EventDetail event={selectedDetail} isCompleted={completion.isCompleted(selectedDetail)} onToggleCompletion={() => completion.toggle(selectedDetail)} onClose={() => setSelectedEvent(null)} />}
   </div>;

@@ -9,12 +9,13 @@ import { koreanDate } from '../utils';
 import { EventEditor } from './EventEditor';
 import { IssueDetail } from './IssueDetail';
 import { CollectionLogs } from './CollectionLogs';
+import { NoticeManager } from './NoticeManager';
 
 interface EditorSelection { event?: CalendarEvent; issue?: CollectionIssue; key: string }
 export const AdminPage = () => {
   const admin = useAdmin();
   const [game, setGame] = useState<GameId | 'all'>('all');
-  const [tab, setTab] = useState<'issues' | 'events' | 'logs'>('issues');
+  const [tab, setTab] = useState<'issues' | 'events' | 'logs' | 'notices'>('issues');
   const [status, setStatus] = useState('pending');
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState('');
@@ -56,11 +57,12 @@ export const AdminPage = () => {
       <p>{source.message}</p><small>{source.fetchedAt ? koreanDate(source.fetchedAt) : '수집된 데이터 없음'} · 제외 {source.skipped}개</small></button>)}</section>
     <div className="admin-toolbar"><div className="type-filters"><button type="button" className={cn('type-filter', tab === 'issues' && 'type-active')} onClick={() => setTab('issues')}>확인 항목 {pendingCount}</button>
       <button type="button" className={cn('type-filter', tab === 'events' && 'type-active')} onClick={() => setTab('events')}>전체 일정 {events.size}</button>
-      <button type="button" className={cn('type-filter', tab === 'logs' && 'type-active')} onClick={() => setTab('logs')}>수집 로그</button></div>
-      {tab !== 'logs' && <label>게임<select aria-label="게임 필터" value={game} onChange={(change) => setGame(GAME_IDS.find((id) => id === change.target.value) ?? 'all')}><option value="all">전체 게임</option>{GAME_IDS.map((id) => <option key={id} value={id}>{GAMES[id].name}</option>)}</select></label>}
+      <button type="button" className={cn('type-filter', tab === 'logs' && 'type-active')} onClick={() => setTab('logs')}>수집 로그</button>
+      <button type="button" className={cn('type-filter', tab === 'notices' && 'type-active')} onClick={() => setTab('notices')}>공지 관리</button></div>
+      {tab !== 'logs' && tab !== 'notices' && <label>게임<select aria-label="게임 필터" value={game} onChange={(change) => setGame(GAME_IDS.find((id) => id === change.target.value) ?? 'all')}><option value="all">전체 게임</option>{GAME_IDS.map((id) => <option key={id} value={id}>{GAMES[id].name}</option>)}</select></label>}
       {tab === 'issues' && <label>처리 상태<select value={status} onChange={(change) => setStatus(change.target.value)}><option value="pending">미처리</option><option value="resolved">처리 완료</option><option value="ignored">제외</option><option value="all">전체</option></select></label>}
-      {tab !== 'logs' && <label className="search-box"><input aria-label="관리 항목 검색" value={query} placeholder="제목 검색" onChange={(change) => setQuery(change.target.value)} /></label>}</div>
-    {tab === 'logs' ? <CollectionLogs /> : <div className="admin-workspace"><section className="admin-list" aria-label={tab === 'issues' ? '확인 항목 목록' : '일정 목록'}>
+      {tab !== 'logs' && tab !== 'notices' && <label className="search-box"><input aria-label="관리 항목 검색" value={query} placeholder="제목 검색" onChange={(change) => setQuery(change.target.value)} /></label>}</div>
+    {tab === 'notices' ? <NoticeManager /> : tab === 'logs' ? <CollectionLogs /> : <div className="admin-workspace"><section className="admin-list" aria-label={tab === 'issues' ? '확인 항목 목록' : '일정 목록'}>
       {tab === 'issues' ? filteredIssues.map((issue) => <button type="button" className={cn('admin-list-item', selectedId === issue.id && !editor && 'admin-selected')} key={issue.id}
         onClick={() => { setSelectedId(issue.id); setEditor(null); }}>
         <span>{GAMES[issue.game].name} · {state?.reviews[issue.id] ? state.reviews[issue.id]?.status === 'resolved' ? '처리 완료' : '제외' : '미처리'}</span><strong>{issue.title}</strong><p>{issue.reason}</p></button>)
