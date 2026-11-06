@@ -4,7 +4,7 @@
 
 ## 실행
 
-https://subculture-calendar.pages.dev/
+https://subdays.kr/
 
 Node.js 22 이상과 pnpm이 필요합니다.
 
@@ -157,7 +157,7 @@ Cloudflare Pages의 빌드 환경 변수에 `VITE_API_BASE_URL=https://api.examp
 PORT=5173
 HOST=127.0.0.1
 ADMIN_ALLOWED_IPS=203.0.113.20
-CORS_ALLOWED_ORIGINS=https://subculture-calendar.pages.dev
+CORS_ALLOWED_ORIGINS=https://subdays.kr
 TRUSTED_PROXY_IPS=127.0.0.1,::1
 ```
 

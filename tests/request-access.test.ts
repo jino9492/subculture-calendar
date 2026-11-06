@@ -5,7 +5,7 @@ import { parseAdminAllowedIps } from '../server/admin-access';
 import { checkRequestAccess, parseAllowedOrigins, type RequestAccess } from '../server/request-access';
 
 test('CORS 출처는 HTTP·HTTPS 도메인만 허용', () => {
-  assert.deepEqual([...parseAllowedOrigins(' https://subculture-calendar.pages.dev/, http://localhost:5173 ')], ['https://subculture-calendar.pages.dev', 'http://localhost:5173']);
+  assert.deepEqual([...parseAllowedOrigins(' https://subdays.kr/, http://localhost:5173 ')], ['https://subdays.kr', 'http://localhost:5173']);
   assert.equal(parseAllowedOrigins(undefined).size, 0);
   for (const value of ['*', 'null', 'ftp://example.com', 'https://example.com/path', 'https://user:pass@example.com', 'https://example.com?query=1', 'https://example.com#hash']) {
     assert.throws(() => parseAllowedOrigins(value), /CORS_ALLOWED_ORIGINS/);
@@ -13,7 +13,7 @@ test('CORS 출처는 HTTP·HTTPS 도메인만 허용', () => {
 });
 
 test('Pages CORS·관리자 preflight·HTTPS 출처·프록시 IP 제한을 실제 HTTP 요청으로 검증', async () => {
-  const pages = 'https://subculture-calendar.pages.dev';
+  const pages = 'https://subdays.kr';
   const access: RequestAccess = {
     adminAllowedIps: parseAdminAllowedIps('127.0.0.1'),
     trustedProxyIps: parseAdminAllowedIps(''),
